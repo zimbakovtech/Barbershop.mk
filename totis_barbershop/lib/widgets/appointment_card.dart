@@ -11,12 +11,16 @@ import 'dart:math';
 
 class AppointmentCardWidget extends ConsumerStatefulWidget {
   final Appointment appointment;
+  final bool haveCall;
+  final bool haveMenu;
   final BarberService barberService;
   final VoidCallback? onCancel;
 
   const AppointmentCardWidget({
     super.key,
     required this.appointment,
+    required this.haveCall,
+    required this.haveMenu,
     required this.barberService,
     this.onCancel,
   });
@@ -27,306 +31,276 @@ class AppointmentCardWidget extends ConsumerStatefulWidget {
 }
 
 class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
-  bool _lastHour = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkIfLastHour();
-  }
-
-  void _checkIfLastHour() {
-    // Extract date and time from the widget
-    final dateParts = widget.appointment.date!.split('-');
-    final timeParts = widget.appointment.time!.split(':');
-
-    final appointmentTime = DateTime(
-      int.parse(dateParts[2]),
-      int.parse(dateParts[1]),
-      int.parse(dateParts[0]),
-      int.parse(timeParts[0]),
-      int.parse(timeParts[1]),
-    );
-
-    final now = DateTime.now();
-
-    final difference = appointmentTime.difference(now).inMinutes;
-    if (difference <= 60 && difference >= 0) {
-      setState(() {
-        _lastHour = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+    return Card(
+      color: navy,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
-        gradient: _lastHour
-            ? const LinearGradient(colors: [
-                Color.fromARGB(255, 199, 133, 70),
-                Color.fromARGB(255, 130, 88, 47)
-              ])
-            : null,
+        side: const BorderSide(color: background, width: 2),
       ),
-      child: Card(
-        color: navy,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        elevation: 8.0,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.appointment.barbershop?.name} - ${widget.appointment.barber?.fullName} - ${widget.appointment.id}',
-                      style: TextStyle(
-                        color: textSecondary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+      elevation: 3.0,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 18.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${widget.appointment.clientName}',
+                    style: TextStyle(
+                      color: textSecondary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontFamily: GoogleFonts.montserrat().fontFamily,
                     ),
-                    const SizedBox(height: 5),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Transform.rotate(
-                              angle: -pi / 2,
-                              child: const Icon(
-                                CupertinoIcons.scissors,
-                                color: orange,
-                                size: 30,
-                              ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Transform.rotate(
+                            angle: -pi / 2,
+                            child: const Icon(
+                              CupertinoIcons.scissors,
+                              color: orange,
+                              size: 30,
                             ),
-                            SizedBox(
-                              width: 55,
-                              child: Text(
-                                widget.appointment.service?.name ?? '',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                  fontFamily: GoogleFonts.roboto().fontFamily,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 8.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              widget.appointment.time ?? '',
-                              style: TextStyle(
-                                color: textPrimary,
-                                fontSize: 23,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: GoogleFonts.lato().fontFamily,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(
-                              widget.appointment.date ?? '',
-                              style: TextStyle(
-                                color: textSecondary,
-                                fontSize: 14,
-                                fontFamily: GoogleFonts.lato().fontFamily,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.phone,
-                  color: orange,
-                  size: 28,
-                ),
-                onPressed: () async {
-                  final phoneNumber = widget.appointment.barber?.phoneNumber;
-                  // bool confirmed =
-                  await showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: navy,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        title: Text(
-                          'Јави се на ${widget.appointment.barber?.fullName}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: textPrimary,
                           ),
-                        ),
-                        content: Text(
-                          'Дали сакате да се јавите на $phoneNumber?',
-                          style: const TextStyle(color: textSecondary),
-                        ),
-                        actions: [
-                          TextButton(
-                            child: const Text(
-                              'Не',
-                              style: TextStyle(color: orange),
+                          SizedBox(
+                            width: 55,
+                            child: Text(
+                              widget.appointment.service?.name ?? '',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                                fontFamily: GoogleFonts.roboto().fontFamily,
+                              ),
                             ),
-                            onPressed: () => Navigator.of(context).pop(false),
-                          ),
-                          TextButton(
-                            child: const Text(
-                              'Да',
-                              style: TextStyle(color: orange),
-                            ),
-                            onPressed: () => Navigator.of(context).pop(true),
                           ),
                         ],
-                      );
-                    },
-                  );
-
-                  // if (confirmed) {
-                  //   ScaffoldMessenger.of(context).showSnackBar(
-                  //     SnackBar(
-                  //       content: Text('Calling $phoneNumber...'),
-                  //       backgroundColor: Colors.green,
-                  //     ),
-                  //   );
-
-                  //   if (await canLaunchUrl(Uri.parse('tel:$phoneNumber'))) {
-                  //     await launchUrl(Uri.parse('tel:$phoneNumber'));
-                  //   } else {
-                  //     ScaffoldMessenger.of(context).showSnackBar(
-                  //       SnackBar(
-                  //         content: Text('Could not launch $phoneNumber'),
-                  //         backgroundColor: Colors.red,
-                  //       ),
-                  //     );
-                  //   }
-                  //   launchUrl(Uri.parse('tel:$phoneNumber'));
-                  // }
-                },
-              ),
-              PopupMenuButton<String>(
-                color: navy,
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: orange,
-                  size: 30,
-                ),
-                onSelected: (String result) async {
-                  if (result == 'Cancel') {
-                    bool confirmed = await showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          backgroundColor: navy,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                          title: const Text(
-                            'Откажи термин',
+                      ),
+                      const SizedBox(width: 8.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.appointment.time ?? '',
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
                               color: textPrimary,
+                              fontSize: 23,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: GoogleFonts.lato().fontFamily,
                             ),
                           ),
-                          content: const Text(
-                            'Дали сте сигурни дека сакате да го откажете овој термин?',
-                            style: TextStyle(color: textSecondary),
+                          const SizedBox(width: 10),
+                          Text(
+                            widget.appointment.date ?? '',
+                            style: TextStyle(
+                              color: textSecondary,
+                              fontSize: 14,
+                              fontFamily: GoogleFonts.lato().fontFamily,
+                            ),
                           ),
-                          actions: [
-                            TextButton(
-                              child: const Text(
-                                'Не',
-                                style: TextStyle(color: orange),
-                              ),
-                              onPressed: () => Navigator.of(context).pop(false),
-                            ),
-                            TextButton(
-                              child: const Text(
-                                'Да',
-                                style: TextStyle(color: orange),
-                              ),
-                              onPressed: () => Navigator.of(context).pop(true),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-
-                    if (confirmed) {
-                      try {
-                        await ref
-                            .read(appointmentProvider.notifier)
-                            .cancelAppointment(widget.appointment.id!);
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                                  Text('Appointment canceled successfully'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Failed to cancel appointment: $e'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      }
-                    }
-                  }
-                },
-                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                  const PopupMenuItem<String>(
-                    value: 'Cancel',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.cancel,
-                          color: orange,
-                          size: 20,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'Откажи',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
-                            color: textPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
-                ),
-                elevation: 8,
-              )
-            ],
-          ),
+              ),
+            ),
+            widget.haveCall
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.phone,
+                      color: orange,
+                      size: 28,
+                    ),
+                    onPressed: () async {
+                      final phoneNumber =
+                          widget.appointment.barber?.phoneNumber;
+                      // bool confirmed =
+                      await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: navy,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            title: Text(
+                              'Јави се на ${widget.appointment.barber?.fullName}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: textPrimary,
+                              ),
+                            ),
+                            content: Text(
+                              'Дали сакате да се јавите на $phoneNumber?',
+                              style: const TextStyle(color: textSecondary),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text(
+                                  'Не',
+                                  style: TextStyle(color: orange),
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  'Да',
+                                  style: TextStyle(color: orange),
+                                ),
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      // if (confirmed) {
+                      //   ScaffoldMessenger.of(context).showSnackBar(
+                      //     SnackBar(
+                      //       content: Text('Calling $phoneNumber...'),
+                      //       backgroundColor: Colors.green,
+                      //     ),
+                      //   );
+
+                      //   if (await canLaunchUrl(Uri.parse('tel:$phoneNumber'))) {
+                      //     await launchUrl(Uri.parse('tel:$phoneNumber'));
+                      //   } else {
+                      //     ScaffoldMessenger.of(context).showSnackBar(
+                      //       SnackBar(
+                      //         content: Text('Could not launch $phoneNumber'),
+                      //         backgroundColor: Colors.red,
+                      //       ),
+                      //     );
+                      //   }
+                      //   launchUrl(Uri.parse('tel:$phoneNumber'));
+                      // }
+                    },
+                  )
+                : const SizedBox(),
+            widget.haveMenu
+                ? PopupMenuButton<String>(
+                    color: navy,
+                    icon: const Icon(
+                      Icons.more_vert,
+                      color: orange,
+                      size: 30,
+                    ),
+                    onSelected: (String result) async {
+                      if (result == 'Cancel') {
+                        bool confirmed = await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: navy,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              title: const Text(
+                                'Откажи термин',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: textPrimary,
+                                ),
+                              ),
+                              content: const Text(
+                                'Дали сте сигурни дека сакате да го откажете овој термин?',
+                                style: TextStyle(color: textSecondary),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text(
+                                    'Не',
+                                    style: TextStyle(color: orange),
+                                  ),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                ),
+                                TextButton(
+                                  child: const Text(
+                                    'Да',
+                                    style: TextStyle(color: orange),
+                                  ),
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+
+                        if (confirmed) {
+                          try {
+                            await ref
+                                .read(appointmentProvider.notifier)
+                                .cancelAppointment(widget.appointment.id!);
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Appointment canceled successfully'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Failed to cancel appointment: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        }
+                      }
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        <PopupMenuEntry<String>>[
+                      const PopupMenuItem<String>(
+                        value: 'Cancel',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.cancel,
+                              color: orange,
+                              size: 20,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              'Откажи',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    elevation: 8,
+                  )
+                : const SizedBox()
+          ],
         ),
       ),
     );

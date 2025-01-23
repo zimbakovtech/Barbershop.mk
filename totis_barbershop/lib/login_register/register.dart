@@ -74,10 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-              builder: (context) => const BarbershopApp(
-                    customer: true,
-                  )),
+          MaterialPageRoute(builder: (context) => const BarbershopApp()),
         );
       }
     } catch (e) {

@@ -4,7 +4,6 @@ import 'package:barbers_mk/services/barber_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:barbers_mk/providers/appointment_provider.dart';
 import 'package:barbers_mk/providers/home_screen_provider.dart';
-import 'package:barbers_mk/widgets/barbershop_selection.dart';
 import 'package:barbers_mk/book_flow.dart';
 import 'package:barbers_mk/models/appointment.dart';
 import 'package:barbers_mk/models/barber.dart';
@@ -74,14 +73,12 @@ class _BarbershopState extends ConsumerState<Barbershop> {
           backgroundColor: Colors.transparent,
           body: isLoading
               ? const Center(child: CircularProgressIndicator(color: orange))
-              : barbershopName.isNotEmpty
-                  ? BookingFlow(
-                      barbershopName: barbershopName,
-                      barbers: barbers,
-                      appointment: appointment,
-                      barberService: barberService,
-                    )
-                  : const BarbershopSelection()),
+              : BookingFlow(
+                  barbershopName: barbershopName,
+                  barbers: barbers,
+                  appointment: appointment,
+                  barberService: barberService,
+                )),
     );
   }
 }

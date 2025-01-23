@@ -55,18 +55,12 @@ class _LoginScreenState extends State<LoginScreen> {
         if (_user!.userType == 'barber') {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) => const BarbershopApp(
-                      customer: false,
-                    )),
+            MaterialPageRoute(builder: (context) => const BarbershopApp()),
           );
         } else {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(
-                builder: (context) => const BarbershopApp(
-                      customer: true,
-                    )),
+            MaterialPageRoute(builder: (context) => const BarbershopApp()),
           );
         }
       }

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../models/appointment.dart';
 import '../models/barber.dart';
 import '../models/barbershop.dart';
+import '../models/client.dart';
 import '../models/schedule.dart';
 import '../models/service.dart';
 import '../models/user.dart';
@@ -153,18 +154,15 @@ class BarberService {
     }
   }
 
-  Future<List<User>> fetchClients() async {
+  Future<List<Client>> fetchClients() async {
     try {
       final headers = await _getHeaders();
       final response =
           await apiFetcher.get('barbers/clients', headers: headers);
 
-      if (response == null || response.isEmpty) {
-        return [];
-      }
-
-      final List<dynamic> data = response as List<dynamic>;
-      return data.map((client) => User.fromJson(client)).toList();
+      return (response as List<dynamic>)
+          .map((client) => Client.fromJson(client as Map<String, dynamic>))
+          .toList();
     } catch (error) {
       throw Exception('Error fetching clients: $error');
     }
@@ -180,7 +178,7 @@ class BarberService {
         return [];
       }
 
-      final List<dynamic> data = response as List<dynamic>;
+      final List<dynamic> data = response['content'] as List<dynamic>;
       return data
           .map((appointmentJson) =>
               Appointment.fromJson(appointmentJson as Map<String, dynamic>))
@@ -231,28 +229,56 @@ class BarberService {
     try {
       final headers = await _getHeaders();
 
-      final response = await apiFetcher.get(
-        'users/home-screen',
-        headers: headers,
-      );
+      // final response = await apiFetcher.get(
+      //   'establishments',
+      //   headers: headers,
+      // );
+
+      Map<String, dynamic> response = {
+        "id": 2,
+        "name": "Toti's Barbershop",
+        "short_name": "Toti's",
+        "address": {
+          "street": "Ul. Elizabet br. 21",
+          "city_id": 10,
+          "city_name": "Strumica"
+        },
+        "phone_number": "078121244",
+        "image_url":
+            "https://barber-cdn.s3.eu-central-1.amazonaws.com/images/establishments/1729724417.jpg",
+        "rating": 3,
+        "user_favorite": false,
+        "user_home_screen": false,
+        "created_at": "2024-10-22T23:49:42Z",
+        "updated_at": "2025-01-23T10:15:32Z",
+        "barbers": [
+          {
+            "id": 2,
+            "full_name": "Toti Nikolov",
+            "email": "toti@nikolov.com",
+            "phone_number": "078812111",
+            "profile_picture":
+                "https://barber-cdn.s3.eu-central-1.amazonaws.com/images/establishments/1730587390.png",
+            "average_rating": 0,
+            "establishment": {
+              "id": 2,
+              "name": "Toti's Barbershop",
+              "short_name": "Toti's",
+              "rating": 0,
+              "user_favorite": false,
+              "user_home_screen": false,
+              "barbers": null,
+              "created_at": "0001-01-01T00:00:00Z",
+              "updated_at": "0001-01-01T00:00:00Z"
+            },
+            "created_at": "0001-01-01T00:00:00Z",
+            "updated_at": "0001-01-01T00:00:00Z"
+          }
+        ]
+      };
       return Barbershop.fromJson(response);
     } catch (error) {
       throw Exception('Error fetching home screen data: $error');
-    }
-  }
-
-  Future<void> setHomeScreenEstablishment(int establishmentId) async {
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.post(
-        'users/home-screen',
-        body: {
-          'establishment_id': establishmentId,
-        },
-        headers: headers,
-      );
-    } catch (e) {
-      throw Exception('Error setting home screen establishment: $e');
     }
   }
 
@@ -264,6 +290,19 @@ class BarberService {
         headers: headers,
       );
       return User.fromJson(response as Map<String, dynamic>);
+    } catch (e) {
+      throw Exception('Error fetching user info: $e');
+    }
+  }
+
+  Future<Client> getClientById(int id) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get(
+        'barbers/clients/$id',
+        headers: headers,
+      );
+      return Client.fromJson(response);
     } catch (e) {
       throw Exception('Error fetching user info: $e');
     }

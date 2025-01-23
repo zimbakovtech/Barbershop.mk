@@ -162,6 +162,8 @@ class BarberSelectionWidget extends StatelessWidget {
                   left: 10,
                   right: 10,
                   child: AppointmentCardWidget(
+                    haveCall: true,
+                    haveMenu: true,
                     appointment: appointment,
                     barberService: barberService,
                     onCancel: onCancel,

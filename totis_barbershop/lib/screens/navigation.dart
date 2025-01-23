@@ -1,17 +1,13 @@
-import 'package:barbers_mk/screens/notifications.dart';
+import 'package:barbers_mk/screens/clients.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'home.dart';
 import 'profile.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'appointments.dart';
-import 'barber_screen.dart';
-import 'clients.dart';
 
 class BarbershopApp extends StatelessWidget {
-  final bool customer;
-  const BarbershopApp({super.key, this.customer = true});
+  const BarbershopApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,14 +16,13 @@ class BarbershopApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
-      home: MainPage(customer: customer),
+      home: const MainPage(),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
-  final bool customer;
-  const MainPage({super.key, this.customer = true});
+  const MainPage({super.key});
 
   static MainPageState? of(BuildContext context) =>
       context.findAncestorStateOfType<MainPageState>();
@@ -41,24 +36,16 @@ class MainPageState extends State<MainPage> {
   int _lastTappedIndex = -1;
   DateTime _lastTapTime = DateTime.now();
 
-  List<Widget> _screens = [
+  final List<Widget> _screens = [
     const Barbershop(key: ValueKey('Home')),
     const Appointments(),
-    const Notifications(),
+    const Clients(),
     const Profile(),
   ];
 
   @override
   void initState() {
     super.initState();
-    if (!widget.customer) {
-      _screens = [
-        const BarberScreen(key: ValueKey('Home')),
-        const Appointments(key: ValueKey('Appointments')),
-        const Clients(),
-        const Profile(),
-      ];
-    }
   }
 
   final List<Key> _screenKeys = List.generate(4, (index) => UniqueKey());
@@ -110,7 +97,7 @@ class MainPageState extends State<MainPage> {
                             _screens[index] = Appointments(
                                 key: ValueKey(DateTime.now().toString()));
                           } else if (index == 2) {
-                            _screens[index] = Notifications(
+                            _screens[index] = Clients(
                                 key: ValueKey(DateTime.now().toString()));
                           }
                         });
@@ -124,28 +111,26 @@ class MainPageState extends State<MainPage> {
                     },
                     backgroundColor: navy,
                     selectedItemColor: orange,
+                    unselectedFontSize: 13.5,
+                    selectedFontSize: 15,
                     unselectedItemColor: Colors.white54,
                     type: BottomNavigationBarType.fixed,
-                    items: [
-                      const BottomNavigationBarItem(
+                    items: const [
+                      BottomNavigationBarItem(
                         icon: Icon(Icons.home_filled),
-                        label: 'Home',
+                        label: 'Дома',
                       ),
                       BottomNavigationBarItem(
-                        icon: widget.customer
-                            ? const Icon(CupertinoIcons.search)
-                            : const Icon(Icons.calendar_today),
-                        label: widget.customer ? 'Search' : 'Appointments',
+                        icon: Icon(Icons.calendar_today),
+                        label: 'Термини',
                       ),
                       BottomNavigationBarItem(
-                        icon: widget.customer
-                            ? const Icon(Icons.favorite)
-                            : const Icon(Icons.people),
-                        label: widget.customer ? 'Favorites' : 'Clients',
+                        icon: Icon(Icons.people),
+                        label: 'Клиенти',
                       ),
-                      const BottomNavigationBarItem(
+                      BottomNavigationBarItem(
                         icon: Icon(Icons.person),
-                        label: 'Profile',
+                        label: 'Профил',
                       ),
                     ],
                   ),

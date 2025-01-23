@@ -37,6 +37,8 @@ class AppointmentsScreenState extends ConsumerState<AppointmentsScreen> {
             final appointment = appointments[index];
 
             return AppointmentCardWidget(
+              haveCall: true,
+              haveMenu: true,
               appointment: appointment,
               barberService: BarberService(),
             );
