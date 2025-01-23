@@ -1,6 +1,6 @@
 # Barbers.mk
 
-Barbers.mk is a Dart/Flutter app
+Totis Barbershop is a Dart/Flutter App
 
 ## Getting Started
 
