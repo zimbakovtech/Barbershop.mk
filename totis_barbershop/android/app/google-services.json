@@ -1,0 +1,105 @@
+{
+  "project_info": {
+    "project_number": "164134187996",
+    "project_id": "barbers-mk",
+    "storage_bucket": "barbers-mk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164134187996:android:f7c1174d3329a815199519",
+        "android_client_info": {
+          "package_name": "com.example.app.barberMk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDVleoz64qXRGkQCQDvW1Xdi_jM1PIhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164134187996:android:50c9e742710ec5c6199519",
+        "android_client_info": {
+          "package_name": "com.example.barberMk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDVleoz64qXRGkQCQDvW1Xdi_jM1PIhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164134187996:android:b98c2209359f18f7199519",
+        "android_client_info": {
+          "package_name": "com.example.barber_mk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDVleoz64qXRGkQCQDvW1Xdi_jM1PIhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164134187996:android:04017d205717f4c2199519",
+        "android_client_info": {
+          "package_name": "com.example.barbermk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDVleoz64qXRGkQCQDvW1Xdi_jM1PIhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164134187996:android:bb5d004a2560e513199519",
+        "android_client_info": {
+          "package_name": "com.exmaple.barbers.mk"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYDVleoz64qXRGkQCQDvW1Xdi_jM1PIhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

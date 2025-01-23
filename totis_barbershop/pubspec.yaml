@@ -1,0 +1,46 @@
+name: barbers_mk
+description: "Barbers.mk App"
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  intl: ^0.19.0
+  http: ^0.13.5
+  shared_preferences: ^2.1.0 
+  google_fonts: ^4.0.4
+  table_calendar: ^3.0.0
+  path_provider: ^2.0.14
+  firebase_core: ^3.8.0
+  firebase_messaging: ^15.1.5
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  url_launcher: ^6.1.7
+  
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  riverpod_generator: ^2.6.3
+  build_runner: ^2.4.13
+  custom_lint: ^0.7.0
+  riverpod_lint: ^2.6.3
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - lib/assets/
+
+  # fonts:
+  #   - family: CustomIcons
+  #     fonts:
+  #       - asset: assets/fonts/CustomIcons.ttf
