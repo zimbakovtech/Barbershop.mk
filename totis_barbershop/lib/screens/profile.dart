@@ -104,7 +104,7 @@ class _ProfileState extends State<Profile> {
               BuildProfileItem(
                   context: context,
                   title: 'Промени телефон',
-                  icon: Icons.phone,
+                  icon: Icons.phone_outlined,
                   user: user!),
               const Divider(color: Colors.white54),
               const SizedBox(height: 10),
@@ -115,7 +115,7 @@ class _ProfileState extends State<Profile> {
                   user: user!),
               BuildProfileItem(
                   context: context,
-                  title: 'Историја',
+                  title: 'Историjа',
                   icon: Icons.history,
                   user: user!),
               const Divider(color: Colors.white54),

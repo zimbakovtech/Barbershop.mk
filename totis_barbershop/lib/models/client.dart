@@ -9,6 +9,7 @@ class Client {
   final int totalAppointments;
   List<Appointment>? pastAppointments;
   List<Appointment>? futureAppointments;
+  final int? totalRevenue;
   String? token;
 
   Client({
@@ -20,6 +21,7 @@ class Client {
     required this.totalAppointments,
     this.pastAppointments,
     this.futureAppointments,
+    this.totalRevenue,
     this.token,
   });
 
@@ -30,17 +32,20 @@ class Client {
       phoneNumber: json['phone_number'],
       lastAppointmentDate: json['last_appointment_date'],
       totalAppointments: json['total_appointments'],
-      pastAppointments: json['past_appointments'] != null
+      pastAppointments: (json['past_appointments'] != null &&
+              json['past_appointments']['content'] != null)
           ? (json['past_appointments']['content'] as List)
               .map((e) => Appointment.fromJson(e))
               .toList()
-          : null,
-      futureAppointments: json['future_appointments'] != null
+          : [],
+      futureAppointments: (json['future_appointments'] != null &&
+              json['future_appointments']['content'] != null)
           ? (json['future_appointments']['content'] as List)
               .map((e) => Appointment.fromJson(e))
               .toList()
-          : null,
+          : [],
       profilePicture: json['profile_picture'],
+      totalRevenue: json['total_revenue'],
       token: null,
     );
   }

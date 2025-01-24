@@ -26,9 +26,7 @@ class _ClientsState extends State<Clients> {
     try {
       clients = await barberService.fetchClients();
       setState(() {});
-    } catch (e) {
-      print('Error fetching clients: $e');
-    }
+    } catch (e) {}
   }
 
   @override

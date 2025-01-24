@@ -39,7 +39,7 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
             _showChangePasswordDialog(context);
           } else if (widget.title == 'Промени телефон') {
             _showChangePhoneDialog(context);
-          } else if (widget.title == 'Историја') {
+          } else if (widget.title == 'Историjа') {
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -267,7 +267,7 @@ class _LanguageSectionState extends State<LanguageSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Јазик',
+          'Jазик',
           style: TextStyle(
             color: Colors.white,
             fontSize: 18,
@@ -346,7 +346,7 @@ class _SupportSectionState extends State<SupportSection> {
         ListTile(
           leading: const Icon(Icons.logout, color: orange),
           title: const Text(
-            'Одјави се',
+            'Одjави се',
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
           onTap: () async {
