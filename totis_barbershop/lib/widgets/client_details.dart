@@ -63,7 +63,10 @@ class _ClientDetailsState extends State<ClientDetails>
                 children: [
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage(client!.profilePicture!),
+                    backgroundImage: client!.profilePicture != null
+                        ? NetworkImage(client!.profilePicture!)
+                        : const AssetImage('lib/assets/avatar.jpg')
+                            as ImageProvider,
                   ),
                   const SizedBox(height: 16),
                   Text(

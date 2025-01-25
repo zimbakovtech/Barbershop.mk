@@ -1,9 +1,10 @@
 import 'package:barbers_mk/appointment_history.dart';
-import 'package:barbers_mk/appointments.dart';
 import 'package:barbers_mk/login_register/login.dart';
 import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/edit_services.dart';
+import 'package:barbers_mk/widgets/statistics.dart';
 import 'package:flutter/material.dart';
 
 class BuildProfileItem extends StatefulWidget {
@@ -45,19 +46,16 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
               MaterialPageRoute(
                   builder: (context) => const AppointmentHistoryScreen()),
             );
-          } else if (widget.title == 'Мои термини') {
-            if (widget.user?.userType == 'barber') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const AppointmentsScreen()),
-              );
-            } else {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AppointmentsScreen()));
-            }
+          } else if (widget.title == 'Статистика') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Statistics()),
+            );
+          } else if (widget.title == "Мои услуги") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const EditServices()),
+            );
           }
         });
   }
@@ -297,17 +295,6 @@ class _LanguageSectionState extends State<LanguageSection> {
           },
           activeColor: orange,
           title: const Text('Англиски', style: TextStyle(color: Colors.white)),
-        ),
-        RadioListTile(
-          value: 'Албански',
-          groupValue: widget.language,
-          onChanged: (value) {
-            setState(() {
-              widget.language = value;
-            });
-          },
-          activeColor: orange,
-          title: const Text('Албански', style: TextStyle(color: Colors.white)),
         ),
       ],
     );

@@ -26,7 +26,7 @@ class _ClientsState extends State<Clients> {
     try {
       clients = await barberService.fetchClients();
       setState(() {});
-    } catch (e) {}
+    } finally {}
   }
 
   @override
@@ -42,7 +42,7 @@ class _ClientsState extends State<Clients> {
             id: client.id,
             fullName: client.fullName,
             phoneNumber: client.phoneNumber,
-            profilePicture: client.profilePicture!,
+            profilePicture: client.profilePicture ?? 'lib/assets/avatar.jpg',
             lastAppointmentDate: DateTime.parse(client.lastAppointmentDate),
             totalAppointments: client.totalAppointments,
           );
@@ -98,12 +98,19 @@ class ClientCard extends StatelessWidget {
               // Profile picture on the left
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
-                child: Image.network(
-                  profilePicture,
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
+                child: profilePicture != 'lib/assets/avatar.jpg'
+                    ? Image.network(
+                        profilePicture,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      )
+                    : Image.asset(
+                        profilePicture,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
               ),
               const SizedBox(width: 12),
 

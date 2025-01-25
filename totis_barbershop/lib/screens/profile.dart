@@ -110,8 +110,13 @@ class _ProfileState extends State<Profile> {
               const SizedBox(height: 10),
               BuildProfileItem(
                   context: context,
-                  title: 'Мои термини',
-                  icon: Icons.calendar_today,
+                  title: 'Статистика',
+                  icon: Icons.bar_chart,
+                  user: user!),
+              BuildProfileItem(
+                  context: context,
+                  title: 'Мои услуги',
+                  icon: Icons.cut,
                   user: user!),
               BuildProfileItem(
                   context: context,

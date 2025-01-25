@@ -115,27 +115,23 @@ class BarberService {
     }
   }
 
-  Future<List<Barbershop>> fetchFavorites() async {
+  Future<void> updateService(
+      {required int serviceId,
+      required int price,
+      required int duration,
+      required int userId}) async {
+    final body = {
+      'service_id': serviceId,
+      'price': price,
+      'duration': duration,
+    };
+
     try {
       final headers = await _getHeaders();
-      final response = await apiFetcher.get('users/favorite-establishments',
-          headers: headers);
-      final List<dynamic> data = response;
-
-      return data.map((shop) => Barbershop.fromJson(shop)).toList();
-    } catch (error) {
-      throw Exception('Error fetching favorites: $error');
-    }
-  }
-
-  Future<bool> toggleFavorite(int establishmentId, bool currentStatus) async {
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.post('users/favorite-establishments',
-          body: {'establishment_id': establishmentId}, headers: headers);
-      return !currentStatus;
+      await apiFetcher.post('barbers/$userId/services',
+          body: body, headers: headers);
     } catch (e) {
-      throw Exception('Error toggling favorite: $e');
+      throw Exception('Error updating service: $e');
     }
   }
 
