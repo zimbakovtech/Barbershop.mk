@@ -30,6 +30,7 @@ class Confirmation extends ConsumerStatefulWidget {
 
 class _ConfirmationState extends ConsumerState<Confirmation> {
   final BarberService barberService = BarberService();
+  final TextEditingController _nameController = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +49,30 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
       ),
       body: Column(
         children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: navy,
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  hintText: 'Име и Презиме',
+                  hintStyle: TextStyle(color: Colors.white),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: orange),
+                  ),
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: orange),
+                  ),
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Container(
@@ -115,8 +140,6 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
                     ],
                   ),
                   const SizedBox(height: 16),
-
-                  // Price Row
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -163,6 +186,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
                 try {
                   await barberService.bookAppointment(
                     widget.barberId,
+                    _nameController.text,
                     widget.service.id,
                     widget.date,
                     widget.time,

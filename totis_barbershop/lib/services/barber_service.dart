@@ -33,11 +33,12 @@ class BarberService {
     };
   }
 
-  Future<void> bookAppointment(
-      int barberId, int serviceId, DateTime date, String time) async {
+  Future<void> bookAppointment(int barberId, String clientName, int serviceId,
+      DateTime date, String time) async {
     final endpoint = 'barbers/$barberId/appointments';
     final body = {
       'service_id': serviceId,
+      'client_name': clientName,
       'date': DateFormat('yyyy-MM-dd').format(date),
       'time': time,
     };

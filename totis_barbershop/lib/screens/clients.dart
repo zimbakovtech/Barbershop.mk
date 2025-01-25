@@ -124,7 +124,7 @@ class ClientCard extends StatelessWidget {
                       'Last Appointment: $formattedDate',
                       style: TextStyle(
                         color: Colors.grey[400],
-                        fontSize: 14,
+                        fontSize: 12.5,
                       ),
                     ),
                     const SizedBox(height: 8),
