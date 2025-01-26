@@ -30,6 +30,8 @@ class CalendarWidget extends StatelessWidget {
       child: TableCalendar(
         firstDay: DateTime.now(),
         lastDay: DateTime.now().add(const Duration(days: 30)),
+        headerStyle:
+            const HeaderStyle(titleTextStyle: TextStyle(color: textPrimary)),
         calendarStyle: const CalendarStyle(
           todayDecoration: BoxDecoration(
             border: Border(

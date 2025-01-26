@@ -136,6 +136,30 @@ class BarberService {
     }
   }
 
+  Future<List> fetchSlots({required String date}) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get('barbers/schedule/slots?date=$date',
+          headers: headers);
+
+      return response['slots'];
+    } catch (error) {
+      throw Exception('Error fetching slots: $error');
+    }
+  }
+
+  Future<void> updateSlots(List slots, String date) async {
+    final body = {'date': date, 'slots': slots};
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/schedule/slots',
+          body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating slots: $e');
+    }
+  }
+
   Future<void> updatePassword(String oldPassword, String newPassword) async {
     final body = {
       'old_password': oldPassword,
@@ -157,7 +181,7 @@ class BarberService {
       final response =
           await apiFetcher.get('barbers/clients', headers: headers);
 
-      return (response as List<dynamic>)
+      return (response['content'] as List<dynamic>)
           .map((client) => Client.fromJson(client as Map<String, dynamic>))
           .toList();
     } catch (error) {

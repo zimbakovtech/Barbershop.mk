@@ -59,9 +59,10 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
               ),
               child: TextField(
                 controller: _nameController,
+                cursorColor: orange,
                 decoration: const InputDecoration(
                   hintText: 'Име и Презиме',
-                  hintStyle: TextStyle(color: Colors.white),
+                  hintStyle: TextStyle(color: textSecondary),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: orange),
                   ),
