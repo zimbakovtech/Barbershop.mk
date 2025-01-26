@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class AvailabilityTab extends StatelessWidget {
+class AvailabilityTab extends StatefulWidget {
   final DateTime availabilityCurrentMonth;
   final DateTime availabilityCurrentWeekStart;
   final DateTime availabilitySelectedDate;
@@ -35,238 +35,266 @@ class AvailabilityTab extends StatelessWidget {
   });
 
   @override
+  State<AvailabilityTab> createState() => _AvailabilityTabState();
+}
+
+class _AvailabilityTabState extends State<AvailabilityTab> {
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Container(
-            color: navy,
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Text(
-                    availabilityFormatMonth(availabilityCurrentMonth),
-                    style: const TextStyle(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: navy,
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      widget.availabilityFormatMonth(
+                          widget.availabilityCurrentMonth),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 80,
-                  child: GestureDetector(
-                    key: ValueKey<DateTime>(availabilityCurrentWeekStart),
-                    onHorizontalDragEnd: (details) {
-                      if (details.primaryVelocity == null) {
-                        return;
-                      }
-                      if (details.primaryVelocity! < 0) {
-                        availabilityGoToNextWeek();
-                      } else if (details.primaryVelocity! > 0) {
-                        availabilityGoToPreviousWeek();
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: availabilityGetCurrentWeekDates().map((day) {
-                        final isSelected = stripTime(day) ==
-                            stripTime(availabilitySelectedDate);
-                        final isToday =
-                            stripTime(day) == stripTime(DateTime.now());
-                        return GestureDetector(
-                          onTap: () {
-                            availabilityOnDaySelected(day);
-                          },
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                width: 45,
-                                height: 45,
-                                decoration: BoxDecoration(
-                                  color: isSelected ? orange : background,
-                                  shape: BoxShape.circle,
-                                  border: Border(
-                                    top: BorderSide(
-                                      color: isToday
-                                          ? orange
-                                          : isSelected
-                                              ? orange
-                                              : Colors.grey,
-                                      width: 1,
-                                    ),
-                                    left: BorderSide(
-                                      color: isToday
-                                          ? orange
-                                          : isSelected
-                                              ? orange
-                                              : Colors.grey,
-                                      width: 1,
-                                    ),
-                                  ),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text(
-                                  '${day.day}',
-                                  style: TextStyle(
-                                    color:
-                                        isSelected ? Colors.white : textPrimary,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                DateFormat('E', 'en').format(day),
-                                style: const TextStyle(
-                                    fontSize: 12, color: textPrimary),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(5),
-                    color: navy,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Text(
-                            DateFormat('EEEE - dd.MM.yyyy')
-                                .format(availabilitySelectedDate),
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        GridView.builder(
-                          padding: const EdgeInsets.all(3),
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            mainAxisSpacing: 1,
-                            crossAxisSpacing: 0,
-                            childAspectRatio: 1.35,
-                          ),
-                          itemCount: availabilitySlots.length,
-                          itemBuilder: (context, index) {
-                            final slot = availabilitySlots[index];
-                            final timeSlot = slot['time_slot'] ?? '';
-                            final status = slot['status'] ?? '';
-                            final isSelected =
-                                availabilitySelectedSlots.contains(timeSlot);
-                            final isOpen =
-                                status == 'open' || status == 'availability';
-                            final borderColor = isSelected
-                                ? orange
-                                : isOpen
-                                    ? Colors.green
-                                    : Colors.red;
-                            return GestureDetector(
-                              onTap: () {
-                                if (isSelected) {
-                                  availabilitySelectedSlots.remove(timeSlot);
-                                } else {
-                                  availabilitySelectedSlots.add(timeSlot);
-                                }
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Container(
+                  SizedBox(
+                    height: 80,
+                    child: GestureDetector(
+                      key: ValueKey<DateTime>(
+                          widget.availabilityCurrentWeekStart),
+                      onHorizontalDragEnd: (details) {
+                        if (details.primaryVelocity == null) {
+                          return;
+                        }
+                        setState(() {
+                          if (details.primaryVelocity! < 0) {
+                            widget.availabilityGoToNextWeek();
+                          } else if (details.primaryVelocity! > 0) {
+                            widget.availabilityGoToPreviousWeek();
+                          }
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children:
+                            widget.availabilityGetCurrentWeekDates().map((day) {
+                          final isSelected = widget.stripTime(day) ==
+                              widget.stripTime(widget.availabilitySelectedDate);
+                          final isToday = widget.stripTime(day) ==
+                              widget.stripTime(DateTime.now());
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                widget.availabilityOnDaySelected(day);
+                              });
+                            },
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: 45,
+                                  height: 45,
                                   decoration: BoxDecoration(
-                                    color: background,
-                                    borderRadius: BorderRadius.circular(30),
-                                    shape: BoxShape.rectangle,
+                                    color: isSelected ? orange : background,
+                                    shape: BoxShape.circle,
                                     border: Border(
                                       top: BorderSide(
-                                          color:
-                                              isSelected ? orange : borderColor,
-                                          width: 1),
+                                        color: isToday
+                                            ? orange
+                                            : isSelected
+                                                ? orange
+                                                : Colors.grey,
+                                        width: 1,
+                                      ),
                                       left: BorderSide(
-                                          color:
-                                              isSelected ? orange : borderColor,
-                                          width: 1),
+                                        color: isToday
+                                            ? orange
+                                            : isSelected
+                                                ? orange
+                                                : Colors.grey,
+                                        width: 1,
+                                      ),
                                     ),
                                   ),
                                   alignment: Alignment.center,
-                                  child: Text(timeSlot,
-                                      style:
-                                          const TextStyle(color: Colors.white)),
+                                  child: Text(
+                                    '${day.day}',
+                                    style: TextStyle(
+                                      color: isSelected
+                                          ? Colors.white
+                                          : textPrimary,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final updatedSlots = <String>[];
-                        for (final slot in availabilitySlots) {
-                          final timeSlot = slot['time_slot'];
-                          if (availabilitySelectedSlots.contains(timeSlot)) {
-                            updatedSlots.add(timeSlot);
-                          }
-                        }
-                        await ref
-                            .read(availabilityProvider.notifier)
-                            .updateSlots(
-                              updatedSlots,
-                              DateFormat('yyyy-MM-dd')
-                                  .format(availabilitySelectedDate),
-                            );
-                        availabilitySelectedSlots.clear();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: orange,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 13.0),
-                        child: Text('Отвори / Затвори',
-                            style:
-                                TextStyle(fontSize: 17.0, color: textPrimary)),
+                                Text(
+                                  toBeginningOfSentenceCase(
+                                      DateFormat('E', 'mk')
+                                          .format(day)
+                                          .substring(0, 3)),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }).toList(),
                       ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 85),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: navy,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                      toBeginningOfSentenceCase(
+                          DateFormat('EEEE - dd.MM.yyyy', 'mk')
+                              .format(widget.availabilitySelectedDate))!,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  GridView.builder(
+                    padding: const EdgeInsets.all(3),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 5,
+                      mainAxisSpacing: 1,
+                      crossAxisSpacing: 0,
+                      childAspectRatio: 1.35,
+                    ),
+                    itemCount: widget.availabilitySlots.length,
+                    itemBuilder: (context, index) {
+                      final slot = widget.availabilitySlots[index];
+                      final timeSlot = slot['time_slot'] ?? '';
+                      final status = slot['status'] ?? '';
+                      final isSelected =
+                          widget.availabilitySelectedSlots.contains(timeSlot);
+                      final isOpen =
+                          status == 'open' || status == 'availability';
+                      final borderColor = isSelected
+                          ? orange
+                          : isOpen
+                              ? Colors.green
+                              : Colors.red;
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (isSelected) {
+                              widget.availabilitySelectedSlots.remove(timeSlot);
+                            } else {
+                              widget.availabilitySelectedSlots.add(timeSlot);
+                            }
+                          });
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: background,
+                              borderRadius: BorderRadius.circular(30),
+                              shape: BoxShape.rectangle,
+                              border: Border(
+                                top: BorderSide(
+                                  color: isSelected ? orange : borderColor,
+                                  width: 1,
+                                ),
+                                left: BorderSide(
+                                  color: isSelected ? orange : borderColor,
+                                  width: 1,
+                                ),
+                              ),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              timeSlot,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final updatedSlots = <String>[];
+                  for (final slot in widget.availabilitySlots) {
+                    final timeSlot = slot['time_slot'];
+                    if (widget.availabilitySelectedSlots.contains(timeSlot)) {
+                      updatedSlots.add(timeSlot);
+                    }
+                  }
+                  await widget.ref
+                      .read(availabilityProvider.notifier)
+                      .updateSlots(
+                        updatedSlots,
+                        DateFormat('yyyy-MM-dd')
+                            .format(widget.availabilitySelectedDate),
+                      );
+                  setState(() {
+                    widget.availabilitySelectedSlots.clear();
+                  });
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 13.0),
+                  child: Text(
+                    'Отвори / Затвори',
+                    style: TextStyle(fontSize: 17.0, color: textPrimary),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 85),
+        ],
+      ),
     );
   }
 }

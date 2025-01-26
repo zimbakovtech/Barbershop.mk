@@ -1,3 +1,4 @@
+import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointment_card.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class AppointmentTab extends StatelessWidget {
   final List<DateTime> Function() getCurrentWeekDates;
   final DateTime Function(DateTime) stripTime;
   final List<dynamic> todaysAppointments;
-  final dynamic barberService;
+  final BarberService barberService;
 
   const AppointmentTab({
     super.key,
@@ -43,7 +44,10 @@ class AppointmentTab extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Container(
-                    color: navy,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: navy,
+                    ),
                     padding: const EdgeInsets.all(8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -124,7 +128,10 @@ class AppointmentTab extends StatelessWidget {
                                         ),
                                       ),
                                       Text(
-                                        DateFormat('E', 'en').format(day),
+                                        toBeginningOfSentenceCase(
+                                            DateFormat('E', 'mk')
+                                                .format(day)
+                                                .substring(0, 3)),
                                         style: const TextStyle(
                                             fontSize: 12, color: textPrimary),
                                       ),

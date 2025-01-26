@@ -1,5 +1,6 @@
 import 'package:barbers_mk/providers/appointment_provider.dart';
 import 'package:barbers_mk/providers/availability_provider.dart';
+import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointments_tab.dart';
 import 'package:barbers_mk/widgets/availability_tab.dart';
 import 'package:barbers_mk/widgets/colors.dart';
@@ -22,12 +23,11 @@ class AppointmentsState extends ConsumerState<Appointments> {
   late DateTime _availabilityCurrentWeekStart;
   late DateTime _availabilitySelectedDate;
   final Set<String> _availabilitySelectedSlots = {};
-  late dynamic barberService;
+  final BarberService barberService = BarberService();
 
   @override
   void initState() {
     super.initState();
-    barberService = null;
     final now = DateTime.now();
     _currentMonth = DateTime(now.year, now.month);
     _currentWeekStart = _findStartOfWeek(now);
@@ -82,7 +82,8 @@ class AppointmentsState extends ConsumerState<Appointments> {
   }
 
   String _formatMonth(DateTime date) {
-    return DateFormat('MMMM yyyy', 'en').format(date);
+    return toBeginningOfSentenceCase(
+        DateFormat('MMMM yyyy', 'mk').format(date));
   }
 
   List<DateTime> _getCurrentWeekDates() {
@@ -159,7 +160,8 @@ class AppointmentsState extends ConsumerState<Appointments> {
   }
 
   String _availabilityFormatMonth(DateTime date) {
-    return DateFormat('MMMM yyyy', 'en').format(date);
+    return toBeginningOfSentenceCase(
+        DateFormat('MMMM yyyy', 'mk').format(date));
   }
 
   List<DateTime> _availabilityGetCurrentWeekDates() {
@@ -186,15 +188,19 @@ class AppointmentsState extends ConsumerState<Appointments> {
         backgroundColor: background,
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: navy,
-          title: const Text('Термини'),
+          scrolledUnderElevation: 0.0,
+          backgroundColor: background,
+          title: const Text('Appointments'),
         ),
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(15.0),
               child: Container(
-                color: navy,
+                decoration: BoxDecoration(
+                  color: navy,
+                  borderRadius: BorderRadius.circular(10),
+                ),
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TabBar(
                   labelColor: textPrimary,
@@ -206,11 +212,9 @@ class AppointmentsState extends ConsumerState<Appointments> {
                   ),
                   tabs: const [
                     SizedBox(
-                        width: double.infinity,
-                        child: Tab(text: 'Appointments')),
+                        width: double.infinity, child: Tab(text: 'Термини')),
                     SizedBox(
-                        width: double.infinity,
-                        child: Tab(text: 'Availability')),
+                        width: double.infinity, child: Tab(text: 'Достапност')),
                   ],
                 ),
               ),
