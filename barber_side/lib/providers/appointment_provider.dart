@@ -15,7 +15,8 @@ class AppointmentNotifier extends StateNotifier<List<Appointment>> {
   final BarberService repository;
   AppointmentNotifier(this.repository) : super([]);
   Future<void> fetchAppointments() async {
-    final appointments = await repository.fetchAppointments('');
+    final appointments =
+        await repository.fetchAppointments('?order_by=datetime&order=asc');
     state = appointments; // Notify listeners with the updated list
   }
 

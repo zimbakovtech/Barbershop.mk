@@ -12,12 +12,16 @@ class Schedule extends Iterable<AvailableDate> {
   factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
       currentDate: json['current_date'],
-      slots: List<String>.from(json['slots']),
+      slots: (json['slots'] as List<dynamic>?)
+              ?.map((slot) => slot.toString())
+              .toList() ??
+          [],
       availableDates: (json['available_dates'] as List<dynamic>)
           .map((date) => AvailableDate.fromJson(date))
           .toList(),
     );
   }
+
   @override
   Iterator<AvailableDate> get iterator => availableDates.iterator;
 }

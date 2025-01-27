@@ -177,11 +177,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
         .toList();
     final todaysAppointments = _getAppointmentsForSelectedDate(allAppointments);
     final availabilitySlots = ref.watch(availabilityProvider);
-    for (final slot in availabilitySlots) {
-      if (slot['status'] == 'appointment') {
-        availabilitySlots.remove(slot);
-      }
-    }
+    availabilitySlots.removeWhere((slot) => slot['status'] == 'appointment');
     return DefaultTabController(
       length: 2,
       child: Scaffold(

@@ -4,6 +4,7 @@ import 'package:barbers_mk/widgets/client_details.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
 
 class Clients extends StatefulWidget {
   const Clients({super.key});
@@ -15,6 +16,9 @@ class Clients extends StatefulWidget {
 class _ClientsState extends State<Clients> {
   final barberService = BarberService();
   List<Client> clients = [];
+  List<Client> filteredClients = [];
+  String searchQuery = '';
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -25,28 +29,102 @@ class _ClientsState extends State<Clients> {
   Future<void> fetchClients() async {
     try {
       clients = await barberService.fetchClients();
+      filteredClients = clients; // Initialize filtered list
       setState(() {});
     } finally {}
+  }
+
+  void _onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      setState(() {
+        searchQuery = query.toLowerCase();
+        filteredClients = clients
+            .where((client) =>
+                client.fullName.toLowerCase().contains(searchQuery) ||
+                client.phoneNumber.toLowerCase().contains(searchQuery))
+            .toList();
+      });
+    });
+  }
+
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              onChanged: _onSearchChanged,
+              onSubmitted: (value) async {
+                await fetchClients();
+              },
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search, color: Colors.white70),
+                hintText: 'Search by name...',
+                hintStyle: const TextStyle(color: Colors.white70),
+                contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                fillColor: navy,
+                filled: true,
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: navy),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: navy),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: orange),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                constraints: const BoxConstraints(minHeight: 45),
+              ),
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background, // Dark background
-      appBar: AppBar(title: const Text('Clients'), backgroundColor: background),
-      body: ListView.builder(
-        itemCount: clients.length,
-        itemBuilder: (context, index) {
-          final client = clients[index];
-          return ClientCard(
-            id: client.id,
-            fullName: client.fullName,
-            phoneNumber: client.phoneNumber,
-            profilePicture: client.profilePicture ?? 'lib/assets/avatar.jpg',
-            lastAppointmentDate: DateTime.parse(client.lastAppointmentDate),
-            totalAppointments: client.totalAppointments,
-          );
-        },
+      appBar: AppBar(
+        title: const Text('Clients'),
+        backgroundColor: background,
+      ),
+      body: Column(
+        children: [
+          _buildSearchBar(), // Add search bar here
+          Expanded(
+            child: filteredClients.isNotEmpty
+                ? ListView.builder(
+                    itemCount: filteredClients.length,
+                    itemBuilder: (context, index) {
+                      final client = filteredClients[index];
+                      return ClientCard(
+                        id: client.id,
+                        fullName: client.fullName,
+                        phoneNumber: client.phoneNumber,
+                        profilePicture:
+                            client.profilePicture ?? 'lib/assets/avatar.jpg',
+                        lastAppointmentDate:
+                            DateTime.parse(client.lastAppointmentDate),
+                        totalAppointments: client.totalAppointments,
+                      );
+                    },
+                  )
+                : const Center(
+                    child: Text(
+                      'No clients found.',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+          ),
+        ],
       ),
     );
   }
@@ -72,7 +150,6 @@ class ClientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Format the date in a user-friendly way (e.g. "Jan 20, 2025"):
     final formattedDate =
         DateFormat('MMM dd, yyyy').format(lastAppointmentDate);
 
@@ -95,7 +172,6 @@ class ClientCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           child: Row(
             children: [
-              // Profile picture on the left
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: profilePicture != 'lib/assets/avatar.jpg'
@@ -113,13 +189,10 @@ class ClientCard extends StatelessWidget {
                       ),
               ),
               const SizedBox(width: 12),
-
-              // Main text section
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Last appointment on top
                     Text(
                       'Last Appointment: $formattedDate',
                       style: TextStyle(
@@ -128,8 +201,6 @@ class ClientCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-
-                    // Client’s name in the middle
                     Text(
                       fullName,
                       style: const TextStyle(
@@ -139,8 +210,6 @@ class ClientCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-
-                    // Calendar icon and the total appointment count
                     Row(
                       children: [
                         const Icon(
@@ -150,7 +219,7 @@ class ClientCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '$totalAppointments термини',
+                          '$totalAppointments appointments',
                           style: TextStyle(
                             color: Colors.grey[400],
                             fontSize: 14,
@@ -161,8 +230,6 @@ class ClientCard extends StatelessWidget {
                   ],
                 ),
               ),
-
-              // Arrow on the right
               const Icon(
                 Icons.chevron_right,
                 size: 30,

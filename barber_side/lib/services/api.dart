@@ -40,7 +40,7 @@ class ApiFetcher {
 
     final headers = {
       ...defaultHeaders,
-      if (_token != null) 'Authorization': 'Bearer $_token',
+      'Authorization': 'Bearer $_token',
       if (requestOptions.headers != null) ...requestOptions.headers!,
     };
 

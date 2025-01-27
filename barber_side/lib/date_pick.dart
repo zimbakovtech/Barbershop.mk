@@ -46,20 +46,31 @@ class _DatePickState extends State<DatePick> {
   }
 
   Future<Schedule> _fetchAvailableDates() async {
-    final schedule =
-        await barberService.fetchSchedule(barberId: widget.barberId);
+    try {
+      final schedule =
+          await barberService.fetchSchedule(barberId: widget.barberId);
 
-    setState(() {
-      _availableDates = {
-        for (var dateInfo in schedule)
-          _normalizeDate(DateTime.parse(dateInfo.date)): dateInfo.isAvailable
-      };
-    });
-    return schedule;
+      setState(() {
+        _availableDates = {
+          for (var dateInfo in schedule.availableDates)
+            _normalizeDate(DateTime.parse(dateInfo.date)): dateInfo.isAvailable
+        };
+      });
+
+      return schedule;
+    } catch (error) {
+      setState(() {
+        _availableDates = {};
+      });
+      rethrow;
+    }
   }
 
   bool _isDateAvailable(DateTime date) {
-    return _availableDates[_normalizeDate(date)] ?? false;
+    final normalized = _normalizeDate(date);
+    return _availableDates.containsKey(normalized)
+        ? _availableDates[normalized]!
+        : false;
   }
 
   void _onDateSelected(DateTime selectedDate) async {

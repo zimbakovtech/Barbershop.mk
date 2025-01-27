@@ -33,35 +33,6 @@ class BarberService {
     };
   }
 
-  Future<void> bookAppointment(int barberId, String clientName, int serviceId,
-      DateTime date, String time) async {
-    final endpoint = 'barbers/$barberId/appointments';
-    final body = {
-      'service_id': serviceId,
-      'client_name': clientName,
-      'date': DateFormat('yyyy-MM-dd').format(date),
-      'time': time,
-    };
-
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.post(endpoint, body: body, headers: headers);
-    } catch (e) {
-      throw Exception('Error booking appointment: $e');
-    }
-  }
-
-  Future<void> cancelAppointment(int appointmentId) async {
-    final endpoint = 'appointments/$appointmentId/cancel';
-
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.put(endpoint, headers: headers);
-    } catch (e) {
-      throw Exception('Error cancelling appointment: $e');
-    }
-  }
-
   Future<List<Barber>> fetchBarbers({required int barbershopId}) async {
     final String endpoint = 'establishments/$barbershopId';
 
@@ -78,31 +49,6 @@ class BarberService {
     }
   }
 
-  Future<List<Barbershop>> fetchBarbershops(
-      {String? search, String? cityId}) async {
-    const String apiUrl = 'establishments';
-    Map<String, String> queryParams = {};
-
-    if (search != null && search.isNotEmpty) {
-      queryParams['search'] = search;
-    }
-    if (cityId != null && cityId != 'Any') {
-      queryParams['city'] = cityId;
-    }
-
-    final uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);
-
-    try {
-      final headers = await _getHeaders();
-      final response = await apiFetcher.get(uri.toString(), headers: headers);
-      final List<dynamic> data = response['content'];
-
-      return data.map((shop) => Barbershop.fromJson(shop)).toList();
-    } catch (error) {
-      throw Exception('Error fetching barbershops: $error');
-    }
-  }
-
   Future<List<Service>> fetchServices({required int barberId}) async {
     try {
       final headers = await _getHeaders();
@@ -113,79 +59,6 @@ class BarberService {
       return services.map((service) => Service.fromJson(service)).toList();
     } catch (error) {
       throw Exception('Error fetching services: $error');
-    }
-  }
-
-  Future<void> updateService(
-      {required int serviceId,
-      required int price,
-      required int duration,
-      required int userId}) async {
-    final body = {
-      'service_id': serviceId,
-      'price': price,
-      'duration': duration,
-    };
-
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.post('barbers/$userId/services',
-          body: body, headers: headers);
-    } catch (e) {
-      throw Exception('Error updating service: $e');
-    }
-  }
-
-  Future<List> fetchSlots({required String date}) async {
-    try {
-      final headers = await _getHeaders();
-      final response = await apiFetcher.get('barbers/schedule/slots?date=$date',
-          headers: headers);
-
-      return response['slots'];
-    } catch (error) {
-      throw Exception('Error fetching slots: $error');
-    }
-  }
-
-  Future<void> updateSlots(List slots, String date) async {
-    final body = {'date': date, 'slots': slots};
-
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.post('barbers/schedule/slots',
-          body: body, headers: headers);
-    } catch (e) {
-      throw Exception('Error updating slots: $e');
-    }
-  }
-
-  Future<void> updatePassword(String oldPassword, String newPassword) async {
-    final body = {
-      'old_password': oldPassword,
-      'new_password': newPassword,
-      'password_confirmation': newPassword,
-    };
-
-    try {
-      final headers = await _getHeaders();
-      await apiFetcher.put('users/password', body: body, headers: headers);
-    } catch (e) {
-      throw Exception('Error updating password: $e');
-    }
-  }
-
-  Future<List<Client>> fetchClients() async {
-    try {
-      final headers = await _getHeaders();
-      final response =
-          await apiFetcher.get('barbers/clients', headers: headers);
-
-      return (response['content'] as List<dynamic>)
-          .map((client) => Client.fromJson(client as Map<String, dynamic>))
-          .toList();
-    } catch (error) {
-      throw Exception('Error fetching clients: $error');
     }
   }
 
@@ -206,6 +79,39 @@ class BarberService {
           .toList();
     } catch (error) {
       throw Exception('Error fetching appointments: $error');
+    }
+  }
+
+  Future<List<Client>> fetchClients({String? search}) async {
+    String apiUrl = 'barbers/clients';
+    Map<String, String> queryParams = {};
+    if (search != null && search.isNotEmpty) {
+      queryParams['search'] = search;
+    }
+
+    final uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);
+
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get(uri.toString(), headers: headers);
+
+      return (response['content'] as List<dynamic>)
+          .map((client) => Client.fromJson(client as Map<String, dynamic>))
+          .toList();
+    } catch (error) {
+      throw Exception('Error fetching clients: $error');
+    }
+  }
+
+  Future<List> fetchSlots({required String date}) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get('barbers/schedule/slots?date=$date',
+          headers: headers);
+
+      return response['slots'];
+    } catch (error) {
+      throw Exception('Error fetching slots: $error');
     }
   }
 
@@ -243,6 +149,82 @@ class BarberService {
       return slots.map((slot) => slot.toString()).toList();
     } catch (error) {
       throw Exception('Error fetching times: $error');
+    }
+  }
+
+  Future<void> bookAppointment(int barberId, String clientName, int serviceId,
+      DateTime date, String time) async {
+    final endpoint = 'barbers/$barberId/appointments';
+    final body = {
+      'service_id': serviceId,
+      'client_name': clientName,
+      'date': DateFormat('yyyy-MM-dd').format(date),
+      'time': time,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post(endpoint, body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error booking appointment: $e');
+    }
+  }
+
+  Future<void> cancelAppointment(int appointmentId) async {
+    final endpoint = 'appointments/$appointmentId/cancel';
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.put(endpoint, headers: headers);
+    } catch (e) {
+      throw Exception('Error cancelling appointment: $e');
+    }
+  }
+
+  Future<void> updateService(
+      {required int serviceId,
+      required int price,
+      required int duration,
+      required int userId}) async {
+    final body = {
+      'service_id': serviceId,
+      'price': price,
+      'duration': duration,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/$userId/services',
+          body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating service: $e');
+    }
+  }
+
+  Future<void> updateSlots(List slots, String date) async {
+    final body = {'date': date, 'slots': slots};
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/schedule/slots',
+          body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating slots: $e');
+    }
+  }
+
+  Future<void> updatePassword(String oldPassword, String newPassword) async {
+    final body = {
+      'old_password': oldPassword,
+      'new_password': newPassword,
+      'password_confirmation': newPassword,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.put('users/password', body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating password: $e');
     }
   }
 
