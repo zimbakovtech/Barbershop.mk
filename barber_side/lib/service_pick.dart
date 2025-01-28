@@ -54,20 +54,10 @@ class _ServicePickState extends State<ServicePick> {
         SingleChildScrollView(
           child: Column(
             children: [
-              const SizedBox(height: 50),
               Center(
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Одберете услуга',
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.white,
-                      ),
-                    ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 20),
                     isLoading
                         ? const CircularProgressIndicator() // Show loading indicator
                         : ServiceList(

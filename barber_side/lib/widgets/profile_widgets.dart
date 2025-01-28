@@ -5,6 +5,7 @@ import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/edit_services.dart';
 import 'package:barbers_mk/widgets/statistics.dart';
+import 'package:barbers_mk/widgets/working_hours.dart';
 import 'package:flutter/material.dart';
 
 class BuildProfileItem extends StatefulWidget {
@@ -55,6 +56,13 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const EditServices()),
+            );
+          } else if (widget.title == "Работни часови") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      EditWorkingHours(barberId: widget.user!.id)),
             );
           }
         });

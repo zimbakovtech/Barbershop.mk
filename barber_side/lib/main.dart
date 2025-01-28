@@ -1,5 +1,6 @@
 import 'package:barbers_mk/screens/navigation.dart';
 import 'package:barbers_mk/services/firebase_messaging_service.dart';
+import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,16 +38,16 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? token = prefs.getString('auth_token');
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? token = prefs.getString('auth_token');
 
-    if (token != null) {
-      try {
+      if (token != null) {
         _homeScreen = const BarbershopApp();
-      } catch (e) {
+      } else {
         _homeScreen = const LoginScreen();
       }
-    } else {
+    } catch (e) {
       _homeScreen = const LoginScreen();
     }
 
@@ -64,7 +65,7 @@ class _MyAppState extends State<MyApp> {
       home: _isCheckingLogin
           ? const Scaffold(
               body: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(color: orange),
               ),
             )
           : _homeScreen,

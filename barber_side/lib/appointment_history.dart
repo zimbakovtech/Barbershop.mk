@@ -56,7 +56,7 @@ class AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
       appBar: AppBar(
         elevation: 0.0,
         scrolledUnderElevation: 0,
-        backgroundColor: navy,
+        backgroundColor: background,
         title: const Text('Историја на термини'),
       ),
       body: FutureBuilder<List<Appointment>>(
@@ -87,10 +87,14 @@ class AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
               final statusColor = _getStatusColor(status ?? 'unknown');
               final statusIcon = _getStatusIcon(status ?? 'unknown');
 
-              return AppointmentListCard(
-                  appointment: appointment,
-                  statusColor: statusColor,
-                  statusIcon: statusIcon);
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+                child: AppointmentListCard(
+                    appointment: appointment,
+                    statusColor: statusColor,
+                    statusIcon: statusIcon),
+              );
             },
           );
         },

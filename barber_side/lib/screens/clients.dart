@@ -51,6 +51,17 @@ class _ClientsState extends State<Clients> {
     });
   }
 
+  void onSubmit(String query) {
+    setState(() {
+      searchQuery = query.toLowerCase();
+      filteredClients = clients
+          .where((client) =>
+              client.fullName.toLowerCase().contains(searchQuery) ||
+              client.phoneNumber.toLowerCase().contains(searchQuery))
+          .toList();
+    });
+  }
+
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -59,12 +70,7 @@ class _ClientsState extends State<Clients> {
           Expanded(
             child: TextField(
               onChanged: _onSearchChanged,
-              onSubmitted: (value) async {
-                setState(() {
-                  isLoading = true;
-                });
-                await fetchClients();
-              },
+              onSubmitted: onSubmit,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search, color: Colors.white70),
                 hintText: 'Search by name...',

@@ -17,8 +17,8 @@ class AvailabilityNotifier extends StateNotifier<List> {
     state = slots;
   }
 
-  Future<void> updateSlots(List slots, String date) async {
-    await repository.updateSlots(slots, date);
+  Future<void> updateSlots(List slots, String date, bool toggle) async {
+    await repository.updateSlots(slots, date, toggle);
     await fetchSlots(date);
   }
 }

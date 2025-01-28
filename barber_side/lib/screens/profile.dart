@@ -1,62 +1,19 @@
-import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/profile_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/models/user.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final User? user;
+  const Profile({super.key, this.user});
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
-  final BarberService _barberService = BarberService();
-
-  User? user;
-  bool isLoading = true;
   String? language = 'Македонски';
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchUserInfo();
-  }
-
-  void _fetchUserInfo() async {
-    try {
-      user = await _barberService.getUserInfo();
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(
-            color: orange,
-          ),
-        ),
-      );
-    }
-
-    if (user == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text(
-            'Failed to load user information.',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       body: Container(
         color: const Color.fromARGB(255, 19, 20, 21),
@@ -69,13 +26,13 @@ class _ProfileState extends State<Profile> {
                   children: [
                     CircleAvatar(
                       radius: 55,
-                      backgroundImage: user!.profilePicture != null
-                          ? NetworkImage(user!.profilePicture!)
+                      backgroundImage: widget.user!.profilePicture != null
+                          ? NetworkImage(widget.user!.profilePicture!)
                           : const AssetImage('lib/assets/barber.jpg'),
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '${user!.firstName} ${user!.lastName}',
+                      '${widget.user!.firstName} ${widget.user!.lastName}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
@@ -84,7 +41,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      user!.email!,
+                      widget.user!.email!,
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
@@ -100,29 +57,34 @@ class _ProfileState extends State<Profile> {
                   context: context,
                   title: 'Промени лозинка',
                   icon: Icons.lock,
-                  user: user!),
+                  user: widget.user),
               BuildProfileItem(
                   context: context,
                   title: 'Промени телефон',
                   icon: Icons.phone_outlined,
-                  user: user!),
+                  user: widget.user),
               const Divider(color: Colors.white54),
               const SizedBox(height: 10),
               BuildProfileItem(
                   context: context,
                   title: 'Статистика',
                   icon: Icons.bar_chart,
-                  user: user!),
+                  user: widget.user),
               BuildProfileItem(
                   context: context,
                   title: 'Мои услуги',
                   icon: Icons.cut,
-                  user: user!),
+                  user: widget.user),
+              BuildProfileItem(
+                  context: context,
+                  title: 'Работни часови',
+                  icon: Icons.schedule,
+                  user: widget.user),
               BuildProfileItem(
                   context: context,
                   title: 'Историjа',
                   icon: Icons.history,
-                  user: user!),
+                  user: widget.user),
               const Divider(color: Colors.white54),
               const SizedBox(height: 10),
               LanguageSection(language: language),

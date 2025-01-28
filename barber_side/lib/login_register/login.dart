@@ -6,7 +6,6 @@ import '../screens/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/widgets.dart';
 import '../widgets/colors.dart';
-import '../models/user.dart';
 import '/services/barber_service.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String _statusMessage = '';
-  User? _user;
 
   @override
   void initState() {
@@ -43,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     try {
-      _user = await BarberService().login(email, password);
+      await BarberService().login(email, password);
 
       if (mounted) {
         setState(() {
@@ -52,17 +50,10 @@ class _LoginScreenState extends State<LoginScreen> {
               prefs.getString('fcmToken') ?? 'NoDeviceToken';
           generalService.sendDeviceToken(fcmToken);
         });
-        if (_user!.userType == 'barber') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const BarbershopApp()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const BarbershopApp()),
-          );
-        }
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const BarbershopApp()),
+        );
       }
     } catch (e) {
       if (mounted) {

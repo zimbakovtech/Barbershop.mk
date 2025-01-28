@@ -355,39 +355,84 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
           right: 15,
           child: SizedBox(
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () async {
-                final updatedSlots = widget.availabilitySlots
-                    .where((slot) => widget.availabilitySelectedSlots
-                        .contains(slot['time_slot']))
-                    .map((slot) => slot['time_slot'].toString())
-                    .toList();
-                await widget.ref
-                    .read(availabilityProvider.notifier)
-                    .updateSlots(
-                      updatedSlots,
-                      DateFormat('yyyy-MM-dd')
-                          .format(widget.availabilitySelectedDate),
-                    );
-                if (mounted) {
-                  setState(() {
-                    widget.availabilitySelectedSlots.clear();
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: orange,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final updatedSlots = widget.availabilitySlots
+                          .where((slot) => widget.availabilitySelectedSlots
+                              .contains(slot['time_slot']))
+                          .map((slot) => slot['time_slot'].toString())
+                          .toList();
+                      await widget.ref
+                          .read(availabilityProvider.notifier)
+                          .updateSlots(
+                              updatedSlots,
+                              DateFormat('yyyy-MM-dd')
+                                  .format(widget.availabilitySelectedDate),
+                              true);
+                      if (mounted) {
+                        setState(() {
+                          widget.availabilitySelectedSlots.clear();
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 13.0),
+                      child: Text(
+                        'Отвори',
+                        style: TextStyle(fontSize: 17.0, color: textPrimary),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 13.0),
-                child: Text(
-                  'Отвори / Затвори',
-                  style: TextStyle(fontSize: 17.0, color: textPrimary),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final updatedSlots = widget.availabilitySlots
+                          .where((slot) => widget.availabilitySelectedSlots
+                              .contains(slot['time_slot']))
+                          .map((slot) => slot['time_slot'].toString())
+                          .toList();
+                      await widget.ref
+                          .read(availabilityProvider.notifier)
+                          .updateSlots(
+                              updatedSlots,
+                              DateFormat('yyyy-MM-dd')
+                                  .format(widget.availabilitySelectedDate),
+                              false);
+                      if (mounted) {
+                        setState(() {
+                          widget.availabilitySelectedSlots.clear();
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 13.0),
+                      child: Text(
+                        'Затвори',
+                        style: TextStyle(fontSize: 17.0, color: textPrimary),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         )

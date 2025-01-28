@@ -19,7 +19,7 @@ class BarberCardWidget extends StatelessWidget {
       color: navy,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: const BorderSide(color: Colors.grey, width: 1.0),
+        side: const BorderSide(color: lightBackground, width: 1.0),
       ),
       elevation: 5.0,
       child: Padding(
@@ -36,7 +36,7 @@ class BarberCardWidget extends StatelessWidget {
               child: Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.grey, width: 1.0),
+                  border: Border.all(color: lightBackground, width: 1.0),
                 ),
               ),
             ),

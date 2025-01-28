@@ -1,3 +1,4 @@
+import 'package:barbers_mk/models/availability.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 import 'package:intl/intl.dart';
@@ -152,6 +153,54 @@ class BarberService {
     }
   }
 
+  Future<List<WorkingHours>> fetchWorkingHours(int barberId) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get('barbers/$barberId/availabilities',
+          headers: headers);
+      final schedule = response['schedule'] as Map<String, dynamic>;
+      return schedule.entries.map((entry) {
+        final day = entry.key;
+        final timeSlots = entry.value as List<dynamic>;
+        return WorkingHours.fromJson(day, timeSlots);
+      }).toList();
+    } catch (error) {
+      throw Exception('Error fetching working hours: $error');
+    }
+  }
+
+  Future<void> deleteAvailability(int barberId, String day) async {
+    final endpoint = 'barbers/$barberId/availabilities?day_of_week=$day';
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.delete(endpoint, headers: headers);
+    } catch (e) {
+      throw Exception('Error deleting availability: $e');
+    }
+  }
+
+  Future<void> updateAvailability(
+      {required int barberId,
+      required String day,
+      required String start,
+      required String end}) async {
+    final body = {
+      'barber_id': barberId,
+      'day_of_week': day,
+      'start_time': start,
+      'end_time': end,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/$barberId/availabilities',
+          body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating availability: $e');
+    }
+  }
+
   Future<void> bookAppointment(int barberId, String clientName, int serviceId,
       DateTime date, String time) async {
     final endpoint = 'barbers/$barberId/appointments';
@@ -201,8 +250,8 @@ class BarberService {
     }
   }
 
-  Future<void> updateSlots(List slots, String date) async {
-    final body = {'date': date, 'slots': slots};
+  Future<void> updateSlots(List slots, String date, bool toggle) async {
+    final body = {'date': date, 'slots': slots, "open": toggle};
 
     try {
       final headers = await _getHeaders();

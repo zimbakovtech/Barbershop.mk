@@ -40,13 +40,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
-      appBar: AppBar(
-        backgroundColor: background,
-        elevation: 0,
-        title: const Text("Детали", style: TextStyle(color: Colors.white)),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
           Padding(

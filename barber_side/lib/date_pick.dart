@@ -3,7 +3,6 @@ import 'package:barbers_mk/models/service.dart';
 import 'package:flutter/material.dart';
 import 'services/barber_service.dart';
 import 'package:intl/intl.dart';
-import 'package:barbers_mk/widgets/colors.dart';
 import 'widgets/widgets.dart';
 
 class DatePick extends StatefulWidget {
@@ -110,7 +109,7 @@ class _DatePickState extends State<DatePick> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: background,
+      backgroundColor: Colors.transparent,
       body: FutureBuilder<Schedule>(
           future: _scheduleFuture,
           builder: (context, snapshot) {
@@ -123,11 +122,6 @@ class _DatePickState extends State<DatePick> {
               padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
               child: ListView(
                 children: [
-                  Text(
-                    'Одбери термин за ${widget.service.name} со ${widget.barberName}',
-                    style: const TextStyle(color: Colors.white, fontSize: 19),
-                    textAlign: TextAlign.center,
-                  ),
                   const SizedBox(height: 20),
                   // Use the CalendarWidget
                   CalendarWidget(
