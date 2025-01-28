@@ -61,14 +61,14 @@ class _ProfileState extends State<Profile> {
       body: Container(
         color: const Color.fromARGB(255, 19, 20, 21),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(15.0, 20.0, 15.0, 80.0),
+          padding: const EdgeInsets.fromLTRB(15.0, 35.0, 15.0, 80.0),
           child: ListView(
             children: [
               Center(
                 child: Column(
                   children: [
                     CircleAvatar(
-                      radius: 50,
+                      radius: 55,
                       backgroundImage: user!.profilePicture != null
                           ? NetworkImage(user!.profilePicture!)
                           : const AssetImage('lib/assets/barber.jpg'),

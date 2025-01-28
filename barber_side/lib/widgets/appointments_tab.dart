@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 class AppointmentTab extends StatelessWidget {
   final DateTime currentMonth;
+  final bool isLoading;
   final DateTime currentWeekStart;
   final DateTime selectedDate;
   final VoidCallback onNextWeek;
@@ -20,6 +21,7 @@ class AppointmentTab extends StatelessWidget {
   const AppointmentTab({
     super.key,
     required this.currentMonth,
+    required this.isLoading,
     required this.currentWeekStart,
     required this.selectedDate,
     required this.onNextWeek,
@@ -156,33 +158,39 @@ class AppointmentTab extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                if (todaysAppointments.isEmpty)
-                  const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: Text('Нема термини за одбраниот ден',
-                          style: TextStyle(color: Colors.grey)),
-                    ),
-                  )
-                else
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 85),
-                    itemCount: todaysAppointments.length,
-                    itemBuilder: (context, index) {
-                      final appointment = todaysAppointments[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3.0),
-                        child: AppointmentCardWidget(
-                          haveCall: true,
-                          haveMenu: true,
-                          appointment: appointment,
-                          barberService: barberService,
+                isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: orange,
                         ),
-                      );
-                    },
-                  ),
+                      )
+                    : todaysAppointments.isEmpty
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(20.0),
+                              child: Text('Нема термини за одбраниот ден',
+                                  style: TextStyle(color: Colors.grey)),
+                            ),
+                          )
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 85),
+                            itemCount: todaysAppointments.length,
+                            itemBuilder: (context, index) {
+                              final appointment = todaysAppointments[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 3.0),
+                                child: AppointmentCardWidget(
+                                  haveCall: true,
+                                  haveMenu: true,
+                                  appointment: appointment,
+                                  barberService: barberService,
+                                ),
+                              );
+                            },
+                          ),
               ],
             ),
           ),

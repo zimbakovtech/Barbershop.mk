@@ -19,6 +19,7 @@ class _ClientsState extends State<Clients> {
   List<Client> filteredClients = [];
   String searchQuery = '';
   Timer? _debounce;
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -30,7 +31,9 @@ class _ClientsState extends State<Clients> {
     try {
       clients = await barberService.fetchClients();
       filteredClients = clients; // Initialize filtered list
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
     } finally {}
   }
 
@@ -57,6 +60,9 @@ class _ClientsState extends State<Clients> {
             child: TextField(
               onChanged: _onSearchChanged,
               onSubmitted: (value) async {
+                setState(() {
+                  isLoading = true;
+                });
                 await fetchClients();
               },
               decoration: InputDecoration(
@@ -117,12 +123,15 @@ class _ClientsState extends State<Clients> {
                       );
                     },
                   )
-                : const Center(
-                    child: Text(
-                      'No clients found.',
-                      style: TextStyle(color: Colors.white70),
-                    ),
-                  ),
+                : isLoading
+                    ? const Center(
+                        child: CircularProgressIndicator(color: orange))
+                    : const Center(
+                        child: Text(
+                          'No clients found',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
           ),
         ],
       ),

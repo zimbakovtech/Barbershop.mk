@@ -23,6 +23,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
   late DateTime _availabilityCurrentWeekStart;
   late DateTime _availabilitySelectedDate;
   final Set<String> _availabilitySelectedSlots = {};
+  bool isLoading = true;
   final BarberService barberService = BarberService();
 
   @override
@@ -32,13 +33,19 @@ class AppointmentsState extends ConsumerState<Appointments> {
     _currentMonth = DateTime(now.year, now.month);
     _currentWeekStart = _findStartOfWeek(now);
     _selectedDate = now;
+
     _availabilityCurrentMonth = DateTime(now.year, now.month);
     _availabilityCurrentWeekStart = _availabilityFindStartOfWeek(now);
     _availabilitySelectedDate = now;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Initial fetch for availability
       ref
           .read(availabilityProvider.notifier)
           .fetchSlots(DateFormat('yyyy-MM-dd').format(now));
+    });
+    setState(() {
+      isLoading = false;
     });
   }
 
@@ -75,15 +82,23 @@ class AppointmentsState extends ConsumerState<Appointments> {
     });
   }
 
-  void _onDaySelected(DateTime day) {
+  void _onDaySelected(DateTime day) async {
     setState(() {
+      isLoading = true;
       _selectedDate = day;
+    });
+    await ref
+        .read(appointmentProvider.notifier)
+        .fetchAppointments(date: DateFormat('yyyy-MM-dd').format(day));
+    setState(() {
+      isLoading = false;
     });
   }
 
   String _formatMonth(DateTime date) {
     return toBeginningOfSentenceCase(
-        DateFormat('MMMM yyyy', 'mk').format(date));
+      DateFormat('MMMM yyyy', 'mk').format(date),
+    );
   }
 
   List<DateTime> _getCurrentWeekDates() {
@@ -93,6 +108,8 @@ class AppointmentsState extends ConsumerState<Appointments> {
 
   DateTime _stripTime(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 
+  // This still filters by date in the UI (optional safety net),
+  // but the main filtering is now done on the backend via fetchAppointments.
   List<dynamic> _getAppointmentsForSelectedDate(List<dynamic> allAppointments) {
     final grouped = <DateTime, List<dynamic>>{};
     for (final apt in allAppointments) {
@@ -161,7 +178,8 @@ class AppointmentsState extends ConsumerState<Appointments> {
 
   String _availabilityFormatMonth(DateTime date) {
     return toBeginningOfSentenceCase(
-        DateFormat('MMMM yyyy', 'mk').format(date));
+      DateFormat('MMMM yyyy', 'mk').format(date),
+    );
   }
 
   List<DateTime> _availabilityGetCurrentWeekDates() {
@@ -175,9 +193,14 @@ class AppointmentsState extends ConsumerState<Appointments> {
         .watch(appointmentProvider)
         .where((appointment) => appointment.status != 'canceled')
         .toList();
+
+    // These are the appointments shown in the UI for the selected date
     final todaysAppointments = _getAppointmentsForSelectedDate(allAppointments);
+
+    // Watch availability and remove any slots that are actual appointments
     final availabilitySlots = ref.watch(availabilityProvider);
     availabilitySlots.removeWhere((slot) => slot['status'] == 'appointment');
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -220,6 +243,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
                 children: [
                   AppointmentTab(
                     currentMonth: _currentMonth,
+                    isLoading: isLoading,
                     currentWeekStart: _currentWeekStart,
                     selectedDate: _selectedDate,
                     onNextWeek: _goToNextWeek,

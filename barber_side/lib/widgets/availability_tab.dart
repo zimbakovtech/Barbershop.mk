@@ -39,6 +39,15 @@ class AvailabilityTab extends StatefulWidget {
 }
 
 class _AvailabilityTabState extends State<AvailabilityTab> {
+  void _selectAllSlots() {
+    setState(() {
+      widget.availabilitySelectedSlots.clear();
+      for (var slot in widget.availabilitySlots) {
+        widget.availabilitySelectedSlots.add(slot['time_slot']);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final weekDates = widget.availabilityGetCurrentWeekDates();
@@ -179,16 +188,32 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(
-                          toBeginningOfSentenceCase(
-                            DateFormat('EEEE - dd.MM.yyyy', 'mk')
-                                .format(widget.availabilitySelectedDate),
-                          )!,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              toBeginningOfSentenceCase(
+                                DateFormat('EEEE - dd.MM.yyyy', 'mk')
+                                    .format(widget.availabilitySelectedDate),
+                              )!,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: _selectAllSlots,
+                              child: const Text(
+                                'Select all',
+                                style: TextStyle(
+                                  color: orange,
+                                  fontSize: 15,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       GridView.builder(
