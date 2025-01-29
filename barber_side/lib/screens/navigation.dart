@@ -82,7 +82,7 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: navy,
       body: isLoading
           ? Container(
               color: navy,
