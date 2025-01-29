@@ -76,7 +76,7 @@ class CalendarWidget extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.all(3.0),
                   child: GestureDetector(
-                    onTap: isAvailable ? () => onDateSelected(day) : null,
+                    onTap: () => onDateSelected(day),
                     child: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -208,7 +208,7 @@ class AvailableTimesWidget extends StatelessWidget {
       );
     } else if (availableTimes.isEmpty) {
       return const Text(
-        'No available times for this date.',
+        'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
         style: TextStyle(fontSize: 16),
         textAlign: TextAlign.center,
       );

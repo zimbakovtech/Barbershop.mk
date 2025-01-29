@@ -110,8 +110,6 @@ class AppointmentsState extends ConsumerState<Appointments> {
 
   DateTime _stripTime(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 
-  // This still filters by date in the UI (optional safety net),
-  // but the main filtering is now done on the backend via fetchAppointments.
   List<dynamic> _getAppointmentsForSelectedDate(List<dynamic> allAppointments) {
     final grouped = <DateTime, List<dynamic>>{};
     for (final apt in allAppointments) {

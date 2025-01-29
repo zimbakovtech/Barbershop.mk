@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:barbers_mk/models/appointment.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:barbers_mk/providers/appointment_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
@@ -51,11 +50,10 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                 children: [
                   Text(
                     '${widget.appointment.clientName}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: textSecondary,
                       fontWeight: FontWeight.bold,
                       fontSize: 14,
-                      fontFamily: GoogleFonts.montserrat().fontFamily,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -78,10 +76,9 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                             child: Text(
                               widget.appointment.service?.name ?? '',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.grey,
                                 fontSize: 10,
-                                fontFamily: GoogleFonts.roboto().fontFamily,
                               ),
                             ),
                           ),
@@ -93,20 +90,18 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                         children: [
                           Text(
                             widget.appointment.time ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: textPrimary,
                               fontSize: 23,
                               fontWeight: FontWeight.bold,
-                              fontFamily: GoogleFonts.lato().fontFamily,
                             ),
                           ),
                           const SizedBox(width: 10),
                           Text(
                             widget.appointment.date ?? '',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: textSecondary,
                               fontSize: 14,
-                              fontFamily: GoogleFonts.lato().fontFamily,
                             ),
                           ),
                         ],
