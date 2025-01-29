@@ -212,7 +212,10 @@ class AppointmentsState extends ConsumerState<Appointments> {
           centerTitle: false,
           scrolledUnderElevation: 0.0,
           backgroundColor: background,
-          title: const Text('Термини'),
+          title: const Padding(
+            padding: EdgeInsets.only(left: 10.0),
+            child: Text('Термини'),
+          ),
           actions: [
             Padding(
               padding: const EdgeInsets.only(right: 10.0),

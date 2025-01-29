@@ -58,7 +58,7 @@ class _EditServicesState extends State<EditServices> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          icon: const Icon(Icons.arrow_back_ios, color: orange),
+          icon: const Icon(Icons.arrow_back_ios),
         ),
       ),
       body: isLoading

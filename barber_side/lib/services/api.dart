@@ -161,5 +161,6 @@ final apiFetcher = ApiFetcher(
   {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
+    'Accept-Language': 'mk',
   },
 );

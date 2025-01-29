@@ -107,7 +107,10 @@ class _ClientsState extends State<Clients> {
     return Scaffold(
       backgroundColor: background, // Dark background
       appBar: AppBar(
-        title: const Text('Клиенти'),
+        title: const Padding(
+          padding: EdgeInsets.only(left: 10.0),
+          child: Text('Клиенти'),
+        ),
         backgroundColor: background,
         centerTitle: false,
         actions: [
