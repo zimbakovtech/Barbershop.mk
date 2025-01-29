@@ -33,21 +33,22 @@ class _DatePickState extends State<DatePick> {
   List<String> _availableTimes = [];
   bool _isFetchingTimes = false;
   String? _fetchTimesError;
+  int currentMonth = DateTime.now().month; // Store month as int
 
   @override
   void initState() {
     super.initState();
-    _scheduleFuture = _fetchAvailableDates();
+    _scheduleFuture = _fetchAvailableDates(currentMonth);
   }
 
   DateTime _normalizeDate(DateTime date) {
     return DateTime(date.year, date.month, date.day);
   }
 
-  Future<Schedule> _fetchAvailableDates() async {
+  Future<Schedule> _fetchAvailableDates(int month) async {
     try {
-      final schedule =
-          await barberService.fetchSchedule(barberId: widget.barberId);
+      final schedule = await barberService.fetchSchedule(
+          barberId: widget.barberId, month: month.toString());
 
       setState(() {
         _availableDates = {
@@ -66,10 +67,7 @@ class _DatePickState extends State<DatePick> {
   }
 
   bool _isDateAvailable(DateTime date) {
-    final normalized = _normalizeDate(date);
-    return _availableDates.containsKey(normalized)
-        ? _availableDates[normalized]!
-        : false;
+    return _availableDates[_normalizeDate(date)] ?? false;
   }
 
   void _onDateSelected(DateTime selectedDate) async {
@@ -100,6 +98,26 @@ class _DatePickState extends State<DatePick> {
     }
   }
 
+  void _onPageChanged(DateTime month) {
+    int newMonth = month.month;
+
+    if (newMonth != currentMonth) {
+      setState(() {
+        currentMonth = newMonth;
+        DateTime newFocusedDay = DateTime(month.year, month.month, 1);
+
+        // Ensure newFocusedDay is not before firstDay
+        DateTime firstDay = DateTime.now(); // Assuming the first day is today
+        if (newFocusedDay.isBefore(firstDay)) {
+          newFocusedDay = firstDay;
+        }
+
+        _focusedDay = newFocusedDay;
+        _scheduleFuture = _fetchAvailableDates(currentMonth);
+      });
+    }
+  }
+
   void _onTimeSelected(String selectedTime) {
     setState(() {
       _selectedTime = selectedTime;
@@ -111,54 +129,48 @@ class _DatePickState extends State<DatePick> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: FutureBuilder<Schedule>(
-          future: _scheduleFuture,
-          builder: (context, snapshot) {
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return const Center(child: CircularProgressIndicator());
-            // } else if (snapshot.hasError) {
-            //   return const Center(child: Text('Error fetching schedule'));
-            // } else {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 80.0),
-              child: ListView(
-                children: [
-                  const SizedBox(height: 20),
-                  // Use the CalendarWidget
-                  CalendarWidget(
-                    focusedDay: _focusedDay,
-                    selectedDate: _selectedDate,
-                    onDaySelected: (selectedDay, focusedDay) {
-                      if (_isDateAvailable(selectedDay)) {
-                        setState(() {
-                          _focusedDay = selectedDay;
-                        });
-                        _onDateSelected(selectedDay);
-                      }
-                    },
-                    isDateAvailable: _isDateAvailable,
-                    onDateSelected: _onDateSelected,
-                  ),
-                  const SizedBox(height: 20),
-                  AvailableTimesWidget(
-                    selectedDate: _selectedDate,
-                    isFetchingTimes: _isFetchingTimes,
-                    fetchTimesError: _fetchTimesError,
-                    availableTimes: _availableTimes,
-                    selectedTime: _selectedTime,
-                    onTimeSelected: _onTimeSelected,
-                  ),
-                  const SizedBox(height: 20),
-                  BottomButtonWidget(
-                    selectedDate: _selectedDate,
-                    selectedTime: _selectedTime,
-                    onDateTimeSelected: widget.onDateTimeSelected,
-                  ),
-                ],
-              ),
-            );
-          }
-          // },
-          ),
+        future: _scheduleFuture,
+        builder: (context, snapshot) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: ListView(
+              children: [
+                const SizedBox(height: 20),
+                CalendarWidget(
+                  focusedDay: _focusedDay,
+                  selectedDate: _selectedDate,
+                  onDaySelected: (selectedDay, focusedDay) {
+                    if (_isDateAvailable(selectedDay)) {
+                      setState(() {
+                        _focusedDay = selectedDay;
+                      });
+                      _onDateSelected(selectedDay);
+                    }
+                  },
+                  isDateAvailable: _isDateAvailable,
+                  onDateSelected: _onDateSelected,
+                  onPageChanged: _onPageChanged,
+                ),
+                const SizedBox(height: 20),
+                AvailableTimesWidget(
+                  selectedDate: _selectedDate,
+                  isFetchingTimes: _isFetchingTimes,
+                  fetchTimesError: _fetchTimesError,
+                  availableTimes: _availableTimes,
+                  selectedTime: _selectedTime,
+                  onTimeSelected: _onTimeSelected,
+                ),
+                const SizedBox(height: 20),
+                BottomButtonWidget(
+                  selectedDate: _selectedDate,
+                  selectedTime: _selectedTime,
+                  onDateTimeSelected: widget.onDateTimeSelected,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 }

@@ -162,8 +162,9 @@ class BarberService {
 
   Future<Schedule> fetchSchedule({
     required int barberId,
+    required String month,
   }) async {
-    final String apiUrl = 'barbers/$barberId/schedule';
+    final String apiUrl = 'barbers/$barberId/schedule?month=$month';
 
     try {
       final headers = await _getHeaders();

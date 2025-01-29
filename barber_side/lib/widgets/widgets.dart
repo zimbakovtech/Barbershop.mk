@@ -7,6 +7,7 @@ class CalendarWidget extends StatelessWidget {
   final DateTime focusedDay;
   final DateTime? selectedDate;
   final Function(DateTime, DateTime) onDaySelected;
+  final Function(DateTime) onPageChanged;
   final bool Function(DateTime) isDateAvailable;
   final void Function(DateTime) onDateSelected;
 
@@ -16,81 +17,91 @@ class CalendarWidget extends StatelessWidget {
     required this.selectedDate,
     required this.onDaySelected,
     required this.isDateAvailable,
+    required this.onPageChanged,
     required this.onDateSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10.0),
-        color: navy,
-      ),
-      child: TableCalendar(
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(const Duration(days: 30)),
-        headerStyle:
-            const HeaderStyle(titleTextStyle: TextStyle(color: textPrimary)),
-        calendarStyle: const CalendarStyle(
-          todayDecoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: orange),
-              left: BorderSide(color: orange),
-            ),
-            color: background,
-            shape: BoxShape.circle,
-          ),
-          todayTextStyle: TextStyle(color: textPrimary),
-          selectedTextStyle: TextStyle(color: textPrimary),
-          selectedDecoration: BoxDecoration(
-            color: orange,
-            // border: Border(
-            //   top: BorderSide(color: orange),
-            //   left: BorderSide(color: orange),
-            // ),
-            shape: BoxShape.circle,
-          ),
-          cellMargin: EdgeInsets.all(3.0),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Датум',
+          style: TextStyle(
+              fontSize: 20, color: textPrimary, fontWeight: FontWeight.bold),
         ),
-        focusedDay: focusedDay,
-        availableCalendarFormats: const {CalendarFormat.month: 'Month'},
-        calendarFormat: CalendarFormat.month,
-        selectedDayPredicate: (day) => isSameDay(day, selectedDate),
-        onDaySelected: onDaySelected,
-        calendarBuilders: CalendarBuilders(
-          defaultBuilder: (context, day, focusedDay) {
-            final isAvailable = isDateAvailable(day);
-            final isSelected = isSameDay(day, selectedDate);
-            return Padding(
-              padding: const EdgeInsets.all(3.0),
-              child: GestureDetector(
-                onTap: isAvailable ? () => onDateSelected(day) : null,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border(
-                      top: BorderSide(
-                        color: isAvailable ? Colors.teal : Colors.red,
-                      ),
-                      left: BorderSide(
-                        color: isAvailable ? Colors.teal : Colors.red,
-                      ),
-                    ),
-                    color: isSelected ? orange : background,
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${day.day}',
-                      style: const TextStyle(color: textPrimary),
-                    ),
-                  ),
+        const SizedBox(height: 15),
+        Container(
+          padding: const EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+            color: navy,
+          ),
+          child: TableCalendar(
+            startingDayOfWeek: StartingDayOfWeek.monday,
+            onPageChanged: (focusedMonth) {
+              onPageChanged(focusedMonth);
+            },
+            firstDay: DateTime.now(),
+            lastDay: DateTime.now().add(const Duration(days: 30)),
+            headerStyle: const HeaderStyle(
+                titleTextStyle: TextStyle(color: textPrimary)),
+            calendarStyle: const CalendarStyle(
+              todayDecoration: BoxDecoration(
+                border: Border(
+                  top: BorderSide(color: orange),
+                  left: BorderSide(color: orange),
                 ),
+                color: background,
+                shape: BoxShape.circle,
               ),
-            );
-          },
+              todayTextStyle: TextStyle(color: textPrimary),
+              selectedTextStyle: TextStyle(color: textPrimary),
+              selectedDecoration: BoxDecoration(
+                color: orange,
+                shape: BoxShape.circle,
+              ),
+              cellMargin: EdgeInsets.all(3.0),
+            ),
+            focusedDay: focusedDay,
+            availableCalendarFormats: const {CalendarFormat.month: 'Month'},
+            calendarFormat: CalendarFormat.month,
+            selectedDayPredicate: (day) => isSameDay(day, selectedDate),
+            onDaySelected: onDaySelected,
+            calendarBuilders: CalendarBuilders(
+              defaultBuilder: (context, day, focusedDay) {
+                final isAvailable = isDateAvailable(day);
+                final isSelected = isSameDay(day, selectedDate);
+                return Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: GestureDetector(
+                    onTap: isAvailable ? () => onDateSelected(day) : null,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border(
+                          top: BorderSide(
+                              color: isAvailable ? Colors.teal : Colors.red),
+                          left: BorderSide(
+                              color: isAvailable ? Colors.teal : Colors.red),
+                        ),
+                        color: isSelected ? orange : background,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${day.day}',
+                          style: const TextStyle(color: textPrimary),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -186,7 +197,9 @@ class AvailableTimesWidget extends StatelessWidget {
     if (selectedDate == null) {
       return Container();
     } else if (isFetchingTimes) {
-      return const Center(child: CircularProgressIndicator());
+      return const SizedBox(
+          height: 100,
+          child: Center(child: CircularProgressIndicator(color: orange)));
     } else if (fetchTimesError != null) {
       return Text(
         fetchTimesError!,
