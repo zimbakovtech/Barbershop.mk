@@ -84,6 +84,7 @@ class _DatePickState extends State<DatePick> {
       List<String> availableTimes = await barberService.fetchTimes(
         barberId: widget.barberId,
         date: formattedDate,
+        serviceId: widget.service.id,
       );
 
       setState(() {

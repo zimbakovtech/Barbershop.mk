@@ -202,7 +202,7 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                         GestureDetector(
                           onTap: _selectAllSlots,
                           child: const Text(
-                            'Select all',
+                            'Одбери сите',
                             style: TextStyle(
                               color: orange,
                               fontSize: 15,

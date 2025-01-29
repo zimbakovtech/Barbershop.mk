@@ -178,12 +178,13 @@ class BarberService {
   Future<List<String>> fetchTimes({
     required int barberId,
     required String date,
+    required int serviceId,
   }) async {
     try {
       final headers = await _getHeaders();
 
       final response = await apiFetcher.get(
-        'barbers/$barberId/schedule?date=$date',
+        'barbers/$barberId/schedule?date=$date&service_id=$serviceId',
         headers: headers,
       );
 

@@ -209,17 +209,32 @@ class AvailableTimesWidget extends StatelessWidget {
     } else if (availableTimes.isEmpty) {
       return Container(
         height: 70,
-        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           color: navy,
         ),
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Text(
-            'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
-            style: TextStyle(fontSize: 14, color: textPrimary),
-            textAlign: TextAlign.center,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              const Text(
+                'Нема слободни термини за одбраниот даум.',
+                style: TextStyle(fontSize: 14, color: textPrimary),
+                textAlign: TextAlign.center,
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: const Text(
+                  'ЛИСТА НА ЧЕКАЊЕ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: orange,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              )
+            ],
           ),
         ),
       );
