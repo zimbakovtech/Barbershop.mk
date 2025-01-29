@@ -57,7 +57,6 @@ class _ServicePickState extends State<ServicePick> {
               Center(
                 child: Column(
                   children: [
-                    const SizedBox(height: 20),
                     isLoading
                         ? const CircularProgressIndicator() // Show loading indicator
                         : ServiceList(

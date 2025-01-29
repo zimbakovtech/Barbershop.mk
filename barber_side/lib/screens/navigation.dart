@@ -36,7 +36,8 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   int _currentIndex = 0;
-  final PageController _pageController = PageController();
+  int _lastTappedIndex = -1;
+  DateTime _lastTapTime = DateTime.now();
   final BarberService _barberService = BarberService();
   User? user;
   bool isLoading = true;
@@ -70,82 +71,110 @@ class MainPageState extends State<MainPage> {
     }
   }
 
+  final List<Key> _screenKeys = List.generate(4, (index) => UniqueKey());
+
   void changeTabIndex(int index) {
-    _pageController.jumpToPage(index);
-    setState(() => _currentIndex = index);
+    setState(() {
+      _currentIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-      backgroundColor: background,
+      backgroundColor: Colors.transparent,
       body: isLoading
-          ? const Center(child: CircularProgressIndicator(color: orange))
-          : PageView(
-              controller: _pageController,
-              physics: const BouncingScrollPhysics(),
-              children: _screens,
-              onPageChanged: (index) => setState(() => _currentIndex = index),
-            ),
-      bottomNavigationBar: _buildCustomNavBar(),
-    );
-  }
+          ? Container(
+              color: navy,
+              child: const Center(
+                child: CircularProgressIndicator(color: orange),
+              ),
+            )
+          : Stack(
+              children: [
+                Positioned.fill(
+                  child: IndexedStack(
+                    index: _currentIndex,
+                    children: _screens,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SafeArea(
+                    // Prevent overflow in areas with system UI (like notches or navigation gestures)
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                      child: SizedBox(
+                        height: 85, // Adjust the height as needed
+                        child: BottomNavigationBar(
+                          currentIndex: _currentIndex,
+                          onTap: (index) {
+                            final now = DateTime.now();
+                            if (_currentIndex == index &&
+                                _lastTappedIndex == index &&
+                                now.difference(_lastTapTime) <
+                                    const Duration(milliseconds: 300)) {
+                              setState(() {
+                                _screenKeys[index] = UniqueKey();
 
-  Widget _buildCustomNavBar() {
-    return SafeArea(
-      child: Container(
-        height: 85,
-        decoration: BoxDecoration(
-          color: navy,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-          boxShadow: [
-            BoxShadow(
-              color: background.withValues(alpha: 0.1),
-              blurRadius: 6,
-              offset: const Offset(0, -3),
+                                if (index == 0) {
+                                  _screens[index] = Barbershop(
+                                      key: ValueKey(DateTime.now().toString()),
+                                      user: user);
+                                } else if (index == 1) {
+                                  _screens[index] = Appointments(
+                                      key: ValueKey(DateTime.now().toString()));
+                                } else if (index == 2) {
+                                  _screens[index] = Clients(
+                                      key: ValueKey(DateTime.now().toString()));
+                                }
+                              });
+                            } else {
+                              setState(() {
+                                _currentIndex = index;
+                                _lastTappedIndex = index;
+                                _lastTapTime = now;
+                              });
+                            }
+                          },
+                          backgroundColor: navy,
+                          selectedItemColor: orange,
+                          unselectedFontSize: 13.5,
+                          selectedFontSize: 15,
+                          unselectedItemColor: Colors.white54,
+                          type: BottomNavigationBarType.fixed,
+                          items: const [
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.house),
+                              activeIcon: Icon(CupertinoIcons.house_fill),
+                              label: 'Дома',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(Icons.calendar_today_outlined),
+                              activeIcon: Icon(Icons.calendar_today),
+                              label: 'Термини',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.person_2),
+                              activeIcon: Icon(CupertinoIcons.person_2_fill),
+                              label: 'Клиенти',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.person),
+                              activeIcon: Icon(CupertinoIcons.person_fill),
+                              label: 'Профил',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-          child: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (index) => changeTabIndex(index),
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            selectedItemColor: orange,
-            unselectedItemColor: Colors.white54,
-            selectedFontSize: 15,
-            unselectedFontSize: 13.5,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            items: const [
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.house),
-                activeIcon: Icon(CupertinoIcons.house_fill),
-                label: 'Дома',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today_outlined),
-                activeIcon: Icon(Icons.calendar_today),
-                label: 'Термини',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person_2),
-                activeIcon: Icon(CupertinoIcons.person_2_fill),
-                label: 'Клиенти',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person),
-                activeIcon: Icon(CupertinoIcons.person_fill),
-                label: 'Профил',
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

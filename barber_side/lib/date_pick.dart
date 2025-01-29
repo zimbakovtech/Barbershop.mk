@@ -132,7 +132,7 @@ class _DatePickState extends State<DatePick> {
         future: _scheduleFuture,
         builder: (context, snapshot) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: ListView(
               children: [
                 const SizedBox(height: 20),
@@ -166,6 +166,7 @@ class _DatePickState extends State<DatePick> {
                   selectedTime: _selectedTime,
                   onDateTimeSelected: widget.onDateTimeSelected,
                 ),
+                const SizedBox(height: 90)
               ],
             ),
           );
