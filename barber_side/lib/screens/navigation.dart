@@ -98,9 +98,11 @@ class MainPageState extends State<MainPage> {
                     children: _screens,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: 8.0, bottom: MediaQuery.of(context).padding.bottom),
+                SafeArea(
+                  top: false,
+                  minimum: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom,
+                  ),
                   child: BottomNavigationBar(
                     elevation: 0,
                     currentIndex: _currentIndex,
