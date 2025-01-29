@@ -100,6 +100,7 @@ class MainPageState extends State<MainPage> {
           canvasColor: navy,
           splashFactory: NoSplash.splashFactory,
           highlightColor: Colors.transparent,
+          splashColor: Colors.transparent,
         ),
         child: BottomNavigationBar(
           elevation: 0,
