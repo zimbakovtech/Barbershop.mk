@@ -97,8 +97,7 @@ class MainPageState extends State<MainPage> {
               ),
             ),
       bottomNavigationBar: SizedBox(
-        height:
-            kBottomNavigationBarHeight - MediaQuery.of(context).padding.bottom,
+        height: 100 - MediaQuery.of(context).padding.bottom,
         child: BottomNavigationBar(
           elevation: 0,
           currentIndex: _currentIndex,
