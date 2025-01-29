@@ -35,7 +35,7 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
           style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
         trailing: const Icon(Icons.arrow_forward_ios,
-            size: 30.0, color: textSecondary),
+            size: 20.0, color: textSecondary),
         onTap: () {
           // Handle navigation based on title
           if (widget.title == 'Промени лозинка') {
