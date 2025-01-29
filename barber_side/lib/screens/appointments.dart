@@ -5,6 +5,7 @@ import 'package:barbers_mk/widgets/appointments_tab.dart';
 import 'package:barbers_mk/widgets/availability_tab.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/notifications.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -213,17 +214,20 @@ class AppointmentsState extends ConsumerState<Appointments> {
           backgroundColor: background,
           title: const Text('Термини'),
           actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_outlined,
-                color: textPrimary,
-                size: 35.0,
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: IconButton(
+                icon: const Icon(
+                  CupertinoIcons.bell,
+                  color: textPrimary,
+                  size: 30.0,
+                ),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const NotificationsScreen(),
+                  ));
+                },
               ),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const NotificationsScreen(),
-                ));
-              },
             ),
           ],
         ),

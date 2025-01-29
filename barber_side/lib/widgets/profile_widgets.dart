@@ -233,7 +233,12 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
               style: TextStyle(color: Colors.white)),
           content: TextField(
             controller: phoneController,
-            decoration: const InputDecoration(hintText: 'Внеси нов телефон'),
+            cursorColor: orange,
+            decoration: const InputDecoration(
+              hintText: 'Внеси нов телефон',
+              focusedBorder:
+                  UnderlineInputBorder(borderSide: BorderSide(color: orange)),
+            ),
             keyboardType: TextInputType.phone,
             style: const TextStyle(color: Colors.white),
           ),

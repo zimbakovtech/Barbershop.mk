@@ -99,7 +99,7 @@ class AppointmentListCard extends StatelessWidget {
               ),
             ),
             CircleAvatar(
-              backgroundColor: statusColor.withOpacity(0.2),
+              backgroundColor: statusColor.withValues(alpha: 0.2),
               child: Icon(statusIcon, color: statusColor),
             ),
           ],

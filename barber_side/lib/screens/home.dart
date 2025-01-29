@@ -6,6 +6,7 @@ import 'package:barbers_mk/service_pick.dart';
 import 'package:barbers_mk/widgets/barber_selection.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/notifications.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -88,9 +89,11 @@ class _BarbershopState extends ConsumerState<Barbershop> {
     });
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('lib/assets/final_background.png'),
+          image: _currentStep == 0
+              ? const AssetImage('lib/assets/headsup.png')
+              : const AssetImage('lib/assets/final_background.png'),
           fit: BoxFit.cover,
         ),
       ),
@@ -105,17 +108,20 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                   style: const TextStyle(fontSize: 21, color: textPrimary),
                 ),
                 actions: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.notifications_outlined,
-                      color: textPrimary,
-                      size: 35.0,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        CupertinoIcons.bell,
+                        color: textPrimary,
+                        size: 30.0,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const NotificationsScreen(),
+                        ));
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NotificationsScreen(),
-                      ));
-                    },
                   ),
                 ],
               )
@@ -149,17 +155,20 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                   },
                 ),
                 actions: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.notifications_outlined,
-                      color: textPrimary,
-                      size: 35.0,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        CupertinoIcons.bell,
+                        color: textPrimary,
+                        size: 30.0,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const NotificationsScreen(),
+                        ));
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NotificationsScreen(),
-                      ));
-                    },
                   ),
                 ],
               ),
@@ -170,12 +179,14 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                   Expanded(
                     flex: 2,
                     child: _currentStep == 0
-                        ? const Center(
-                            child: Image(
-                              image: AssetImage('lib/assets/barbersmk.png'),
-                              height: 150,
-                              fit: BoxFit.contain,
-                            ),
+                        ? Center(
+                            child: Container(),
+
+                            // Image(
+                            //   image: AssetImage('lib/assets/barbersmk.png'),
+                            //   height: 150,
+                            //   fit: BoxFit.contain,
+                            // ),
                           )
                         : Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -213,9 +224,11 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                   Expanded(
                     flex: 5,
                     child: Container(
+                      padding: const EdgeInsets.only(top: 20.0),
                       child: bookingFlow(),
                     ),
                   ),
+                  const SizedBox(height: 85)
                 ],
               ),
       ),

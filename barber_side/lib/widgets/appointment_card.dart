@@ -119,7 +119,7 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
             widget.haveCall
                 ? IconButton(
                     icon: const Icon(
-                      Icons.phone_outlined,
+                      CupertinoIcons.phone,
                       color: orange,
                       size: 28,
                     ),
@@ -195,7 +195,7 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                 ? PopupMenuButton<String>(
                     color: navy,
                     icon: const Icon(
-                      Icons.more_horiz_outlined,
+                      CupertinoIcons.ellipsis,
                       color: orange,
                       size: 30,
                     ),

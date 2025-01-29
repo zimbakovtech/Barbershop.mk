@@ -345,7 +345,7 @@ class BuildTextField extends StatelessWidget {
         labelText: label,
         labelStyle: const TextStyle(color: Colors.white70),
         filled: true,
-        fillColor: background.withOpacity(0.8),
+        fillColor: background.withValues(alpha: 0.8),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,

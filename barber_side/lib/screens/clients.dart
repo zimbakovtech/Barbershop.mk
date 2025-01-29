@@ -3,6 +3,7 @@ import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/client_details.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/notifications.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -110,17 +111,20 @@ class _ClientsState extends State<Clients> {
         backgroundColor: background,
         centerTitle: false,
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: textPrimary,
-              size: 35.0,
+          Padding(
+            padding: const EdgeInsets.only(right: 10.0),
+            child: IconButton(
+              icon: const Icon(
+                CupertinoIcons.bell,
+                color: textPrimary,
+                size: 30.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ));
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const NotificationsScreen(),
-              ));
-            },
           ),
         ],
       ),
@@ -156,6 +160,7 @@ class _ClientsState extends State<Clients> {
                         ),
                       ),
           ),
+          const SizedBox(height: 85)
         ],
       ),
     );
@@ -267,7 +272,7 @@ class ClientCard extends StatelessWidget {
               const Icon(
                 Icons.chevron_right,
                 size: 30,
-                color: Colors.grey,
+                color: orange,
               ),
             ],
           ),

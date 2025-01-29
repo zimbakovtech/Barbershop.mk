@@ -1,5 +1,6 @@
 import 'package:barbers_mk/widgets/client_history.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/models/client.dart';
 import 'package:barbers_mk/services/barber_service.dart';
@@ -81,8 +82,9 @@ class _ClientDetailsState extends State<ClientDetails>
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       SizedBox(
-                        width: 85.0,
+                        width: 100.0,
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(top: 30.0),
@@ -115,7 +117,7 @@ class _ClientDetailsState extends State<ClientDetails>
                               ),
                             ),
                             const Text(
-                              'Client History',
+                              'Минати термини',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12.0,
@@ -125,7 +127,7 @@ class _ClientDetailsState extends State<ClientDetails>
                         ),
                       ),
                       SizedBox(
-                        width: 85.0,
+                        width: 90.0,
                         child: Column(
                           children: [
                             IconButton(
@@ -141,13 +143,13 @@ class _ClientDetailsState extends State<ClientDetails>
                                 child: const CircleAvatar(
                                   radius: 26,
                                   backgroundColor: navy,
-                                  child: Icon(Icons.phone_outlined,
+                                  child: Icon(CupertinoIcons.phone,
                                       color: orange, size: 24.0),
                                 ),
                               ),
                             ),
                             const Text(
-                              'Call Client',
+                              'Барај клиент',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12.0,
@@ -157,7 +159,7 @@ class _ClientDetailsState extends State<ClientDetails>
                         ),
                       ),
                       SizedBox(
-                        width: 85.0,
+                        width: 100.0,
                         child: Column(
                           children: [
                             Padding(
@@ -187,7 +189,7 @@ class _ClientDetailsState extends State<ClientDetails>
                               ),
                             ),
                             const Text(
-                              'Ban Client',
+                              'Блокирај клиент',
                               style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 12.0,
@@ -223,7 +225,8 @@ class _ClientDetailsState extends State<ClientDetails>
                     SizedBox(
                         width: double.infinity, child: Tab(text: 'Статистика')),
                     SizedBox(
-                        width: double.infinity, child: Tab(text: 'Термини')),
+                        width: double.infinity,
+                        child: Tab(text: 'Идни термини')),
                   ],
                 ),
               ),
@@ -436,21 +439,32 @@ class _ClientDetailsState extends State<ClientDetails>
                           ),
                         ),
                       ),
-                      ListView.builder(
-                        itemCount: client!.futureAppointments!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 2.0),
-                            child: AppointmentCardWidget(
-                              haveCall: false,
-                              haveMenu: true,
-                              appointment: client!.futureAppointments![index],
-                              barberService: barberService,
+                      client!.futureAppointments!.isEmpty
+                          ? const Center(
+                              child: Text(
+                                'Нема идни термини',
+                                style: TextStyle(
+                                  color: textPrimary,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                            )
+                          : ListView.builder(
+                              itemCount: client!.futureAppointments!.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 2.0),
+                                  child: AppointmentCardWidget(
+                                    haveCall: false,
+                                    haveMenu: true,
+                                    appointment:
+                                        client!.futureAppointments![index],
+                                    barberService: barberService,
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
                     ],
                   )),
             ),

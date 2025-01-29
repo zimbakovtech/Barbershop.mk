@@ -34,64 +34,61 @@ class BarberSelectionWidget extends StatelessWidget {
         (screenWidth - 40.0 - (20.0 * (crossAxisCount - 1))) / crossAxisCount;
     bool hasAppointment = appointment.id != null && appointment.date != null;
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 80.0),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              if (barbers.isEmpty)
-                const Text(
-                  'No barbers available',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                )
-              else
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20.0, vertical: 5.0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 45.0),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: crossAxisCount,
-                        crossAxisSpacing: 20.0,
-                        mainAxisSpacing: 20.0,
-                        childAspectRatio: itemWidth / 250,
-                      ),
-                      itemCount: barbers.length,
-                      itemBuilder: (context, index) {
-                        final barber = barbers[index];
-                        return BarberCardWidget(
-                          barber: barber,
-                          onSelectBarber: () {
-                            onSelectBarber(barber);
-                          },
-                        );
-                      },
+    return Stack(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (barbers.isEmpty)
+              const Text(
+                'No barbers available',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              )
+            else
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 45.0),
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: crossAxisCount,
+                      crossAxisSpacing: 20.0,
+                      mainAxisSpacing: 20.0,
+                      childAspectRatio: itemWidth / 250,
                     ),
+                    itemCount: barbers.length,
+                    itemBuilder: (context, index) {
+                      final barber = barbers[index];
+                      return BarberCardWidget(
+                        barber: barber,
+                        onSelectBarber: () {
+                          onSelectBarber(barber);
+                        },
+                      );
+                    },
                   ),
                 ),
-              if (hasAppointment) const SizedBox(height: 70),
-            ],
-          ),
-          if (hasAppointment)
-            Positioned(
-              bottom: 5,
-              left: 10,
-              right: 10,
-              child: AppointmentCardWidget(
-                haveCall: true,
-                haveMenu: true,
-                appointment: appointment,
-                barberService: barberService,
-                onCancel: onCancel,
               ),
+            if (hasAppointment) const SizedBox(height: 70),
+          ],
+        ),
+        if (hasAppointment)
+          Positioned(
+            bottom: 5,
+            left: 10,
+            right: 10,
+            child: AppointmentCardWidget(
+              haveCall: true,
+              haveMenu: true,
+              appointment: appointment,
+              barberService: barberService,
+              onCancel: onCancel,
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 }

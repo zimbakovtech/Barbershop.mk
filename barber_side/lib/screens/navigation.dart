@@ -1,6 +1,7 @@
 import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/screens/clients.dart';
 import 'package:barbers_mk/services/barber_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'home.dart';
@@ -81,85 +82,95 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
       backgroundColor: Colors.transparent,
       body: isLoading
           ? Container(
-              color: background,
+              color: navy,
               child: const Center(
                 child: CircularProgressIndicator(color: orange),
               ),
             )
-          : IndexedStack(
-              index: _currentIndex,
-              children: _screens,
-            ),
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          color: navy,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-        ),
-        height: 80,
-        child: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            final now = DateTime.now();
-            if (_currentIndex == index &&
-                _lastTappedIndex == index &&
-                now.difference(_lastTapTime) <
-                    const Duration(milliseconds: 300)) {
-              setState(() {
-                _screenKeys[index] = UniqueKey();
+          : Stack(
+              children: [
+                Positioned.fill(
+                  child: IndexedStack(
+                    index: _currentIndex,
+                    children: _screens,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SafeArea(
+                    // Prevent overflow in areas with system UI (like notches or navigation gestures)
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
+                      ),
+                      child: SizedBox(
+                        height: 80, // Adjust the height as needed
+                        child: BottomNavigationBar(
+                          currentIndex: _currentIndex,
+                          onTap: (index) {
+                            final now = DateTime.now();
+                            if (_currentIndex == index &&
+                                _lastTappedIndex == index &&
+                                now.difference(_lastTapTime) <
+                                    const Duration(milliseconds: 300)) {
+                              setState(() {
+                                _screenKeys[index] = UniqueKey();
 
-                if (index == 0) {
-                  _screens[index] = Barbershop(
-                      key: ValueKey(DateTime.now().toString()), user: user);
-                } else if (index == 1) {
-                  _screens[index] =
-                      Appointments(key: ValueKey(DateTime.now().toString()));
-                } else if (index == 2) {
-                  _screens[index] =
-                      Clients(key: ValueKey(DateTime.now().toString()));
-                }
-              });
-            } else {
-              setState(() {
-                _currentIndex = index;
-                _lastTappedIndex = index;
-                _lastTapTime = now;
-              });
-            }
-          },
-          backgroundColor: Colors.transparent,
-          selectedItemColor: orange,
-          unselectedFontSize: 13.5,
-          selectedFontSize: 15,
-          unselectedItemColor: Colors.white54,
-          type: BottomNavigationBarType.fixed,
-          elevation: 0,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_filled),
-              label: 'Дома',
+                                if (index == 0) {
+                                  _screens[index] = Barbershop(
+                                      key: ValueKey(DateTime.now().toString()),
+                                      user: user);
+                                } else if (index == 1) {
+                                  _screens[index] = Appointments(
+                                      key: ValueKey(DateTime.now().toString()));
+                                } else if (index == 2) {
+                                  _screens[index] = Clients(
+                                      key: ValueKey(DateTime.now().toString()));
+                                }
+                              });
+                            } else {
+                              setState(() {
+                                _currentIndex = index;
+                                _lastTappedIndex = index;
+                                _lastTapTime = now;
+                              });
+                            }
+                          },
+                          backgroundColor: navy,
+                          selectedItemColor: orange,
+                          unselectedFontSize: 13.5,
+                          selectedFontSize: 15,
+                          unselectedItemColor: Colors.white54,
+                          type: BottomNavigationBarType.fixed,
+                          items: const [
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.house),
+                              label: 'Дома',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(Icons.calendar_today),
+                              label: 'Термини',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.person_2),
+                              label: 'Клиенти',
+                            ),
+                            BottomNavigationBarItem(
+                              icon: Icon(CupertinoIcons.person),
+                              label: 'Профил',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Термини',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.people),
-              label: 'Клиенти',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Профил',
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
