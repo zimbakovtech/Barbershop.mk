@@ -77,7 +77,7 @@ class BarberSelectionWidget extends StatelessWidget {
         ),
         if (hasAppointment)
           Positioned(
-            bottom: 5,
+            bottom: 90,
             left: 10,
             right: 10,
             child: AppointmentCardWidget(

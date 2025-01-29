@@ -160,7 +160,6 @@ class _ClientsState extends State<Clients> {
                         ),
                       ),
           ),
-          const SizedBox(height: 85)
         ],
       ),
     );

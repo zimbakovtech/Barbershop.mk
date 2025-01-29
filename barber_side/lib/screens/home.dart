@@ -228,7 +228,6 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                       child: bookingFlow(),
                     ),
                   ),
-                  const SizedBox(height: 85)
                 ],
               ),
       ),

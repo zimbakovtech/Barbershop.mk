@@ -132,7 +132,7 @@ class _DatePickState extends State<DatePick> {
         future: _scheduleFuture,
         builder: (context, snapshot) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ListView(
               children: [
                 const SizedBox(height: 20),
