@@ -100,10 +100,9 @@ class MainPageState extends State<MainPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).padding.bottom,
-                  ),
+                      bottom: MediaQuery.of(context).padding.bottom),
                   child: BottomNavigationBar(
-                    elevation: 0.0,
+                    elevation: 0,
                     currentIndex: _currentIndex,
                     onTap: (index) {
                       final now = DateTime.now();
