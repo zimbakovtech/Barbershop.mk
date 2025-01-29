@@ -216,7 +216,7 @@ class AvailableTimesWidget extends StatelessWidget {
         ),
         child: const Text(
           'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
-          style: TextStyle(fontSize: 16),
+          style: TextStyle(fontSize: 16, color: textPrimary),
           textAlign: TextAlign.center,
         ),
       );
