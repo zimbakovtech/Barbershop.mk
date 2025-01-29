@@ -1,4 +1,5 @@
 import 'package:barbers_mk/models/availability.dart';
+import '../models/stats.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 import 'package:intl/intl.dart';
@@ -80,6 +81,49 @@ class BarberService {
           .toList();
     } catch (error) {
       throw Exception('Error fetching appointments: $error');
+    }
+  }
+
+  Future<List<Service>> fetchAllServices() async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get('services', headers: headers);
+
+      if (response is List) {
+        return response
+            .map((item) => Service.fromJson(item as Map<String, dynamic>))
+            .toList();
+      } else {
+        throw Exception('Invalid response format: expected a list');
+      }
+    } catch (error) {
+      throw Exception('Error fetching services: $error');
+    }
+  }
+
+  Future<void> addService(
+      int barberId, int serviceId, int price, int duration) async {
+    final body = {
+      'service_id': serviceId,
+      'price': price,
+      'duration': duration,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/$barberId/services',
+          body: body, headers: headers);
+    } catch (error) {
+      throw Exception('Error adding service: $error');
+    }
+  }
+
+  Future<void> deleteService(int serviceId) async {
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.delete('barbers/services/$serviceId', headers: headers);
+    } catch (error) {
+      throw Exception('Error deleting service: $error');
     }
   }
 
@@ -370,6 +414,31 @@ class BarberService {
       return Barber.fromJson(response as Map<String, dynamic>);
     } catch (e) {
       throw Exception('Error fetching barber info: $e');
+    }
+  }
+
+  // Add these two new methods to your BarberService class
+  Future<List<ServiceStat>> getServiceStats() async {
+    try {
+      final headers = await _getHeaders();
+      final response =
+          await apiFetcher.get('statistics/services/popular', headers: headers);
+      return (response as List)
+          .map((json) => ServiceStat.fromJson(json))
+          .toList();
+    } catch (e) {
+      throw Exception('Error fetching service statistics: $e');
+    }
+  }
+
+  Future<CustomerStats> getCustomerStats() async {
+    try {
+      final headers = await _getHeaders();
+      final response =
+          await apiFetcher.get('statistics/customers', headers: headers);
+      return CustomerStats.fromJson(response);
+    } catch (e) {
+      throw Exception('Error fetching customer statistics: $e');
     }
   }
 

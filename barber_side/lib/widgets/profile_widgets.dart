@@ -55,7 +55,8 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
           } else if (widget.title == "Мои услуги") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const EditServices()),
+              MaterialPageRoute(
+                  builder: (context) => EditServices(user: widget.user!)),
             );
           } else if (widget.title == "Работни часови") {
             Navigator.push(

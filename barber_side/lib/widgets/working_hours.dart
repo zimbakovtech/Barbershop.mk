@@ -36,7 +36,13 @@ class EditWorkingHoursState extends State<EditWorkingHours> {
       backgroundColor: background,
       appBar: AppBar(
         title: const Text('Работни часови'),
-        backgroundColor: navy,
+        backgroundColor: background,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
       body: isLoading
           ? const Center(

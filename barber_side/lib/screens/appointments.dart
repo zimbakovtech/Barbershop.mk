@@ -4,6 +4,7 @@ import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointments_tab.dart';
 import 'package:barbers_mk/widgets/availability_tab.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -207,9 +208,24 @@ class AppointmentsState extends ConsumerState<Appointments> {
         backgroundColor: background,
         appBar: AppBar(
           elevation: 0,
+          centerTitle: false,
           scrolledUnderElevation: 0.0,
           backgroundColor: background,
-          title: const Text('Appointments'),
+          title: const Text('Термини'),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: textPrimary,
+                size: 35.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NotificationsScreen(),
+                ));
+              },
+            ),
+          ],
         ),
         body: Column(
           children: [

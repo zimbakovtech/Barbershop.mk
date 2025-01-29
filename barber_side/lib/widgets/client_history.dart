@@ -17,6 +17,12 @@ class ClientHistory extends StatelessWidget {
         elevation: 0.0,
         scrolledUnderElevation: 0.0,
         title: const Text('Историjа на термини'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
       body: ListView.builder(
         itemCount: appointments.length,

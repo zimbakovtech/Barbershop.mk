@@ -23,6 +23,8 @@ class ServiceList extends StatelessWidget {
         return ServiceCard(
             service: service,
             icon: Icons.arrow_forward_ios,
+            delete: false,
+            onServiceDeleted: () {},
             onServiceSelected: onServiceSelected);
       },
     );

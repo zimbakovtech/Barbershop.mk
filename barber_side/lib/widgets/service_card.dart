@@ -7,14 +7,17 @@ import 'dart:math';
 class ServiceCard extends StatelessWidget {
   final Service service;
   final IconData icon;
+  final bool delete;
+  final VoidCallback onServiceDeleted;
   final Function(Service) onServiceSelected;
 
-  const ServiceCard({
-    super.key,
-    required this.service,
-    required this.icon,
-    required this.onServiceSelected,
-  });
+  const ServiceCard(
+      {super.key,
+      required this.service,
+      required this.icon,
+      required this.onServiceDeleted,
+      required this.delete,
+      required this.onServiceSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -67,9 +70,9 @@ class ServiceCard extends StatelessWidget {
                       children: [
                         Text(
                           service.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: 20,
+                            fontSize: service.name.length > 16 ? 18 : 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -97,18 +100,32 @@ class ServiceCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(right: 16.0),
-                  child: IconButton(
-                    onPressed: () {
-                      onServiceSelected(service);
-                    },
-                    icon: Icon(
-                      icon,
-                      color: orange,
-                    ),
+                IconButton(
+                  onPressed: () {
+                    onServiceSelected(service);
+                  },
+                  icon: Icon(
+                    icon,
+                    color: orange,
                   ),
                 ),
+                const SizedBox(
+                  width: 5.0,
+                ),
+                delete
+                    ? IconButton(
+                        onPressed: () {
+                          onServiceDeleted();
+                        },
+                        icon: const Icon(
+                          Icons.delete_outlined,
+                          color: orange,
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  width: 10.0,
+                )
               ],
             ),
           ),

@@ -2,6 +2,7 @@ import 'package:barbers_mk/models/client.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/client_details.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
@@ -105,8 +106,23 @@ class _ClientsState extends State<Clients> {
     return Scaffold(
       backgroundColor: background, // Dark background
       appBar: AppBar(
-        title: const Text('Clients'),
+        title: const Text('Клиенти'),
         backgroundColor: background,
+        centerTitle: false,
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.notifications_outlined,
+              color: textPrimary,
+              size: 35.0,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const NotificationsScreen(),
+              ));
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -126,6 +142,7 @@ class _ClientsState extends State<Clients> {
                         lastAppointmentDate:
                             DateTime.parse(client.lastAppointmentDate),
                         totalAppointments: client.totalAppointments,
+                        futureAppointments: client.futureAppointments!.length,
                       );
                     },
                   )
@@ -152,6 +169,7 @@ class ClientCard extends StatelessWidget {
   final String profilePicture;
   final DateTime lastAppointmentDate;
   final int totalAppointments;
+  final int futureAppointments;
 
   const ClientCard({
     super.key,
@@ -161,6 +179,7 @@ class ClientCard extends StatelessWidget {
     required this.profilePicture,
     required this.lastAppointmentDate,
     required this.totalAppointments,
+    required this.futureAppointments,
   });
 
   @override
@@ -209,7 +228,7 @@ class ClientCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Last Appointment: $formattedDate',
+                      'Последен термин: $formattedDate',
                       style: TextStyle(
                         color: Colors.grey[400],
                         fontSize: 12.5,
@@ -234,7 +253,7 @@ class ClientCard extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '$totalAppointments appointments',
+                          '$totalAppointments термини',
                           style: TextStyle(
                             color: Colors.grey[400],
                             fontSize: 14,

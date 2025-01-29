@@ -2,15 +2,15 @@ class Service {
   final int id;
   final String icon;
   final String name;
-  final int price;
-  final int duration;
+  int? price;
+  int? duration;
 
   Service({
     required this.id,
     required this.icon,
     required this.name,
-    required this.price,
-    required this.duration,
+    this.price,
+    this.duration,
   });
 
   factory Service.fromJson(Map<String, dynamic> json) {

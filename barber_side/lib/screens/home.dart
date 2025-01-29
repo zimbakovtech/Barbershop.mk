@@ -5,6 +5,7 @@ import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/service_pick.dart';
 import 'package:barbers_mk/widgets/barber_selection.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -98,23 +99,30 @@ class _BarbershopState extends ConsumerState<Barbershop> {
         appBar: _currentStep == 0
             ? AppBar(
                 backgroundColor: Colors.transparent,
+                centerTitle: false,
                 title: Text(
-                  'Welcome, ${widget.user!.firstName}',
+                  'Добредојде, ${widget.user!.firstName}',
                   style: const TextStyle(fontSize: 21, color: textPrimary),
                 ),
                 actions: [
                   IconButton(
                     icon: const Icon(
                       Icons.notifications_outlined,
+                      color: textPrimary,
                       size: 35.0,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const NotificationsScreen(),
+                      ));
+                    },
                   ),
                 ],
               )
             : AppBar(
                 elevation: 0.0,
                 scrolledUnderElevation: 0.0,
+                centerTitle: false,
                 backgroundColor: Colors.transparent,
                 title: _currentStep == 1
                     ? const Text(
@@ -140,6 +148,20 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                     });
                   },
                 ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.notifications_outlined,
+                      color: textPrimary,
+                      size: 35.0,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const NotificationsScreen(),
+                      ));
+                    },
+                  ),
+                ],
               ),
         body: isLoading
             ? const Center(child: CircularProgressIndicator(color: orange))

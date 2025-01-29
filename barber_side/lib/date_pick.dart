@@ -139,7 +139,6 @@ class _DatePickState extends State<DatePick> {
                     onDateSelected: _onDateSelected,
                   ),
                   const SizedBox(height: 20),
-                  // Use the AvailableTimesWidget
                   AvailableTimesWidget(
                     selectedDate: _selectedDate,
                     isFetchingTimes: _isFetchingTimes,

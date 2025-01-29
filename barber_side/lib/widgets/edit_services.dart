@@ -6,30 +6,42 @@ import 'package:barbers_mk/widgets/service_card.dart';
 import 'package:flutter/material.dart';
 
 class EditServices extends StatefulWidget {
-  const EditServices({super.key});
+  final User user;
+  const EditServices({super.key, required this.user});
 
   @override
   State<EditServices> createState() => _EditServicesState();
 }
 
 class _EditServicesState extends State<EditServices> {
-  User? user;
   List<Service> services = [];
+  List<Service> allServices = [];
+  Service? selectedService;
   final barberService = BarberService();
+  bool isLoading = true;
+
   @override
   void initState() {
     super.initState();
     getServices();
+    isLoading = false;
+    getAllServices();
   }
 
   void getServices() async {
-    final newUser = await barberService.getUserInfo();
-    setState(() {
-      user = newUser;
-    });
-    final newServices = await barberService.fetchServices(barberId: user!.id);
+    isLoading = true;
+    final newServices =
+        await barberService.fetchServices(barberId: widget.user.id);
     setState(() {
       services = newServices;
+      isLoading = false;
+    });
+  }
+
+  void getAllServices() async {
+    final newServices = await barberService.fetchAllServices();
+    setState(() {
+      allServices = newServices;
     });
   }
 
@@ -42,22 +54,37 @@ class _EditServicesState extends State<EditServices> {
         elevation: 0.0,
         scrolledUnderElevation: 0.0,
         title: const Text('Мои услуги'),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
-      body: services.isEmpty
+      body: isLoading
           ? const Center(child: CircularProgressIndicator(color: orange))
-          : ListView.builder(
-              itemCount: services.length,
-              itemBuilder: (context, index) {
-                final service = services[index];
-                return ServiceCard(
-                    service: service,
-                    icon: Icons.edit_outlined,
-                    onServiceSelected: (service) {
-                      showServiceEditDialog(
-                          context, service, barberService, user!);
-                    });
-              },
-            ),
+          : services.isNotEmpty
+              ? ListView.builder(
+                  itemCount: services.length,
+                  itemBuilder: (context, index) {
+                    final service = services[index];
+                    return ServiceCard(
+                        service: service,
+                        icon: Icons.edit_outlined,
+                        delete: true,
+                        onServiceDeleted: () async {
+                          await barberService.deleteService(service.id);
+                          getServices();
+                        },
+                        onServiceSelected: (service) {
+                          showServiceEditDialog(
+                              context, service, barberService, widget.user);
+                        });
+                  },
+                )
+              : const Center(
+                  child: Text('Сеуште немате услуги'),
+                ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 30.0),
         child: SizedBox(
@@ -158,7 +185,7 @@ class _EditServicesState extends State<EditServices> {
                         Navigator.of(context).pop();
                       }
                     } catch (error) {
-                      setState(() {});
+                      getServices();
                     }
                   },
                   child: const Text(
@@ -175,7 +202,6 @@ class _EditServicesState extends State<EditServices> {
   }
 
   void showServiceAddDialog(BuildContext context, BarberService barberService) {
-    final TextEditingController nameController = TextEditingController();
     final TextEditingController priceController = TextEditingController();
     final TextEditingController durationController = TextEditingController();
 
@@ -194,16 +220,40 @@ class _EditServicesState extends State<EditServices> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TextField(
-                      controller: nameController,
-                      cursorColor: orange,
-                      decoration: const InputDecoration(
-                        hintText: 'Внеси име на услуга',
-                        hintStyle: TextStyle(color: Colors.white70),
-                        focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: orange)),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: allServices.map((service) {
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                selectedService = service;
+                              });
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: background, // Dark grey container
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: selectedService == service
+                                      ? orange
+                                      : Colors.grey,
+                                  width: 2,
+                                ),
+                              ),
+                              child: Text(
+                                service.name,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                      style: const TextStyle(color: Colors.white),
                     ),
                     const SizedBox(height: 10),
                     TextField(
@@ -244,25 +294,24 @@ class _EditServicesState extends State<EditServices> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final name = nameController.text;
-                    final price = double.tryParse(priceController.text);
+                    final price = int.tryParse(priceController.text);
                     final duration = int.tryParse(durationController.text);
 
-                    if (name.isEmpty || price == null || duration == null) {
+                    if (selectedService == null ||
+                        price == null ||
+                        duration == null) {
                       setState(() {});
                       return;
                     }
 
-                    // try {
-                    //   await barberService.addService(name, price, duration);
-                    //   if (context.mounted) {
-                    //     Navigator.of(context).pop();
-                    //   }
-                    // } catch (error) {
-                    //   setState(() {
-                    //     errorMessage = 'Грешка при додавање на услугата.';
-                    //   });
-                    // }
+                    try {
+                      await barberService.addService(
+                          widget.user.id, selectedService!.id, price, duration);
+                      if (context.mounted) {
+                        getServices();
+                        Navigator.of(context).pop();
+                      }
+                    } finally {}
                   },
                   child: const Text(
                     'Потврди',

@@ -13,14 +13,48 @@ class AppointmentHistoryScreen extends StatefulWidget {
 }
 
 class AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
-  late Future<List<Appointment>> _appointmentsFuture;
   final barberService = BarberService();
+  final ScrollController _scrollController = ScrollController();
+  final List<Appointment> _appointments = [];
+
+  bool _isLoading = false;
+  final bool _hasMore = true;
+  int _currentPage = 1; // Start at page 1
+  final int _limit = 10; // Items per page
 
   @override
   void initState() {
     super.initState();
-    _appointmentsFuture =
-        barberService.fetchAppointments('?history=true&order=desc');
+    _fetchAppointments();
+    _scrollController.addListener(_onScroll);
+  }
+
+  Future<void> _fetchAppointments() async {
+    if (_isLoading || !_hasMore) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final newAppointments = await barberService.fetchAppointments(
+          '?history=true&order=desc&limit=$_limit&page=$_currentPage');
+      setState(() {
+        _appointments.addAll(newAppointments);
+        _currentPage++; // Move to the next page
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent) {
+      _fetchAppointments();
+    }
   }
 
   Color _getStatusColor(String status) {
@@ -51,54 +85,82 @@ class AppointmentHistoryScreenState extends State<AppointmentHistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_appointments.isEmpty && _isLoading) {
+      return Scaffold(
+        backgroundColor: background,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: background,
+          title: const Text('Историја на термини'),
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        ),
+        body: const Center(
+          child: CircularProgressIndicator(color: orange),
+        ),
+      );
+    }
+    if (_appointments.isEmpty) {
+      return Scaffold(
+        backgroundColor: background,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: background,
+          title: const Text('Историја на термини'),
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back_ios),
+          ),
+        ),
+        body: const Center(child: Text('No appointments found.')),
+      );
+    }
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
-        elevation: 0.0,
-        scrolledUnderElevation: 0,
+        elevation: 0,
+        scrolledUnderElevation: 0.0,
         backgroundColor: background,
         title: const Text('Историја на термини'),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back_ios),
+        ),
       ),
-      body: FutureBuilder<List<Appointment>>(
-        future: _appointmentsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Failed to load appointments: ${snapshot.error}',
-                style: const TextStyle(color: Colors.red),
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 5.0),
+        child: ListView.builder(
+          controller: _scrollController,
+          itemCount: _appointments.length + (_isLoading ? 1 : 0),
+          itemBuilder: (context, index) {
+            if (index == _appointments.length) {
+              return _hasMore
+                  ? const Center(
+                      child: CircularProgressIndicator(color: orange))
+                  : const SizedBox.shrink();
+            }
+            final appointment = _appointments[index];
+            final statusColor = _getStatusColor(appointment.status ?? '');
+            final statusIcon = _getStatusIcon(appointment.status ?? '');
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+              child: AppointmentListCard(
+                appointment: appointment,
+                statusColor: statusColor,
+                statusIcon: statusIcon,
               ),
             );
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(
-              child: Text('No appointments found.'),
-            );
-          }
-
-          final appointments = snapshot.data!;
-
-          return ListView.builder(
-            itemCount: appointments.length,
-            itemBuilder: (context, index) {
-              final appointment = appointments[index];
-              final status = appointment.status;
-              final statusColor = _getStatusColor(status ?? 'unknown');
-              final statusIcon = _getStatusIcon(status ?? 'unknown');
-
-              return Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
-                child: AppointmentListCard(
-                    appointment: appointment,
-                    statusColor: statusColor,
-                    statusIcon: statusIcon),
-              );
-            },
-          );
-        },
+          },
+        ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
