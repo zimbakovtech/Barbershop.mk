@@ -100,7 +100,7 @@ class MainPageState extends State<MainPage> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).padding.bottom),
+                      top: 8.0, bottom: MediaQuery.of(context).padding.bottom),
                   child: BottomNavigationBar(
                     elevation: 0,
                     currentIndex: _currentIndex,
