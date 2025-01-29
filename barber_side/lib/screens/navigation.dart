@@ -90,17 +90,21 @@ class MainPageState extends State<MainPage> {
                 child: CircularProgressIndicator(color: orange),
               ),
             )
-          : SafeArea(
-              child: Column(
-                children: [
-                  Expanded(
-                    child: IndexedStack(
-                      index: _currentIndex,
-                      children: _screens,
-                    ),
+          : Column(
+              children: [
+                Expanded(
+                  child: IndexedStack(
+                    index: _currentIndex,
+                    children: _screens,
                   ),
-                  BottomNavigationBar(
-                    elevation: 0.0,
+                ),
+                SafeArea(
+                  top: false,
+                  minimum: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).padding.bottom,
+                  ),
+                  child: BottomNavigationBar(
+                    elevation: 0,
                     currentIndex: _currentIndex,
                     onTap: (index) {
                       final now = DateTime.now();
@@ -159,8 +163,8 @@ class MainPageState extends State<MainPage> {
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
     );
   }
