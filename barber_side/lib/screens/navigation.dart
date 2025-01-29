@@ -90,7 +90,9 @@ class MainPageState extends State<MainPage> {
                 child: CircularProgressIndicator(color: orange),
               ),
             )
-          : SafeArea(
+          : Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewPadding.bottom),
               child: Column(
                 children: [
                   Expanded(
