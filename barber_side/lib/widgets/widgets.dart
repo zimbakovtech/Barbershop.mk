@@ -207,10 +207,18 @@ class AvailableTimesWidget extends StatelessWidget {
         textAlign: TextAlign.center,
       );
     } else if (availableTimes.isEmpty) {
-      return const Text(
-        'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
-        style: TextStyle(fontSize: 16),
-        textAlign: TextAlign.center,
+      return Container(
+        height: 70,
+        padding: const EdgeInsets.symmetric(vertical: 15.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: navy,
+        ),
+        child: const Text(
+          'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
+          style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
       );
     } else {
       return Column(
