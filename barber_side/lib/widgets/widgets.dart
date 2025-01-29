@@ -218,7 +218,7 @@ class AvailableTimesWidget extends StatelessWidget {
           padding: EdgeInsets.all(8.0),
           child: Text(
             'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
-            style: TextStyle(fontSize: 16, color: textPrimary),
+            style: TextStyle(fontSize: 14, color: textPrimary),
             textAlign: TextAlign.center,
           ),
         ),
