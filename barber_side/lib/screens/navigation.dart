@@ -98,13 +98,12 @@ class MainPageState extends State<MainPage> {
                     children: _screens,
                   ),
                 ),
-                SafeArea(
-                  top: false,
-                  minimum: EdgeInsets.only(
+                Padding(
+                  padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).padding.bottom,
                   ),
                   child: BottomNavigationBar(
-                    elevation: 0,
+                    elevation: 0.0,
                     currentIndex: _currentIndex,
                     onTap: (index) {
                       final now = DateTime.now();
