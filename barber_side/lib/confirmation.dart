@@ -167,36 +167,38 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: orange,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 18),
                 ),
-                minimumSize: const Size(double.infinity, 65),
-              ),
-              onPressed: () async {
-                try {
-                  await barberService.bookAppointment(
-                    widget.barberId,
-                    _nameController.text,
-                    widget.service.id,
-                    widget.date,
-                    widget.time,
-                  );
-                  await ref
-                      .read(appointmentProvider.notifier)
-                      .fetchAppointments();
-                  widget.onBookingSuccess();
-                } catch (e) {
-                  // Handle error
-                }
-              },
-              child: const Text(
-                'Закажи',
-                style: TextStyle(color: Colors.white, fontSize: 18),
+                onPressed: () async {
+                  try {
+                    await barberService.bookAppointment(
+                      widget.barberId,
+                      _nameController.text,
+                      widget.service.id,
+                      widget.date,
+                      widget.time,
+                    );
+                    await ref
+                        .read(appointmentProvider.notifier)
+                        .fetchAppointments();
+                    widget.onBookingSuccess();
+                  } catch (e) {
+                    // Handle error
+                  }
+                },
+                child: const Text(
+                  'Закажи',
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
             ),
           ),

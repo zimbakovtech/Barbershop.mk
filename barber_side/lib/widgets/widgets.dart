@@ -289,16 +289,15 @@ class BottomButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      margin: const EdgeInsets.all(10.0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: orange,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: const EdgeInsets.symmetric(vertical: 18),
         ),
         onPressed: () {
           if (selectedDate != null && selectedTime != null) {

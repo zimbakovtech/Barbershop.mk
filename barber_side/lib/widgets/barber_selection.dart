@@ -47,29 +47,26 @@ class BarberSelectionWidget extends StatelessWidget {
             else
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 45.0),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: crossAxisCount,
-                      crossAxisSpacing: 20.0,
-                      mainAxisSpacing: 20.0,
-                      childAspectRatio: itemWidth / 250,
-                    ),
-                    itemCount: barbers.length,
-                    itemBuilder: (context, index) {
-                      final barber = barbers[index];
-                      return BarberCardWidget(
-                        barber: barber,
-                        onSelectBarber: () {
-                          onSelectBarber(barber);
-                        },
-                      );
-                    },
+                    const EdgeInsets.only(left: 20.0, right: 20, top: 50.0),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    crossAxisSpacing: 20.0,
+                    mainAxisSpacing: 20.0,
+                    childAspectRatio: itemWidth / 250,
                   ),
+                  itemCount: barbers.length,
+                  itemBuilder: (context, index) {
+                    final barber = barbers[index];
+                    return BarberCardWidget(
+                      barber: barber,
+                      onSelectBarber: () {
+                        onSelectBarber(barber);
+                      },
+                    );
+                  },
                 ),
               ),
             if (hasAppointment) const SizedBox(height: 70),

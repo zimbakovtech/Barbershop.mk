@@ -333,17 +333,17 @@ class BarberService {
 
       Map<String, dynamic> response = {
         "id": 2,
-        "name": "Toti's Barbershop",
-        "short_name": "Toti's",
+        "name": "Head's Up Barbershop",
+        "short_name": "Head's Up",
         "address": {
-          "street": "Ul. Elizabet br. 21",
+          "street": "Goce Delcev 23",
           "city_id": 10,
           "city_name": "Strumica"
         },
-        "phone_number": "078121244",
+        "phone_number": "077854332",
         "image_url":
             "https://barber-cdn.s3.eu-central-1.amazonaws.com/images/establishments/1729724417.jpg",
-        "rating": 3,
+        "rating": 5,
         "user_favorite": false,
         "user_home_screen": false,
         "created_at": "2024-10-22T23:49:42Z",
@@ -351,16 +351,38 @@ class BarberService {
         "barbers": [
           {
             "id": 2,
-            "full_name": "Toti Nikolov",
-            "email": "toti@nikolov.com",
-            "phone_number": "078812111",
+            "full_name": "Trajce Zlatkov",
+            "email": "trajce@zlatkov.com",
+            "phone_number": "077854332",
             "profile_picture":
-                "https://barber-cdn.s3.eu-central-1.amazonaws.com/images/establishments/1730587390.png",
+                "https://images.newrepublic.com/9bba0e56c589fb3e06191969202abb446327a86a.jpeg?auto=format&fit=crop&crop=faces&q=65&w=1000&h=undefined&ar=3%3A2&ixlib=react-9.0.3&w=1000",
             "average_rating": 0,
             "establishment": {
               "id": 2,
-              "name": "Toti's Barbershop",
-              "short_name": "Toti's",
+              "name": "Head's Up Barbershop",
+              "short_name": "Head's Up",
+              "rating": 0,
+              "user_favorite": false,
+              "user_home_screen": false,
+              "barbers": null,
+              "created_at": "0001-01-01T00:00:00Z",
+              "updated_at": "0001-01-01T00:00:00Z"
+            },
+            "created_at": "0001-01-01T00:00:00Z",
+            "updated_at": "0001-01-01T00:00:00Z"
+          },
+          {
+            "id": 2,
+            "full_name": "Marko Petrov",
+            "email": "marko@petrov.com",
+            "phone_number": "077854332",
+            "profile_picture":
+                "https://images.squarespace-cdn.com/content/v1/5d52feb1aa6f990001929012/e89c181b-dd09-420e-8e80-06aa47a5a37a/todecacho.png",
+            "average_rating": 0,
+            "establishment": {
+              "id": 2,
+              "name": "Head's Up Barbershop",
+              "short_name": "Head's Up",
               "rating": 0,
               "user_favorite": false,
               "user_home_screen": false,
