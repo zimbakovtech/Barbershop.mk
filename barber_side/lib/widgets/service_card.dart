@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barbers_mk/models/service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +63,7 @@ class ServiceCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          service.name,
+                          utf8.decode(service.name.runes.toList()),
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: service.name.length > 16 ? 18 : 20,

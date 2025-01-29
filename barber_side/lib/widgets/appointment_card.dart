@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:barbers_mk/models/appointment.dart';
@@ -74,7 +76,8 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                           SizedBox(
                             width: 55,
                             child: Text(
-                              widget.appointment.service?.name ?? '',
+                              utf8.decode(widget.appointment.service!.name.runes
+                                  .toList()),
                               textAlign: TextAlign.center,
                               style: const TextStyle(
                                 color: Colors.grey,

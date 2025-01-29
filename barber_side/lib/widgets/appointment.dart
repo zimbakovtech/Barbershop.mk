@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barbers_mk/models/appointment.dart';
 import 'package:flutter/material.dart';
 import 'colors.dart';
@@ -58,7 +60,8 @@ class AppointmentListCard extends StatelessWidget {
                           SizedBox(
                             width: 55,
                             child: Text(
-                              appointment.service?.name ?? 'Unknown',
+                              utf8.decode(
+                                  appointment.service!.name.runes.toList()),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.grey,
