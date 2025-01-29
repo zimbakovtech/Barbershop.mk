@@ -214,10 +214,13 @@ class AvailableTimesWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
           color: navy,
         ),
-        child: const Text(
-          'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
-          style: TextStyle(fontSize: 16, color: textPrimary),
-          textAlign: TextAlign.center,
+        child: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Text(
+            'Нема слободни термини за одбраниот даум. ЛИСТА НА ЧЕКАЊЕ',
+            style: TextStyle(fontSize: 16, color: textPrimary),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     } else {
