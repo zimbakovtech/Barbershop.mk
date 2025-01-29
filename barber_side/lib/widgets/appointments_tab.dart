@@ -175,7 +175,7 @@ class AppointmentTab extends StatelessWidget {
                         : ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
-                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 85),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             itemCount: todaysAppointments.length,
                             itemBuilder: (context, index) {
                               final appointment = todaysAppointments[index];

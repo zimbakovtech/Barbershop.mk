@@ -94,7 +94,7 @@ class _ProfileState extends State<Profile> {
             SupportSection(
               context: context,
             ),
-            const SizedBox(height: 90),
+            const SizedBox(height: 10)
           ],
         ),
       ),

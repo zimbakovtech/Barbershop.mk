@@ -341,7 +341,7 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 20.0, bottom: 90.0),
+            padding: const EdgeInsets.symmetric(vertical: 20.0),
             child: SizedBox(
               width: double.infinity,
               child: Row(
