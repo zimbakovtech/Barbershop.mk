@@ -102,6 +102,7 @@ class MainPageState extends State<MainPage> {
                   SizedBox(
                     height: 80,
                     child: BottomNavigationBar(
+                      elevation: 0.0,
                       currentIndex: _currentIndex,
                       onTap: (index) {
                         final now = DateTime.now();
