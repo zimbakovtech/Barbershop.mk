@@ -3,6 +3,7 @@ import 'package:barbers_mk/services/firebase_messaging_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:barbers_mk/services/firebase_options.dart';
 import 'package:barbers_mk/login_register/login.dart';
@@ -12,6 +13,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: navy,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
   await initializeDateFormatting('mk');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

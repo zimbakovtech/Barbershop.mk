@@ -139,6 +139,10 @@ class BarberService {
       final headers = await _getHeaders();
       final response = await apiFetcher.get(uri.toString(), headers: headers);
 
+      if (response['content'] == null) {
+        return [];
+      }
+
       return (response['content'] as List<dynamic>)
           .map((client) => Client.fromJson(client as Map<String, dynamic>))
           .toList();
