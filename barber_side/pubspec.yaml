@@ -23,7 +23,7 @@ dependencies:
   riverpod_annotation: ^2.6.1
   url_launcher: ^6.1.7
   fl_chart: ^0.69.0
-  
+  date_picker_timeline: ^1.2.6
 
 dev_dependencies:
   flutter_test:

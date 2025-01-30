@@ -18,11 +18,7 @@ class Appointments extends ConsumerStatefulWidget {
 }
 
 class AppointmentsState extends ConsumerState<Appointments> {
-  late DateTime _currentMonth;
-  late DateTime _currentWeekStart;
   late DateTime _selectedDate;
-  late DateTime _availabilityCurrentMonth;
-  late DateTime _availabilityCurrentWeekStart;
   late DateTime _availabilitySelectedDate;
   final Set<String> _availabilitySelectedSlots = {};
   bool isLoading = true;
@@ -32,55 +28,16 @@ class AppointmentsState extends ConsumerState<Appointments> {
   void initState() {
     super.initState();
     final now = DateTime.now();
-    _currentMonth = DateTime(now.year, now.month);
-    _currentWeekStart = _findStartOfWeek(now);
     _selectedDate = now;
-
-    _availabilityCurrentMonth = DateTime(now.year, now.month);
-    _availabilityCurrentWeekStart = _availabilityFindStartOfWeek(now);
     _availabilitySelectedDate = now;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Initial fetch for availability
       ref
           .read(availabilityProvider.notifier)
           .fetchSlots(DateFormat('yyyy-MM-dd').format(now));
     });
     setState(() {
       isLoading = false;
-    });
-  }
-
-  DateTime _findStartOfWeek(DateTime date) {
-    final dayOfWeek = date.weekday;
-    return DateTime(date.year, date.month, date.day - (dayOfWeek - 1));
-  }
-
-  void _goToNextWeek() {
-    setState(() {
-      _currentWeekStart = _currentWeekStart.add(const Duration(days: 7));
-      if (_currentWeekStart.month != _currentMonth.month ||
-          _currentWeekStart.year != _currentMonth.year) {
-        final nextMonth = _currentMonth.month + 1;
-        final yearAdjustment = nextMonth > 12 ? 1 : 0;
-        final normalizedMonth = ((nextMonth - 1) % 12) + 1;
-        _currentMonth =
-            DateTime(_currentMonth.year + yearAdjustment, normalizedMonth);
-      }
-    });
-  }
-
-  void _goToPreviousWeek() {
-    setState(() {
-      _currentWeekStart = _currentWeekStart.subtract(const Duration(days: 7));
-      if (_currentWeekStart.month != _currentMonth.month ||
-          _currentWeekStart.year != _currentMonth.year) {
-        final prevMonth = _currentMonth.month - 1;
-        final yearAdjustment = prevMonth < 1 ? -1 : 0;
-        final normalizedMonth = ((prevMonth - 1) % 12) + 1;
-        _currentMonth =
-            DateTime(_currentMonth.year + yearAdjustment, normalizedMonth);
-      }
     });
   }
 
@@ -103,11 +60,6 @@ class AppointmentsState extends ConsumerState<Appointments> {
     );
   }
 
-  List<DateTime> _getCurrentWeekDates() {
-    return List.generate(
-        7, (index) => _currentWeekStart.add(Duration(days: index)));
-  }
-
   DateTime _stripTime(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 
   List<dynamic> _getAppointmentsForSelectedDate(List<dynamic> allAppointments) {
@@ -119,51 +71,6 @@ class AppointmentsState extends ConsumerState<Appointments> {
       } catch (_) {}
     }
     return grouped[_stripTime(_selectedDate)] ?? [];
-  }
-
-  DateTime _availabilityFindStartOfWeek(DateTime date) {
-    final dayOfWeek = date.weekday;
-    return DateTime(date.year, date.month, date.day - (dayOfWeek - 1));
-  }
-
-  void _availabilityGoToNextWeek() {
-    setState(() {
-      _availabilityCurrentWeekStart =
-          _availabilityCurrentWeekStart.add(const Duration(days: 7));
-      if (_availabilityCurrentWeekStart.month !=
-              _availabilityCurrentMonth.month ||
-          _availabilityCurrentWeekStart.year !=
-              _availabilityCurrentMonth.year) {
-        final nextMonth = _availabilityCurrentMonth.month + 1;
-        final yearAdjustment = nextMonth > 12 ? 1 : 0;
-        final normalizedMonth = ((nextMonth - 1) % 12) + 1;
-        _availabilityCurrentMonth = DateTime(
-            _availabilityCurrentMonth.year + yearAdjustment, normalizedMonth);
-      }
-    });
-    ref
-        .read(availabilityProvider.notifier)
-        .fetchSlots(DateFormat('yyyy-MM-dd').format(_availabilitySelectedDate));
-  }
-
-  void _availabilityGoToPreviousWeek() {
-    setState(() {
-      _availabilityCurrentWeekStart =
-          _availabilityCurrentWeekStart.subtract(const Duration(days: 7));
-      if (_availabilityCurrentWeekStart.month !=
-              _availabilityCurrentMonth.month ||
-          _availabilityCurrentWeekStart.year !=
-              _availabilityCurrentMonth.year) {
-        final prevMonth = _availabilityCurrentMonth.month - 1;
-        final yearAdjustment = prevMonth < 1 ? -1 : 0;
-        final normalizedMonth = ((prevMonth - 1) % 12) + 1;
-        _availabilityCurrentMonth = DateTime(
-            _availabilityCurrentMonth.year + yearAdjustment, normalizedMonth);
-      }
-    });
-    ref
-        .read(availabilityProvider.notifier)
-        .fetchSlots(DateFormat('yyyy-MM-dd').format(_availabilitySelectedDate));
   }
 
   void _availabilityOnDaySelected(DateTime day) {
@@ -182,11 +89,6 @@ class AppointmentsState extends ConsumerState<Appointments> {
     );
   }
 
-  List<DateTime> _availabilityGetCurrentWeekDates() {
-    return List.generate(
-        7, (index) => _availabilityCurrentWeekStart.add(Duration(days: index)));
-  }
-
   @override
   Widget build(BuildContext context) {
     final allAppointments = ref
@@ -194,10 +96,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
         .where((appointment) => appointment.status != 'canceled')
         .toList();
 
-    // These are the appointments shown in the UI for the selected date
     final todaysAppointments = _getAppointmentsForSelectedDate(allAppointments);
-
-    // Watch availability and remove any slots that are actual appointments
     final availabilitySlots = ref.watch(availabilityProvider);
     availabilitySlots.removeWhere((slot) => slot['status'] == 'appointment');
 
@@ -263,30 +162,24 @@ class AppointmentsState extends ConsumerState<Appointments> {
               child: TabBarView(
                 children: [
                   AppointmentTab(
-                    currentMonth: _currentMonth,
+                    currentMonth:
+                        DateTime(_selectedDate.year, _selectedDate.month),
                     isLoading: isLoading,
-                    currentWeekStart: _currentWeekStart,
                     selectedDate: _selectedDate,
-                    onNextWeek: _goToNextWeek,
-                    onPreviousWeek: _goToPreviousWeek,
                     onDaySelected: _onDaySelected,
                     formatMonth: _formatMonth,
-                    getCurrentWeekDates: _getCurrentWeekDates,
                     stripTime: _stripTime,
                     todaysAppointments: todaysAppointments,
                     barberService: barberService,
                   ),
                   AvailabilityTab(
-                    availabilityCurrentMonth: _availabilityCurrentMonth,
-                    availabilityCurrentWeekStart: _availabilityCurrentWeekStart,
+                    availabilityCurrentMonth: DateTime(
+                        _availabilitySelectedDate.year,
+                        _availabilitySelectedDate.month),
                     availabilitySelectedDate: _availabilitySelectedDate,
                     availabilitySelectedSlots: _availabilitySelectedSlots,
-                    availabilityGoToNextWeek: _availabilityGoToNextWeek,
-                    availabilityGoToPreviousWeek: _availabilityGoToPreviousWeek,
                     availabilityOnDaySelected: _availabilityOnDaySelected,
                     availabilityFormatMonth: _availabilityFormatMonth,
-                    availabilityGetCurrentWeekDates:
-                        _availabilityGetCurrentWeekDates,
                     stripTime: _stripTime,
                     availabilitySlots: availabilitySlots,
                     ref: ref,

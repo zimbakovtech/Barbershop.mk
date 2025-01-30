@@ -70,7 +70,9 @@ class BarberService {
       if (response == null || response.isEmpty) {
         return [];
       }
-
+      if (response['content'] == null) {
+        return [];
+      }
       final List<dynamic> data = response['content'] as List<dynamic>;
       return data
           .map((appointmentJson) =>

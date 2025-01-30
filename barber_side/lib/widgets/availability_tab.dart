@@ -1,19 +1,16 @@
 import 'package:barbers_mk/providers/availability_provider.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 class AvailabilityTab extends StatefulWidget {
   final DateTime availabilityCurrentMonth;
-  final DateTime availabilityCurrentWeekStart;
   final DateTime availabilitySelectedDate;
   final Set<String> availabilitySelectedSlots;
-  final VoidCallback availabilityGoToNextWeek;
-  final VoidCallback availabilityGoToPreviousWeek;
   final Function(DateTime) availabilityOnDaySelected;
   final String Function(DateTime) availabilityFormatMonth;
-  final List<DateTime> Function() availabilityGetCurrentWeekDates;
   final DateTime Function(DateTime) stripTime;
   final List<dynamic> availabilitySlots;
   final WidgetRef ref;
@@ -21,14 +18,10 @@ class AvailabilityTab extends StatefulWidget {
   const AvailabilityTab({
     super.key,
     required this.availabilityCurrentMonth,
-    required this.availabilityCurrentWeekStart,
     required this.availabilitySelectedDate,
     required this.availabilitySelectedSlots,
-    required this.availabilityGoToNextWeek,
-    required this.availabilityGoToPreviousWeek,
     required this.availabilityOnDaySelected,
     required this.availabilityFormatMonth,
-    required this.availabilityGetCurrentWeekDates,
     required this.stripTime,
     required this.availabilitySlots,
     required this.ref,
@@ -50,7 +43,6 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
 
   @override
   Widget build(BuildContext context) {
-    final weekDates = widget.availabilityGetCurrentWeekDates();
     final slotsCopy = List<dynamic>.from(widget.availabilitySlots);
 
     return SingleChildScrollView(
@@ -80,91 +72,28 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                     ),
                   ),
                   SizedBox(
-                    height: 80,
-                    child: GestureDetector(
-                      key: ValueKey<DateTime>(
-                          widget.availabilityCurrentWeekStart),
-                      onHorizontalDragEnd: (details) {
-                        if (details.primaryVelocity == null) {
-                          return;
-                        }
-                        setState(() {
-                          if (details.primaryVelocity! < 0) {
-                            widget.availabilityGoToNextWeek();
-                          } else if (details.primaryVelocity! > 0) {
-                            widget.availabilityGoToPreviousWeek();
-                          }
-                        });
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: weekDates.map((day) {
-                          final isSelected = widget.stripTime(day) ==
-                              widget.stripTime(widget.availabilitySelectedDate);
-                          final isToday = widget.stripTime(day) ==
-                              widget.stripTime(DateTime.now());
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                widget.availabilityOnDaySelected(day);
-                              });
-                            },
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Container(
-                                  width: 45,
-                                  height: 45,
-                                  decoration: BoxDecoration(
-                                    color: isSelected ? orange : background,
-                                    shape: BoxShape.circle,
-                                    border: Border(
-                                      top: BorderSide(
-                                        color: isToday
-                                            ? orange
-                                            : isSelected
-                                                ? orange
-                                                : Colors.grey,
-                                        width: 1,
-                                      ),
-                                      left: BorderSide(
-                                        color: isToday
-                                            ? orange
-                                            : isSelected
-                                                ? orange
-                                                : Colors.grey,
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    '${day.day}',
-                                    style: TextStyle(
-                                      color: isSelected
-                                          ? Colors.white
-                                          : textPrimary,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  toBeginningOfSentenceCase(
-                                    DateFormat('E', 'mk')
-                                        .format(day)
-                                        .substring(0, 3),
-                                  )!,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: textPrimary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                    height: 90,
+                    child: DatePicker(
+                      DateTime.now(),
+                      width: 60,
+                      height: 80,
+                      initialSelectedDate: widget.availabilitySelectedDate,
+                      selectionColor: orange,
+                      selectedTextColor: Colors.white,
+                      daysCount: 365,
+                      locale: 'mk_MK',
+                      onDateChange: widget.availabilityOnDaySelected,
+                      dayTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                      dateTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                      ),
+                      monthTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
                       ),
                     ),
                   ),

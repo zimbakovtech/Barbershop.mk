@@ -2,18 +2,14 @@ import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointment_card.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:date_picker_timeline/date_picker_timeline.dart';
 
 class AppointmentTab extends StatelessWidget {
   final DateTime currentMonth;
   final bool isLoading;
-  final DateTime currentWeekStart;
   final DateTime selectedDate;
-  final VoidCallback onNextWeek;
-  final VoidCallback onPreviousWeek;
   final Function(DateTime) onDaySelected;
   final String Function(DateTime) formatMonth;
-  final List<DateTime> Function() getCurrentWeekDates;
   final DateTime Function(DateTime) stripTime;
   final List<dynamic> todaysAppointments;
   final BarberService barberService;
@@ -22,13 +18,9 @@ class AppointmentTab extends StatelessWidget {
     super.key,
     required this.currentMonth,
     required this.isLoading,
-    required this.currentWeekStart,
     required this.selectedDate,
-    required this.onNextWeek,
-    required this.onPreviousWeek,
     required this.onDaySelected,
     required this.formatMonth,
-    required this.getCurrentWeekDates,
     required this.stripTime,
     required this.todaysAppointments,
     required this.barberService,
@@ -65,82 +57,28 @@ class AppointmentTab extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 80,
-                          child: GestureDetector(
-                            key: ValueKey<DateTime>(currentWeekStart),
-                            onHorizontalDragEnd: (details) {
-                              if (details.primaryVelocity == null) {
-                                return;
-                              }
-                              if (details.primaryVelocity! < 0) {
-                                onNextWeek();
-                              } else if (details.primaryVelocity! > 0) {
-                                onPreviousWeek();
-                              }
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: getCurrentWeekDates().map((day) {
-                                final isSelected =
-                                    stripTime(day) == stripTime(selectedDate);
-                                final isToday =
-                                    stripTime(day) == stripTime(DateTime.now());
-                                return GestureDetector(
-                                  onTap: () => onDaySelected(day),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Container(
-                                        width: 45,
-                                        height: 45,
-                                        decoration: BoxDecoration(
-                                          color:
-                                              isSelected ? orange : background,
-                                          shape: BoxShape.circle,
-                                          border: Border(
-                                            top: BorderSide(
-                                              color: isToday
-                                                  ? orange
-                                                  : isSelected
-                                                      ? orange
-                                                      : Colors.grey,
-                                              width: 1,
-                                            ),
-                                            left: BorderSide(
-                                              color: isToday
-                                                  ? orange
-                                                  : isSelected
-                                                      ? orange
-                                                      : Colors.grey,
-                                              width: 1,
-                                            ),
-                                          ),
-                                        ),
-                                        alignment: Alignment.center,
-                                        child: Text(
-                                          '${day.day}',
-                                          style: TextStyle(
-                                            color: isSelected
-                                                ? Colors.white
-                                                : textPrimary,
-                                            fontWeight: isSelected
-                                                ? FontWeight.bold
-                                                : FontWeight.normal,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                        toBeginningOfSentenceCase(
-                                            DateFormat('E', 'mk')
-                                                .format(day)
-                                                .substring(0, 3)),
-                                        style: const TextStyle(
-                                            fontSize: 12, color: textPrimary),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }).toList(),
+                          height: 90,
+                          child: DatePicker(
+                            DateTime.now(),
+                            width: 60,
+                            height: 80,
+                            initialSelectedDate: selectedDate,
+                            selectionColor: orange,
+                            selectedTextColor: Colors.white,
+                            daysCount: 365,
+                            locale: 'mk_MK',
+                            onDateChange: onDaySelected,
+                            dayTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                            dateTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                            ),
+                            monthTextStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
                             ),
                           ),
                         ),
