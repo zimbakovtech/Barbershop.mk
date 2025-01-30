@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barbers_mk/models/service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -126,7 +128,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
                           const Icon(Icons.cut, color: orange),
                           const SizedBox(width: 8),
                           Text(
-                            widget.service.name,
+                            utf8.decode(widget.service.name.runes.toList()),
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 16),
                           ),

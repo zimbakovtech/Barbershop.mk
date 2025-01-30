@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:barbers_mk/models/service.dart';
 import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/services/barber_service.dart';
@@ -83,7 +85,10 @@ class _EditServicesState extends State<EditServices> {
                   },
                 )
               : const Center(
-                  child: Text('Сеуште немате услуги'),
+                  child: Text(
+                    'Сеуште немате услуги',
+                    style: TextStyle(fontSize: 20, color: textSecondary),
+                  ),
                 ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 30.0),
@@ -122,7 +127,7 @@ class _EditServicesState extends State<EditServices> {
             return AlertDialog(
               backgroundColor: navy,
               title: Text(
-                'Промени информации за ${service.name}',
+                'Промени информации за ${utf8.decode(service.name.runes.toList())}',
                 style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               content: SingleChildScrollView(
@@ -247,7 +252,7 @@ class _EditServicesState extends State<EditServices> {
                                 ),
                               ),
                               child: Text(
-                                service.name,
+                                utf8.decode(service.name.runes.toList()),
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ),
