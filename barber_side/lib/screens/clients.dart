@@ -158,7 +158,7 @@ class _ClientsState extends State<Clients> {
                         child: CircularProgressIndicator(color: orange))
                     : const Center(
                         child: Text(
-                          'No clients found',
+                          'Сеуште немате клиенти',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),
