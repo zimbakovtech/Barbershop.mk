@@ -1,5 +1,6 @@
 import 'package:barbers_mk/providers/availability_provider.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/custom_date_picker.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -72,29 +73,35 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                     ),
                   ),
                   SizedBox(
-                    height: 90,
-                    child: DatePicker(
-                      DateTime.now(),
+                    height: 70,
+                    child: CustomDatePicker(
+                      initialDate: DateTime.now(),
                       width: 60,
-                      height: 80,
+                      height: 60,
                       initialSelectedDate: widget.availabilitySelectedDate,
-                      selectionColor: orange,
-                      selectedTextColor: Colors.white,
+                      background: navy,
+                      selectedColor: orange,
+                      unselectedColor: Colors.grey,
+                      selectedTextColor: textPrimary,
                       daysCount: 365,
                       locale: 'mk_MK',
                       onDateChange: widget.availabilityOnDaySelected,
                       dayTextStyle: const TextStyle(
-                        color: Colors.white,
+                        color: textPrimary,
                         fontSize: 14,
                       ),
                       dateTextStyle: const TextStyle(
-                        color: Colors.white,
+                        color: textPrimary,
                         fontSize: 18,
                       ),
-                      monthTextStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: background,
+                          blurRadius: 5,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
                     ),
                   ),
                 ],

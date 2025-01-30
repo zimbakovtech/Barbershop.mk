@@ -1,10 +1,10 @@
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointment_card.dart';
 import 'package:barbers_mk/widgets/colors.dart';
+import 'package:barbers_mk/widgets/custom_date_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 
-class AppointmentTab extends StatelessWidget {
+class AppointmentTab extends StatefulWidget {
   final DateTime currentMonth;
   final bool isLoading;
   final DateTime selectedDate;
@@ -27,6 +27,13 @@ class AppointmentTab extends StatelessWidget {
   });
 
   @override
+  State<AppointmentTab> createState() => _AppointmentTabState();
+}
+
+class _AppointmentTabState extends State<AppointmentTab> {
+  late DateTime _selectedDate = DateTime.now();
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
@@ -42,45 +49,57 @@ class AppointmentTab extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                       color: navy,
                     ),
-                    padding: const EdgeInsets.all(8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(10.0),
+                          padding: const EdgeInsets.all(15.0),
                           child: Text(
-                            formatMonth(currentMonth),
+                            widget.formatMonth(widget.currentMonth),
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        SizedBox(
-                          height: 90,
-                          child: DatePicker(
-                            DateTime.now(),
-                            width: 60,
-                            height: 80,
-                            initialSelectedDate: selectedDate,
-                            selectionColor: orange,
-                            selectedTextColor: Colors.white,
-                            daysCount: 365,
-                            locale: 'mk_MK',
-                            onDateChange: onDaySelected,
-                            dayTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                            dateTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                            ),
-                            monthTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10.0),
+                          child: SizedBox(
+                              height: 70,
+                              child: CustomDatePicker(
+                                initialDate: DateTime.now(),
+                                width: 60,
+                                height: 60,
+                                initialSelectedDate: _selectedDate,
+                                selectedColor: orange,
+                                unselectedColor: Colors.grey,
+                                selectedTextColor: textPrimary,
+                                background: navy,
+                                daysCount: 365,
+                                locale: 'mk_MK',
+                                onDateChange: (newDate) {
+                                  setState(() {
+                                    _selectedDate = newDate;
+                                    widget.onDaySelected(newDate);
+                                  });
+                                },
+                                dayTextStyle: const TextStyle(
+                                  color: textPrimary,
+                                  fontSize: 14,
+                                ),
+                                dateTextStyle: const TextStyle(
+                                  color: textPrimary,
+                                  fontSize: 18,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: background,
+                                    blurRadius: 5,
+                                    offset: Offset(0, 4),
+                                  ),
+                                ],
+                              )),
                         ),
                       ],
                     ),
@@ -96,13 +115,13 @@ class AppointmentTab extends StatelessWidget {
                         fontWeight: FontWeight.bold),
                   ),
                 ),
-                isLoading
+                widget.isLoading
                     ? const Center(
                         child: CircularProgressIndicator(
                           color: orange,
                         ),
                       )
-                    : todaysAppointments.isEmpty
+                    : widget.todaysAppointments.isEmpty
                         ? const Center(
                             child: Padding(
                               padding: EdgeInsets.all(20.0),
@@ -114,9 +133,10 @@ class AppointmentTab extends StatelessWidget {
                             physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             padding: const EdgeInsets.symmetric(horizontal: 10),
-                            itemCount: todaysAppointments.length,
+                            itemCount: widget.todaysAppointments.length,
                             itemBuilder: (context, index) {
-                              final appointment = todaysAppointments[index];
+                              final appointment =
+                                  widget.todaysAppointments[index];
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 3.0),
@@ -124,7 +144,7 @@ class AppointmentTab extends StatelessWidget {
                                   haveCall: true,
                                   haveMenu: true,
                                   appointment: appointment,
-                                  barberService: barberService,
+                                  barberService: widget.barberService,
                                 ),
                               );
                             },

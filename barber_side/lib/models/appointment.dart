@@ -9,6 +9,7 @@ class Appointment {
   int? userId;
   String? userPhoneNumber;
   String? clientName;
+  int? clientPhoneNumber;
   String? status;
   String? date;
   String? time;
@@ -22,6 +23,7 @@ class Appointment {
     this.userId,
     this.userPhoneNumber,
     this.clientName,
+    this.clientPhoneNumber,
     this.status,
     this.date,
     this.time,
@@ -41,6 +43,7 @@ class Appointment {
       userId: json['user_id'],
       userPhoneNumber: json['user_phone_number'],
       clientName: json['client_name'],
+      clientPhoneNumber: json['client_phone_number'],
       status: json['status'],
       date: formattedDate,
       time: formattedTime,

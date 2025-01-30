@@ -134,7 +134,7 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             title: Text(
-                              'Јави се на ${widget.appointment.barber?.fullName}',
+                              'Јави се на ${widget.appointment.clientName}',
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: textPrimary,
