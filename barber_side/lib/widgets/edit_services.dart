@@ -4,7 +4,7 @@ import 'package:barbers_mk/models/service.dart';
 import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
-import 'package:barbers_mk/widgets/service_card.dart';
+import 'package:barbers_mk/widgets/cards/service_card.dart';
 import 'package:flutter/material.dart';
 
 class EditServices extends StatefulWidget {

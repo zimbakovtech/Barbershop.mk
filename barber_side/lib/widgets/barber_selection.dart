@@ -1,7 +1,7 @@
 import 'package:barbers_mk/models/user.dart';
 import 'package:flutter/material.dart';
-import 'package:barbers_mk/widgets/barber_card.dart';
-import 'package:barbers_mk/widgets/appointment_card.dart';
+import 'package:barbers_mk/widgets/cards/barber_card.dart';
+import 'package:barbers_mk/widgets/cards/appointment_card.dart';
 import 'package:barbers_mk/models/barber.dart';
 import 'package:barbers_mk/models/appointment.dart';
 import 'package:barbers_mk/services/barber_service.dart';

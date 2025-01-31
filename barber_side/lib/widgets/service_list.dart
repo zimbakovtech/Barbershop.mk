@@ -1,4 +1,4 @@
-import 'package:barbers_mk/widgets/service_card.dart';
+import 'package:barbers_mk/widgets/cards/service_card.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/models/service.dart';
 

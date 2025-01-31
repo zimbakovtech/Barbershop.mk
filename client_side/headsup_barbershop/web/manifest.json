@@ -1,11 +1,11 @@
 {
-    "name": "headsup_barbershop",
-    "short_name": "headsup_barbershop",
+    "name": "barber_mk",
+    "short_name": "barber_mk",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Barbers.mk",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

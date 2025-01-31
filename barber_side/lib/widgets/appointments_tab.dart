@@ -1,5 +1,5 @@
 import 'package:barbers_mk/services/barber_service.dart';
-import 'package:barbers_mk/widgets/appointment_card.dart';
+import 'package:barbers_mk/widgets/cards/appointment_card.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/custom_date_picker.dart';
 import 'package:flutter/material.dart';

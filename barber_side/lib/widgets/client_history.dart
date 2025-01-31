@@ -1,5 +1,5 @@
 import 'package:barbers_mk/models/appointment.dart';
-import 'package:barbers_mk/widgets/appointment.dart';
+import 'package:barbers_mk/widgets/cards/app_history_card.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
 

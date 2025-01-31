@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:barbers_mk/models/appointment.dart';
+import '../../models/appointment.dart';
 import 'package:flutter/material.dart';
-import 'colors.dart';
+import '../colors.dart';
 import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';

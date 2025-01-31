@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/models/appointment.dart';
-import 'widgets/appointment.dart';
+import 'widgets/cards/app_history_card.dart';
 import 'widgets/colors.dart';
 
 class AppointmentHistoryScreen extends StatefulWidget {

@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:barbers_mk/models/appointment.dart';
-import 'package:barbers_mk/services/barber_service.dart';
-import 'package:barbers_mk/widgets/colors.dart';
-import 'package:barbers_mk/providers/appointment_provider.dart';
+import '../../models/appointment.dart';
+import '../../services/barber_service.dart';
+import '../colors.dart';
+import '../../providers/appointment_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppointmentCardWidget extends ConsumerStatefulWidget {
   final Appointment appointment;
@@ -32,6 +31,15 @@ class AppointmentCardWidget extends ConsumerStatefulWidget {
 }
 
 class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri url = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -51,7 +59,7 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${widget.appointment.clientName}',
+                    widget.appointment.clientName!,
                     style: const TextStyle(
                       color: textSecondary,
                       fontWeight: FontWeight.bold,
@@ -99,7 +107,6 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(width: 10),
                           Text(
                             widget.appointment.date ?? '',
                             style: const TextStyle(
@@ -124,68 +131,9 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                     onPressed: () async {
                       final phoneNumber =
                           widget.appointment.barber?.phoneNumber;
-                      // bool confirmed =
-                      await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            backgroundColor: navy,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            title: Text(
-                              'Јави се на ${widget.appointment.clientName}',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: textPrimary,
-                              ),
-                            ),
-                            content: Text(
-                              'Дали сакате да се јавите на $phoneNumber?',
-                              style: const TextStyle(color: textSecondary),
-                            ),
-                            actions: [
-                              TextButton(
-                                child: const Text(
-                                  'Не',
-                                  style: TextStyle(color: orange),
-                                ),
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                              ),
-                              TextButton(
-                                child: const Text(
-                                  'Да',
-                                  style: TextStyle(color: orange),
-                                ),
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-
-                      // if (confirmed) {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     SnackBar(
-                      //       content: Text('Calling $phoneNumber...'),
-                      //       backgroundColor: Colors.green,
-                      //     ),
-                      //   );
-
-                      //   if (await canLaunchUrl(Uri.parse('tel:$phoneNumber'))) {
-                      //     await launchUrl(Uri.parse('tel:$phoneNumber'));
-                      //   } else {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       SnackBar(
-                      //         content: Text('Could not launch $phoneNumber'),
-                      //         backgroundColor: Colors.red,
-                      //       ),
-                      //     );
-                      //   }
-                      //   launchUrl(Uri.parse('tel:$phoneNumber'));
-                      // }
+                      if (phoneNumber != null) {
+                        await _makePhoneCall('071987100');
+                      }
                     },
                   )
                 : const SizedBox(),

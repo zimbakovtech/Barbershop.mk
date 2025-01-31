@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/models/client.dart';
 import 'package:barbers_mk/services/barber_service.dart';
-import 'package:barbers_mk/widgets/appointment_card.dart';
+import 'package:barbers_mk/widgets/cards/appointment_card.dart';
 import 'package:intl/intl.dart';
 
 class ClientDetails extends StatefulWidget {
