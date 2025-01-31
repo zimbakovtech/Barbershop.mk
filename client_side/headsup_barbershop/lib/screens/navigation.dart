@@ -18,6 +18,21 @@ class BarbershopApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         textTheme: GoogleFonts.poppinsTextTheme(),
+        primaryColor: navy,
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: orange,
+          selectionHandleColor: orange,
+          cursorColor: orange,
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          hintStyle: TextStyle(color: textSecondary),
+          labelStyle: TextStyle(color: orange),
+        ),
+        hintColor: orange,
+        canvasColor: navy,
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
       ),
       home: const MainPage(),
     );
@@ -38,7 +53,6 @@ class MainPageState extends State<MainPage> {
   int _currentIndex = 0;
   int _lastTappedIndex = -1;
   DateTime _lastTapTime = DateTime.now();
-  final BarberService _barberService = BarberService();
   User? user;
   bool isLoading = true;
 
@@ -46,7 +60,7 @@ class MainPageState extends State<MainPage> {
     const Barbershop(key: ValueKey('Home')),
     const Appointments(),
     const Notifications(),
-    const Profile(),
+    Profile(),
   ];
 
   @override
@@ -57,7 +71,7 @@ class MainPageState extends State<MainPage> {
 
   void _fetchUserInfo() async {
     try {
-      user = await _barberService.getUserInfo();
+      user = await BarberService().getUserInfo();
     } finally {
       setState(() {
         _screens = [
@@ -95,72 +109,64 @@ class MainPageState extends State<MainPage> {
               index: _currentIndex,
               children: _screens,
             ),
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(
-          canvasColor: navy,
-          splashFactory: NoSplash.splashFactory,
-          highlightColor: Colors.transparent,
-          splashColor: Colors.transparent,
-        ),
-        child: BottomNavigationBar(
-          elevation: 0,
-          currentIndex: _currentIndex,
-          onTap: (index) {
-            final now = DateTime.now();
-            if (_currentIndex == index &&
-                _lastTappedIndex == index &&
-                now.difference(_lastTapTime) <
-                    const Duration(milliseconds: 300)) {
-              setState(() {
-                _screenKeys[index] = UniqueKey();
-                if (index == 0) {
-                  _screens[index] = Barbershop(
-                      key: ValueKey(DateTime.now().toString()), user: user);
-                } else if (index == 1) {
-                  _screens[index] =
-                      Appointments(key: ValueKey(DateTime.now().toString()));
-                } else if (index == 2) {
-                  _screens[index] =
-                      Notifications(key: ValueKey(DateTime.now().toString()));
-                }
-              });
-            } else {
-              setState(() {
-                _currentIndex = index;
-                _lastTappedIndex = index;
-                _lastTapTime = now;
-              });
-            }
-          },
-          backgroundColor: navy,
-          selectedItemColor: orange,
-          unselectedFontSize: 13.5,
-          selectedFontSize: 15,
-          unselectedItemColor: Colors.white54,
-          type: BottomNavigationBarType.fixed,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.house),
-              activeIcon: Icon(CupertinoIcons.house_fill),
-              label: 'Дома',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today_outlined),
-              activeIcon: Icon(Icons.calendar_today),
-              label: 'Термини',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.bell),
-              activeIcon: Icon(CupertinoIcons.bell_fill),
-              label: 'Известувања',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(CupertinoIcons.person),
-              activeIcon: Icon(CupertinoIcons.person_fill),
-              label: 'Профил',
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          final now = DateTime.now();
+          if (_currentIndex == index &&
+              _lastTappedIndex == index &&
+              now.difference(_lastTapTime) <
+                  const Duration(milliseconds: 300)) {
+            setState(() {
+              _screenKeys[index] = UniqueKey();
+              if (index == 0) {
+                _screens[index] = Barbershop(
+                    key: ValueKey(DateTime.now().toString()), user: user);
+              } else if (index == 1) {
+                _screens[index] =
+                    Appointments(key: ValueKey(DateTime.now().toString()));
+              } else if (index == 2) {
+                _screens[index] =
+                    Notifications(key: ValueKey(DateTime.now().toString()));
+              }
+            });
+          } else {
+            setState(() {
+              _currentIndex = index;
+              _lastTappedIndex = index;
+              _lastTapTime = now;
+            });
+          }
+        },
+        backgroundColor: navy,
+        selectedItemColor: orange,
+        unselectedFontSize: 13,
+        selectedFontSize: 14,
+        unselectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.house),
+            activeIcon: Icon(CupertinoIcons.house_fill),
+            label: 'Дома',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today_outlined),
+            activeIcon: Icon(Icons.calendar_today),
+            label: 'Термини',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.bell),
+            activeIcon: Icon(CupertinoIcons.bell_fill),
+            label: 'Известувања',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.person),
+            activeIcon: Icon(CupertinoIcons.person_fill),
+            label: 'Профил',
+          ),
+        ],
       ),
     );
   }

@@ -26,7 +26,6 @@ class DatePick extends StatefulWidget {
 }
 
 class _DatePickState extends State<DatePick> {
-  final BarberService barberService = BarberService();
   late Future<Schedule> _scheduleFuture;
   Map<DateTime, bool> _availableDates = {};
   DateTime? _selectedDate;
@@ -47,7 +46,7 @@ class _DatePickState extends State<DatePick> {
 
   Future<Schedule> _fetchAvailableDates(int month) async {
     try {
-      final schedule = await barberService.fetchSchedule(
+      final schedule = await BarberService().fetchSchedule(
         barberId: widget.barberId,
         month: month.toString(),
       );
@@ -79,7 +78,7 @@ class _DatePickState extends State<DatePick> {
     });
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     try {
-      List<String> availableTimes = await barberService.fetchTimes(
+      List<String> availableTimes = await BarberService().fetchTimes(
         barberId: widget.barberId,
         date: formattedDate,
         serviceId: widget.service.id,

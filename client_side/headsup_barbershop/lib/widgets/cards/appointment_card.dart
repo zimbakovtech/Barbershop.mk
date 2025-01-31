@@ -1,9 +1,7 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/appointment.dart';
-import '../../services/barber_service.dart';
 import '../colors.dart';
 import '../../providers/appointment_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,7 +12,6 @@ class AppointmentCardWidget extends ConsumerStatefulWidget {
   final Appointment appointment;
   final bool haveCall;
   final bool haveMenu;
-  final BarberService barberService;
   final VoidCallback? onCancel;
 
   const AppointmentCardWidget({
@@ -22,7 +19,6 @@ class AppointmentCardWidget extends ConsumerStatefulWidget {
     required this.appointment,
     required this.haveCall,
     required this.haveMenu,
-    required this.barberService,
     this.onCancel,
   });
 

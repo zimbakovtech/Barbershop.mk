@@ -9,13 +9,15 @@ class BuildProfileItem extends StatefulWidget {
   final String title;
   final IconData icon;
   final User? user;
+  final VoidCallback onChange;
 
   const BuildProfileItem(
       {super.key,
       required this.context,
       required this.title,
       required this.icon,
-      this.user});
+      this.user,
+      required this.onChange});
 
   @override
   State<BuildProfileItem> createState() => _BuildProfileItemState();
@@ -38,6 +40,8 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
             _showChangePasswordDialog(context);
           } else if (widget.title == 'Промени телефон') {
             _showChangePhoneDialog(context);
+          } else if (widget.title == 'Промени име и презиме') {
+            _showChangeNameDialog(context);
           }
         });
   }
@@ -47,7 +51,6 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
     final TextEditingController newPasswordController = TextEditingController();
     final TextEditingController confirmPasswordController =
         TextEditingController();
-    final barberService = BarberService();
 
     bool passwordsMatch = false;
 
@@ -166,8 +169,8 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
                           }
 
                           try {
-                            await barberService.updatePassword(
-                                oldPassword, newPassword);
+                            await BarberService()
+                                .updatePassword(oldPassword, newPassword);
                             if (context.mounted) {
                               Navigator.of(context).pop();
                             }
@@ -188,6 +191,69 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
               ],
             );
           },
+        );
+      },
+    );
+  }
+
+  void _showChangeNameDialog(BuildContext context) {
+    final TextEditingController firstNameController = TextEditingController();
+    final TextEditingController lastNameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: navy,
+          title: const Text('Промени име и презиме',
+              style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: firstNameController,
+                cursorColor: orange,
+                decoration: const InputDecoration(
+                  hintText: 'Внеси ново име',
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: orange)),
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: lastNameController,
+                cursorColor: orange,
+                decoration: const InputDecoration(
+                  hintText: 'Внеси ново презиме',
+                  focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: orange)),
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Откажи', style: TextStyle(color: orange)),
+            ),
+            TextButton(
+              onPressed: () async {
+                try {
+                  await BarberService().updateUserInfo(
+                      firstName: firstNameController.text,
+                      lastName: lastNameController.text,
+                      phoneNumber: widget.user!.phoneNumber);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    widget.onChange();
+                  }
+                } finally {}
+              },
+              child: const Text('Потврди', style: TextStyle(color: orange)),
+            ),
+          ],
         );
       },
     );
@@ -221,11 +287,17 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
               child: const Text('Откажи', style: TextStyle(color: orange)),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  widget.user!.phoneNumber = phoneController.text;
-                });
-                Navigator.of(context).pop();
+              onPressed: () async {
+                try {
+                  await BarberService().updateUserInfo(
+                      firstName: widget.user!.firstName,
+                      lastName: widget.user!.lastName,
+                      phoneNumber: phoneController.text);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                    widget.onChange();
+                  }
+                } finally {}
               },
               child: const Text('Потврди', style: TextStyle(color: orange)),
             ),
@@ -297,7 +369,6 @@ class SupportSection extends StatefulWidget {
 }
 
 class _SupportSectionState extends State<SupportSection> {
-  final barberService = BarberService();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -312,11 +383,13 @@ class _SupportSectionState extends State<SupportSection> {
           ),
         ),
         const SizedBox(height: 10),
-        BuildProfileItem(context: context, title: 'FAQ', icon: Icons.help),
+        BuildProfileItem(
+            context: context, title: 'FAQ', icon: Icons.help, onChange: () {}),
         BuildProfileItem(
             context: context,
             title: 'Политика за приватност',
-            icon: Icons.privacy_tip),
+            icon: Icons.privacy_tip,
+            onChange: () {}),
         ListTile(
           leading: const Icon(Icons.logout, color: orange),
           title: const Text(
@@ -325,7 +398,7 @@ class _SupportSectionState extends State<SupportSection> {
           ),
           onTap: () async {
             try {
-              await barberService.logout();
+              await BarberService().logout();
               if (context.mounted) {
                 Navigator.pushAndRemoveUntil(
                   context,

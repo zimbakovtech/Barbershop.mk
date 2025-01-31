@@ -4,7 +4,6 @@ import '../widgets/cards/barber_card.dart';
 import '../widgets/cards/appointment_card.dart';
 import '../models/barber.dart';
 import '../models/appointment.dart';
-import '../services/barber_service.dart';
 
 class BarberSelectionWidget extends StatelessWidget {
   final User user;
@@ -12,7 +11,6 @@ class BarberSelectionWidget extends StatelessWidget {
   final List<Barber> barbers;
   final Function(Barber) onSelectBarber;
   final Appointment appointment;
-  final BarberService barberService;
   final VoidCallback onCancel;
 
   const BarberSelectionWidget({
@@ -22,7 +20,6 @@ class BarberSelectionWidget extends StatelessWidget {
     required this.barbers,
     required this.onSelectBarber,
     required this.appointment,
-    required this.barberService,
     required this.onCancel,
   });
 
@@ -81,7 +78,6 @@ class BarberSelectionWidget extends StatelessWidget {
               haveCall: true,
               haveMenu: true,
               appointment: appointment,
-              barberService: barberService,
               onCancel: onCancel,
             ),
           ),

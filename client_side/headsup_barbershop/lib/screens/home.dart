@@ -6,7 +6,6 @@ import '../book_flow/service_pick.dart';
 import '../book_flow/barber_selection.dart';
 import '../widgets/colors.dart';
 import 'package:flutter/material.dart';
-import '../services/barber_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/appointment_provider.dart';
 import '../providers/home_screen_provider.dart';
@@ -24,7 +23,6 @@ class Barbershop extends ConsumerStatefulWidget {
 class _BarbershopState extends ConsumerState<Barbershop> {
   List<Barber> barbers = [];
   bool isLoading = true;
-  final barberService = BarberService();
   String barbershopName = '';
   String picture = '';
   List<Appointment> appointments = [];
@@ -168,8 +166,7 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _selectedBarber!.barbershopName!
-                                        .toUpperCase(),
+                                    barbershopName.toUpperCase(),
                                     style:
                                         const TextStyle(color: textSecondary),
                                   ),
@@ -215,7 +212,6 @@ class _BarbershopState extends ConsumerState<Barbershop> {
           });
         },
         appointment: appointment,
-        barberService: barberService,
         onCancel: () {
           setState(() {
             _resetBooking();

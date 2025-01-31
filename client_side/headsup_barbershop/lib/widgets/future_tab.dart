@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:headsup_barbershop/services/barber_service.dart';
 import 'package:headsup_barbershop/widgets/cards/appointment_card.dart';
 import 'package:headsup_barbershop/widgets/colors.dart';
 
@@ -39,7 +38,6 @@ class FutureAppointments extends StatelessWidget {
                   haveCall: true,
                   haveMenu: true,
                   appointment: appointment,
-                  barberService: BarberService(),
                 );
               },
             ),

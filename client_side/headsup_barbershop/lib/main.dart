@@ -69,8 +69,19 @@ class _MyAppState extends State<MyApp> {
               ),
             )
           : _homeScreen,
-      theme: ThemeData(
+      theme: ThemeData.dark().copyWith(
         textTheme: GoogleFonts.poppinsTextTheme(),
+        primaryColor: navy,
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: orange,
+          selectionHandleColor: orange,
+          cursorColor: orange,
+        ),
+        hintColor: orange,
+        canvasColor: navy,
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
       ),
       navigatorObservers: [NavigatorObserverWithFCM()],
     );

@@ -24,15 +24,13 @@ class _ServicePickState extends State<ServicePick> {
     _fetchAndDisplayServices();
   }
 
-  final barberService = BarberService();
-
   Future<void> _fetchAndDisplayServices() async {
     setState(() {
       isLoading = true;
     });
     try {
       final fetchedServices =
-          await barberService.fetchServices(barberId: widget.barberId);
+          await BarberService().fetchServices(barberId: widget.barberId);
 
       setState(() {
         services = fetchedServices;

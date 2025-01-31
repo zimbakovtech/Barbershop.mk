@@ -12,7 +12,6 @@ class PastAppointments extends StatefulWidget {
 }
 
 class PastAppointmentsState extends State<PastAppointments> {
-  final barberService = BarberService();
   final ScrollController _scrollController = ScrollController();
   final List<Appointment> _appointments = [];
 
@@ -36,7 +35,7 @@ class PastAppointmentsState extends State<PastAppointments> {
     });
 
     try {
-      final newAppointments = await barberService.fetchAppointments(
+      final newAppointments = await BarberService().fetchAppointments(
           '?history=true&order=desc&limit=$_limit&page=$_currentPage');
       setState(() {
         _appointments.addAll(newAppointments);

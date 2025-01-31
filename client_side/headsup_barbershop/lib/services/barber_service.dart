@@ -7,13 +7,20 @@ import '../models/barbershop.dart';
 import '../models/schedule.dart';
 import '../models/service.dart';
 import '../models/user.dart';
+import '../models/notification.dart';
 
 class BarberService {
-  String? _token;
+  static final BarberService _instance = BarberService._internal();
 
-  BarberService() {
+  factory BarberService() {
+    return _instance;
+  }
+
+  BarberService._internal() {
     _initToken();
   }
+
+  String? _token;
 
   Future<void> _initToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -119,13 +126,59 @@ class BarberService {
     }
   }
 
+  Future<Map<String, dynamic>> fetchNotifications(int page) async {
+    final String endpoint = 'notifications?page=$page';
+
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get(endpoint, headers: headers);
+
+      final List<dynamic> content = response['content'] ?? [];
+      final List<NotificationModel> notifications =
+          content.map((json) => NotificationModel.fromJson(json)).toList();
+
+      final bool hasNext = response['has_next'] ?? false;
+
+      return {
+        'notifications': notifications,
+        'hasNext': hasNext,
+      };
+    } catch (error) {
+      throw Exception('Error fetching notifications: $error');
+    }
+  }
+
+  Future<void> updateUserInfo({
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+  }) async {
+    final body = {
+      'first_name': firstName,
+      'last_name': lastName,
+      'phone_number': phoneNumber,
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.put('users/update', body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error updating user info: $e');
+    }
+  }
+
   Future<void> bookAppointment(
-      int barberId, int serviceId, DateTime date, String time) async {
+      {required int barberId,
+      required int serviceId,
+      required DateTime date,
+      required String time,
+      String? note}) async {
     final endpoint = 'barbers/$barberId/appointments';
     final body = {
       'service_id': serviceId,
       'date': DateFormat('yyyy-MM-dd').format(date),
       'time': time,
+      'note': note,
     };
 
     try {
@@ -166,76 +219,11 @@ class BarberService {
     try {
       final headers = await _getHeaders();
 
-      // final response = await apiFetcher.get(
-      //   'establishments',
-      //   headers: headers,
-      // );
-
-      Map<String, dynamic> response = {
-        "id": 2,
-        "name": "Head's Up Barbershop",
-        "short_name": "Head's Up",
-        "address": {
-          "street": "Goce Delcev 23",
-          "city_id": 10,
-          "city_name": "Strumica"
-        },
-        "phone_number": "077854332",
-        "image_url":
-            "https://barber-cdn.s3.eu-central-1.amazonaws.com/images/establishments/1729724417.jpg",
-        "rating": 5,
-        "user_favorite": false,
-        "user_home_screen": false,
-        "created_at": "2024-10-22T23:49:42Z",
-        "updated_at": "2025-01-23T10:15:32Z",
-        "barbers": [
-          {
-            "id": 2,
-            "full_name": "Trajce Zlatkov",
-            "email": "trajce@zlatkov.com",
-            "phone_number": "077854332",
-            "profile_picture":
-                "https://images.newrepublic.com/9bba0e56c589fb3e06191969202abb446327a86a.jpeg?auto=format&fit=crop&crop=faces&q=65&w=1000&h=undefined&ar=3%3A2&ixlib=react-9.0.3&w=1000",
-            "average_rating": 0,
-            "establishment": {
-              "id": 2,
-              "name": "Head's Up Barbershop",
-              "short_name": "Head's Up",
-              "rating": 0,
-              "user_favorite": false,
-              "user_home_screen": false,
-              "barbers": null,
-              "created_at": "0001-01-01T00:00:00Z",
-              "updated_at": "0001-01-01T00:00:00Z"
-            },
-            "created_at": "0001-01-01T00:00:00Z",
-            "updated_at": "0001-01-01T00:00:00Z"
-          },
-          {
-            "id": 2,
-            "full_name": "Marko Petrov",
-            "email": "marko@petrov.com",
-            "phone_number": "077854332",
-            "profile_picture":
-                "https://static.vecteezy.com/system/resources/previews/031/690/272/non_2x/a-barber-trimming-a-man-s-beard-with-clippers-free-photo.jpg",
-            "average_rating": 0,
-            "establishment": {
-              "id": 2,
-              "name": "Head's Up Barbershop",
-              "short_name": "Head's Up",
-              "rating": 0,
-              "user_favorite": false,
-              "user_home_screen": false,
-              "barbers": null,
-              "created_at": "0001-01-01T00:00:00Z",
-              "updated_at": "0001-01-01T00:00:00Z"
-            },
-            "created_at": "0001-01-01T00:00:00Z",
-            "updated_at": "0001-01-01T00:00:00Z"
-          }
-        ]
-      };
-      return Barbershop.fromJson(response);
+      final response = await apiFetcher.get(
+        'establishments/home',
+        headers: headers,
+      );
+      return Barbershop.fromJson(response[0]);
     } catch (error) {
       throw Exception('Error fetching home screen data: $error');
     }
