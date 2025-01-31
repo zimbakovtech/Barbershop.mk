@@ -204,8 +204,7 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _selectedBarber!.barbershopName!
-                                        .toUpperCase(),
+                                    barbershopName.toUpperCase(),
                                     style:
                                         const TextStyle(color: textSecondary),
                                   ),

@@ -4,7 +4,6 @@ class Barber {
   final String? email;
   final String? phoneNumber;
   final String? profilePicture;
-  String? barbershopName;
   List<Barber>? barbers;
 
   Barber({
@@ -13,7 +12,6 @@ class Barber {
     this.email,
     this.phoneNumber,
     this.profilePicture,
-    this.barbershopName,
     this.barbers,
   });
 
@@ -24,9 +22,6 @@ class Barber {
       email: json['email'] ?? '',
       phoneNumber: json['phone_number'] ?? '',
       profilePicture: json['profile_picture'],
-      barbershopName: json['establishment'] != null
-          ? json['establishment']['name'] as String?
-          : null,
       barbers: json['establishment'] != null &&
               json['establishment']['barbers'] != null
           ? (json['establishment']['barbers'] as List)
