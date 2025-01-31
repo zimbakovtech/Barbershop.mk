@@ -12,6 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    systemNavigationBarColor: navy,
+    systemNavigationBarIconBrightness: Brightness.light,
+  ));
   await initializeDateFormatting('mk');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

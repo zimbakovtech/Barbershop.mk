@@ -34,6 +34,7 @@ class GeneralService {
     final body = {
       'platform': platform,
       'token': deviceToken,
+      'app_identifier': 'com.barbershop.mk',
     };
 
     try {

@@ -4,7 +4,6 @@ class User {
   final String lastName;
   final String? email;
   String phoneNumber;
-  final String? userType;
   final String? profilePicture;
   String? token;
 
@@ -14,7 +13,6 @@ class User {
     required this.lastName,
     this.email,
     required this.phoneNumber,
-    required this.userType,
     this.profilePicture,
     this.token,
   });
@@ -35,7 +33,6 @@ class User {
       lastName: last,
       email: json['email'],
       phoneNumber: json['phone_number'],
-      userType: json['user_type'],
       profilePicture: json['profile_picture'],
       token: null,
     );

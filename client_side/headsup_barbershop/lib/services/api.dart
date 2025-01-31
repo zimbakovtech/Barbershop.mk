@@ -161,6 +161,7 @@ final apiFetcher = ApiFetcher(
   {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
+    'x-api-key': 'af2a3faf-96c9-4db4-b998-5cbf61f46944',
     'Accept-Language': 'mk',
   },
 );

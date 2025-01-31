@@ -49,7 +49,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -74,7 +74,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Container(
                 padding: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
@@ -172,7 +172,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0),
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(

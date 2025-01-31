@@ -55,7 +55,8 @@ class BarberSelectionWidget extends StatelessWidget {
                     crossAxisCount: crossAxisCount,
                     crossAxisSpacing: 20.0,
                     mainAxisSpacing: 20.0,
-                    childAspectRatio: itemWidth / 250,
+                    childAspectRatio:
+                        itemWidth / 250, // Adjust this ratio as needed
                   ),
                   itemCount: barbers.length,
                   itemBuilder: (context, index) {

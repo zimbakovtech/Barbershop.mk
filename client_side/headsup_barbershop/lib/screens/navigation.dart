@@ -17,7 +17,6 @@ class BarbershopApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        textTheme: GoogleFonts.poppinsTextTheme(),
         primaryColor: navy,
         textSelectionTheme: const TextSelectionThemeData(
           selectionColor: orange,

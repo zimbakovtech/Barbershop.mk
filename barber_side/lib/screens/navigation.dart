@@ -3,7 +3,6 @@ import 'package:barbers_mk/screens/clients.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'home.dart';
 import 'profile.dart';
 import 'package:barbers_mk/widgets/colors.dart';
@@ -17,7 +16,21 @@ class BarbershopApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
-        textTheme: GoogleFonts.poppinsTextTheme(),
+        primaryColor: navy,
+        textSelectionTheme: const TextSelectionThemeData(
+          selectionColor: orange,
+          selectionHandleColor: orange,
+          cursorColor: orange,
+        ),
+        inputDecorationTheme: const InputDecorationTheme(
+          hintStyle: TextStyle(color: textSecondary),
+          labelStyle: TextStyle(color: orange),
+        ),
+        hintColor: orange,
+        canvasColor: navy,
+        splashFactory: NoSplash.splashFactory,
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
       ),
       home: const MainPage(),
     );
@@ -91,7 +104,6 @@ class MainPageState extends State<MainPage> {
               ),
             )
           : IndexedStack(
-              // Removed the Expanded widget here
               index: _currentIndex,
               children: _screens,
             ),
@@ -134,8 +146,8 @@ class MainPageState extends State<MainPage> {
           },
           backgroundColor: navy,
           selectedItemColor: orange,
-          unselectedFontSize: 13.5,
-          selectedFontSize: 15,
+          unselectedFontSize: 13,
+          selectedFontSize: 14,
           unselectedItemColor: Colors.white54,
           type: BottomNavigationBarType.fixed,
           items: const [

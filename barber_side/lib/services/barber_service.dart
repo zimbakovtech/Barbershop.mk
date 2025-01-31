@@ -1,4 +1,5 @@
 import 'package:barbers_mk/models/availability.dart';
+import 'package:barbers_mk/models/notification.dart';
 import '../models/stats.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
@@ -250,6 +251,28 @@ class BarberService {
     }
   }
 
+  Future<Map<String, dynamic>> fetchNotifications(int page) async {
+    final String endpoint = 'notifications?page=$page';
+
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get(endpoint, headers: headers);
+
+      final List<dynamic> content = response['content'] ?? [];
+      final List<NotificationModel> notifications =
+          content.map((json) => NotificationModel.fromJson(json)).toList();
+
+      final bool hasNext = response['has_next'] ?? false;
+
+      return {
+        'notifications': notifications,
+        'hasNext': hasNext,
+      };
+    } catch (error) {
+      throw Exception('Error fetching notifications: $error');
+    }
+  }
+
   Future<void> bookAppointment(int barberId, String clientName, int serviceId,
       DateTime date, String time) async {
     final endpoint = 'barbers/$barberId/appointments';
@@ -366,20 +389,6 @@ class BarberService {
     }
   }
 
-  Future<Barber> getBarberInfo() async {
-    try {
-      final headers = await _getHeaders();
-      final response = await apiFetcher.get(
-        'barbers/me',
-        headers: headers,
-      );
-      return Barber.fromJson(response as Map<String, dynamic>);
-    } catch (e) {
-      throw Exception('Error fetching barber info: $e');
-    }
-  }
-
-  // Add these two new methods to your BarberService class
   Future<List<ServiceStat>> getServiceStats() async {
     try {
       final headers = await _getHeaders();
@@ -420,40 +429,6 @@ class BarberService {
       }
     } catch (e) {
       throw Exception('Error during login: $e');
-    }
-  }
-
-  Future<String> register({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-    required String passwordConfirmation,
-    required String phoneNumber,
-  }) async {
-    const String endpoint = 'register';
-
-    try {
-      final response = await apiFetcher.post(endpoint, body: {
-        'first_name': firstName,
-        'last_name': lastName,
-        'email': email,
-        'password': password,
-        'password_confirmation': passwordConfirmation,
-        'phone_number': phoneNumber,
-      });
-
-      if (response is Map<String, dynamic> && response.containsKey('token')) {
-        final String token = response['token'];
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('auth_token', token);
-        _token = token;
-        return token;
-      } else {
-        throw Exception('Registration failed: ${response.toString()}');
-      }
-    } catch (e) {
-      throw Exception('Error during registration: $e');
     }
   }
 

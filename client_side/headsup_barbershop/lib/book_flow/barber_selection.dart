@@ -44,7 +44,7 @@ class BarberSelectionWidget extends StatelessWidget {
             else
               Padding(
                 padding:
-                    const EdgeInsets.only(left: 20.0, right: 20, top: 30.0),
+                    const EdgeInsets.only(left: 20.0, right: 20, top: 40.0),
                 child: GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

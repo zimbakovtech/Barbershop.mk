@@ -181,12 +181,6 @@ class _BarbershopState extends ConsumerState<Barbershop> {
                     child: _currentStep == 0
                         ? Center(
                             child: Container(),
-
-                            // Image(
-                            //   image: AssetImage('lib/assets/barbersmk.png'),
-                            //   height: 150,
-                            //   fit: BoxFit.contain,
-                            // ),
                           )
                         : Row(
                             crossAxisAlignment: CrossAxisAlignment.center,

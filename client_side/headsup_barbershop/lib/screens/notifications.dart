@@ -145,7 +145,7 @@ class NotificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      color: background,
+      color: navy,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: const BorderSide(color: navy),
@@ -171,7 +171,7 @@ class NotificationCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  notification.formattedDate,
+                  notification.timeAgo,
                   style: const TextStyle(
                     fontSize: 12,
                     color: textSecondary,

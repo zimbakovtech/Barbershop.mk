@@ -5,7 +5,7 @@ import '../../models/schedule.dart';
 import '../../models/service.dart';
 import '../services/barber_service.dart';
 import '../widgets/custom_date_picker.dart';
-import '../widgets/widgets.dart';
+import '../widgets/bottom_button.dart';
 
 class DatePick extends StatefulWidget {
   final String barberName;
@@ -189,5 +189,132 @@ class _DatePickState extends State<DatePick> {
         },
       ),
     );
+  }
+}
+
+class AvailableTimesWidget extends StatelessWidget {
+  final DateTime? selectedDate;
+  final bool isFetchingTimes;
+  final String? fetchTimesError;
+  final List<String> availableTimes;
+  final String? selectedTime;
+  final Function(String) onTimeSelected;
+
+  const AvailableTimesWidget({
+    super.key,
+    required this.selectedDate,
+    required this.isFetchingTimes,
+    required this.fetchTimesError,
+    required this.availableTimes,
+    required this.selectedTime,
+    required this.onTimeSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (selectedDate == null) {
+      return Container();
+    } else if (isFetchingTimes) {
+      return const SizedBox(
+          height: 100,
+          child: Center(child: CircularProgressIndicator(color: orange)));
+    } else if (fetchTimesError != null) {
+      return Text(
+        fetchTimesError!,
+        style: const TextStyle(color: Colors.red),
+        textAlign: TextAlign.center,
+      );
+    } else if (availableTimes.isEmpty) {
+      return Container(
+        height: 70,
+        padding: const EdgeInsets.symmetric(vertical: 5.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10.0),
+          color: navy,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            children: [
+              const Text(
+                'Нема слободни термини за одбраниот даум.',
+                style: TextStyle(fontSize: 14, color: textPrimary),
+                textAlign: TextAlign.center,
+              ),
+              GestureDetector(
+                onTap: () {},
+                child: const Text(
+                  'ЛИСТА НА ЧЕКАЊЕ',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: orange,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Време',
+            style: TextStyle(
+                fontSize: 20, color: textPrimary, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          Container(
+            height: 70,
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              color: navy,
+            ),
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              scrollDirection: Axis.horizontal,
+              itemCount: availableTimes.length,
+              itemBuilder: (context, index) {
+                final time = availableTimes[index];
+                final isSelected = time == selectedTime;
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  child: GestureDetector(
+                    onTap: () => onTimeSelected(time),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 8.0),
+                      decoration: BoxDecoration(
+                        color: isSelected ? orange : background,
+                        // border: isSelected
+                        //     ? const Border(
+                        //         top: BorderSide(color: orange),
+                        //         left: BorderSide(color: orange),
+                        //       )
+                        //     : null,
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      child: Center(
+                        child: Text(
+                          time,
+                          style: const TextStyle(
+                            color: textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

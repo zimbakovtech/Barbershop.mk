@@ -73,7 +73,7 @@ class CustomDatePickerState extends State<CustomDatePicker> {
 
     final border = isSelected ? orange : Colors.grey;
 
-    return Expanded(
+    return SizedBox(
       child: GestureDetector(
         onTap: () {
           setState(() {

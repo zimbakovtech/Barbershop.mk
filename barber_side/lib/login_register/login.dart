@@ -1,10 +1,8 @@
 import 'package:barbers_mk/services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'register.dart';
 import '../screens/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/widgets.dart';
 import '../widgets/colors.dart';
 import '/services/barber_service.dart';
 
@@ -89,10 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'BARBERS.MK',
+                      'BARBERS Pro',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 45,
+                        fontSize: 42,
                         fontWeight: FontWeight.bold,
                         fontFamily: GoogleFonts.montserrat().fontFamily,
                       ),
@@ -178,38 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const BuildDividerWithText(text: 'OR'),
-                          const SizedBox(height: 20),
-                          BuildSocialButton(
-                            label: 'Continue with Google',
-                            icon: Icons.g_mobiledata_outlined,
-                            onPressed: () {
-                              // Handle Google login
-                            },
-                          ),
-                          const SizedBox(height: 10),
-                          BuildSocialButton(
-                            label: 'Continue with Facebook',
-                            icon: Icons.facebook,
-                            onPressed: () {
-                              // Handle Facebook login
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          TextButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RegisterScreen()),
-                              );
-                            },
-                            child: const Text(
-                              'Don\'t have an account? Sign up',
-                              style: TextStyle(color: Colors.white70),
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -220,6 +186,67 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BuildTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final bool obscureText;
+
+  const BuildTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.obscureText = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      style: const TextStyle(color: Colors.white),
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon, color: Colors.white70),
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.white70),
+        filled: true,
+        fillColor: background.withValues(alpha: 0.8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+}
+
+class BuildDividerWithText extends StatelessWidget {
+  final String text;
+
+  const BuildDividerWithText({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Expanded(child: Divider(color: Colors.white70)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Text(
+            text,
+            style: const TextStyle(color: Colors.white70),
+          ),
+        ),
+        const Expanded(child: Divider(color: Colors.white70)),
+      ],
     );
   }
 }
