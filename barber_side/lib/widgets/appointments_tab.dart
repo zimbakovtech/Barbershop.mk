@@ -45,6 +45,7 @@ class _AppointmentTabState extends State<AppointmentTab> {
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Container(
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: navy,
@@ -53,7 +54,7 @@ class _AppointmentTabState extends State<AppointmentTab> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.all(10.0),
                           child: Text(
                             widget.formatMonth(widget.currentMonth),
                             style: const TextStyle(
@@ -62,45 +63,42 @@ class _AppointmentTabState extends State<AppointmentTab> {
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10.0),
-                          child: SizedBox(
-                              height: 70,
-                              child: CustomDatePicker(
-                                initialDate: DateTime.now(),
-                                width: 60,
-                                height: 60,
-                                initialSelectedDate: _selectedDate,
-                                selectedColor: orange,
-                                unselectedColor: Colors.grey,
-                                selectedTextColor: textPrimary,
-                                background: navy,
-                                daysCount: 90,
-                                locale: 'mk_MK',
-                                onDateChange: (newDate) {
-                                  setState(() {
-                                    _selectedDate = newDate;
-                                    widget.onDaySelected(newDate);
-                                  });
-                                },
-                                dayTextStyle: const TextStyle(
-                                  color: textPrimary,
-                                  fontSize: 14,
+                        SizedBox(
+                            height: 70,
+                            child: CustomDatePicker(
+                              initialDate: DateTime.now(),
+                              width: 60,
+                              height: 60,
+                              initialSelectedDate: _selectedDate,
+                              selectedColor: orange,
+                              unselectedColor: Colors.grey,
+                              selectedTextColor: textPrimary,
+                              background: navy,
+                              daysCount: 90,
+                              locale: 'mk_MK',
+                              onDateChange: (newDate) {
+                                setState(() {
+                                  _selectedDate = newDate;
+                                  widget.onDaySelected(newDate);
+                                });
+                              },
+                              dayTextStyle: const TextStyle(
+                                color: textPrimary,
+                                fontSize: 14,
+                              ),
+                              dateTextStyle: const TextStyle(
+                                color: textPrimary,
+                                fontSize: 18,
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: background,
+                                  blurRadius: 5,
+                                  offset: Offset(0, 4),
                                 ),
-                                dateTextStyle: const TextStyle(
-                                  color: textPrimary,
-                                  fontSize: 18,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: background,
-                                    blurRadius: 5,
-                                    offset: Offset(0, 4),
-                                  ),
-                                ],
-                              )),
-                        ),
+                              ],
+                            )),
                       ],
                     ),
                   ),

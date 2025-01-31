@@ -143,6 +143,7 @@ class CustomDatePickerState extends State<CustomDatePicker> {
             Container(
               width: 45,
               height: 45,
+              margin: const EdgeInsets.symmetric(horizontal: 2),
               decoration: BoxDecoration(
                 color: backgroundColor,
                 shape: BoxShape.circle,

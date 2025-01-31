@@ -82,7 +82,7 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                       selectedColor: orange,
                       unselectedColor: Colors.grey,
                       selectedTextColor: textPrimary,
-                      daysCount: 365,
+                      daysCount: 90,
                       locale: 'mk_MK',
                       onDateChange: widget.availabilityOnDaySelected,
                       dayTextStyle: const TextStyle(
