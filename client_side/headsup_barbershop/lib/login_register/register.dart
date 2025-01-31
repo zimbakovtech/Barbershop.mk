@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:headsup_barbershop/login_register/widgets.dart';
 import '../screens/navigation.dart';
-import '../widgets/widgets.dart';
 import '../widgets/colors.dart';
 import '/services/barber_service.dart';
 import 'package:google_fonts/google_fonts.dart';

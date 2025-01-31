@@ -130,7 +130,8 @@ class _DatePickState extends State<DatePick> {
                   const SizedBox(height: 10),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 10.0),
                     decoration: BoxDecoration(
                       color: navy,
                       borderRadius: BorderRadius.circular(10),
@@ -139,8 +140,7 @@ class _DatePickState extends State<DatePick> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15.0, vertical: 10.0),
+                          padding: const EdgeInsets.all(8.0),
                           child: Text(
                             toBeginningOfSentenceCase(
                               DateFormat('MMMM yyyy', 'mk')

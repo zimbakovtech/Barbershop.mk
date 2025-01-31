@@ -29,19 +29,16 @@ class Schedule extends Iterable<AvailableDate> {
 class AvailableDate {
   final String date;
   final bool isAvailable;
-  final int totalSlots;
 
   AvailableDate({
     required this.date,
     required this.isAvailable,
-    required this.totalSlots,
   });
 
   factory AvailableDate.fromJson(Map<String, dynamic> json) {
     return AvailableDate(
       date: json['date'],
       isAvailable: json['is_available'],
-      totalSlots: json['total_slots'],
     );
   }
 }

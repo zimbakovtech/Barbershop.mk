@@ -1,8 +1,10 @@
-import 'package:barbers_mk/models/schedule.dart';
-import 'package:barbers_mk/models/service.dart';
+import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
-import '../services/barber_service.dart';
 import 'package:intl/intl.dart';
+import '../../models/schedule.dart';
+import '../../models/service.dart';
+import '../services/barber_service.dart';
+import '../widgets/custom_date_picker.dart';
 import '../widgets/widgets.dart';
 
 class DatePick extends StatefulWidget {
@@ -27,18 +29,16 @@ class _DatePickState extends State<DatePick> {
   final BarberService barberService = BarberService();
   late Future<Schedule> _scheduleFuture;
   Map<DateTime, bool> _availableDates = {};
-  DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDate;
   String? _selectedTime;
   List<String> _availableTimes = [];
   bool _isFetchingTimes = false;
   String? _fetchTimesError;
-  int currentMonth = DateTime.now().month; // Store month as int
 
   @override
   void initState() {
     super.initState();
-    _scheduleFuture = _fetchAvailableDates(currentMonth);
+    _scheduleFuture = _fetchAvailableDates(DateTime.now().month);
   }
 
   DateTime _normalizeDate(DateTime date) {
@@ -48,15 +48,15 @@ class _DatePickState extends State<DatePick> {
   Future<Schedule> _fetchAvailableDates(int month) async {
     try {
       final schedule = await barberService.fetchSchedule(
-          barberId: widget.barberId, month: month.toString());
-
+        barberId: widget.barberId,
+        month: month.toString(),
+      );
       setState(() {
         _availableDates = {
           for (var dateInfo in schedule.availableDates)
             _normalizeDate(DateTime.parse(dateInfo.date)): dateInfo.isAvailable
         };
       });
-
       return schedule;
     } catch (error) {
       setState(() {
@@ -77,16 +77,13 @@ class _DatePickState extends State<DatePick> {
       _fetchTimesError = null;
       _availableTimes = [];
     });
-
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-
     try {
       List<String> availableTimes = await barberService.fetchTimes(
         barberId: widget.barberId,
         date: formattedDate,
         serviceId: widget.service.id,
       );
-
       setState(() {
         _availableTimes = availableTimes;
         _isFetchingTimes = false;
@@ -95,26 +92,6 @@ class _DatePickState extends State<DatePick> {
       setState(() {
         _isFetchingTimes = false;
         _fetchTimesError = 'Error fetching times: $error';
-      });
-    }
-  }
-
-  void _onPageChanged(DateTime month) {
-    int newMonth = month.month;
-
-    if (newMonth != currentMonth) {
-      setState(() {
-        currentMonth = newMonth;
-        DateTime newFocusedDay = DateTime(month.year, month.month, 1);
-
-        // Ensure newFocusedDay is not before firstDay
-        DateTime firstDay = DateTime.now(); // Assuming the first day is today
-        if (newFocusedDay.isBefore(firstDay)) {
-          newFocusedDay = firstDay;
-        }
-
-        _focusedDay = newFocusedDay;
-        _scheduleFuture = _fetchAvailableDates(currentMonth);
       });
     }
   }
@@ -132,45 +109,83 @@ class _DatePickState extends State<DatePick> {
       body: FutureBuilder<Schedule>(
         future: _scheduleFuture,
         builder: (context, snapshot) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: ListView(
-              children: [
-                const SizedBox(height: 20),
-                CalendarWidget(
-                  focusedDay: _focusedDay,
-                  selectedDate: _selectedDate,
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (_isDateAvailable(selectedDay)) {
-                      setState(() {
-                        _focusedDay = selectedDay;
-                      });
-                      _onDateSelected(selectedDay);
-                    }
-                  },
-                  isDateAvailable: _isDateAvailable,
-                  onDateSelected: _onDateSelected,
-                  onPageChanged: _onPageChanged,
-                ),
-                const SizedBox(height: 20),
-                AvailableTimesWidget(
-                  selectedDate: _selectedDate,
-                  isFetchingTimes: _isFetchingTimes,
-                  fetchTimesError: _fetchTimesError,
-                  availableTimes: _availableTimes,
-                  selectedTime: _selectedTime,
-                  onTimeSelected: _onTimeSelected,
-                ),
-                const SizedBox(height: 20),
-                BottomButtonWidget(
-                  selectedDate: _selectedDate,
-                  selectedTime: _selectedTime,
-                  onDateTimeSelected: widget.onDateTimeSelected,
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
-          );
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: ListView(
+                children: [
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Датум',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: textPrimary,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 5.0, horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color: navy,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            toBeginningOfSentenceCase(
+                              DateFormat('MMMM yyyy', 'mk')
+                                  .format(_selectedDate ?? DateTime.now()),
+                            ),
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        CustomDatePicker(
+                          initialDate: DateTime.now(),
+                          initialSelectedDate: _selectedDate ?? DateTime.now(),
+                          selectedTextColor: Colors.white,
+                          daysCount: 20,
+                          locale: 'mk_MK',
+                          onDateChange: (date) {
+                            _onDateSelected(date);
+                          },
+                          isDateAvailable: _isDateAvailable,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  AvailableTimesWidget(
+                    selectedDate: _selectedDate,
+                    isFetchingTimes: _isFetchingTimes,
+                    fetchTimesError: _fetchTimesError,
+                    availableTimes: _availableTimes,
+                    selectedTime: _selectedTime,
+                    onTimeSelected: _onTimeSelected,
+                  ),
+                  const SizedBox(height: 20),
+                  BottomButtonWidget(
+                    selectedDate: _selectedDate,
+                    selectedTime: _selectedTime,
+                    onDateTimeSelected: widget.onDateTimeSelected,
+                  ),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            );
+          }
         },
       ),
     );

@@ -1,10 +1,10 @@
+import 'package:headsup_barbershop/login_register/widgets.dart';
 import '../services/general_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'register.dart';
 import '../screens/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../widgets/widgets.dart';
 import '../widgets/colors.dart';
 import '/services/barber_service.dart';
 
