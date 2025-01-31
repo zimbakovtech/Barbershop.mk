@@ -1,11 +1,11 @@
-import 'package:barbers_mk/appointment_history.dart';
+import 'package:barbers_mk/widgets/profile_screens/appointment_history.dart';
 import 'package:barbers_mk/login_register/login.dart';
 import 'package:barbers_mk/models/user.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/colors.dart';
-import 'package:barbers_mk/widgets/edit_services.dart';
-import 'package:barbers_mk/widgets/statistics.dart';
-import 'package:barbers_mk/widgets/working_hours.dart';
+import 'package:barbers_mk/widgets/profile_screens/edit_services.dart';
+import 'package:barbers_mk/widgets/profile_screens/statistics.dart';
+import 'package:barbers_mk/widgets/profile_screens/working_hours.dart';
 import 'package:flutter/material.dart';
 
 class BuildProfileItem extends StatefulWidget {

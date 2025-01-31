@@ -75,7 +75,7 @@ class _AppointmentTabState extends State<AppointmentTab> {
                                 unselectedColor: Colors.grey,
                                 selectedTextColor: textPrimary,
                                 background: navy,
-                                daysCount: 365,
+                                daysCount: 90,
                                 locale: 'mk_MK',
                                 onDateChange: (newDate) {
                                   setState(() {

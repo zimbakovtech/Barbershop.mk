@@ -1,9 +1,9 @@
-import 'package:barbers_mk/confirmation.dart';
-import 'package:barbers_mk/date_pick.dart';
+import 'package:barbers_mk/book_flow/confirmation.dart';
+import 'package:barbers_mk/book_flow/date_pick.dart';
 import 'package:barbers_mk/models/service.dart';
 import 'package:barbers_mk/models/user.dart';
-import 'package:barbers_mk/service_pick.dart';
-import 'package:barbers_mk/widgets/barber_selection.dart';
+import 'package:barbers_mk/book_flow/service_pick.dart';
+import 'package:barbers_mk/book_flow/barber_selection.dart';
 import 'package:barbers_mk/widgets/colors.dart';
 import 'package:barbers_mk/widgets/notifications.dart';
 import 'package:flutter/cupertino.dart';

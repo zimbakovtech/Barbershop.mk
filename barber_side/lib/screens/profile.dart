@@ -1,5 +1,5 @@
 import 'package:barbers_mk/widgets/colors.dart';
-import 'package:barbers_mk/widgets/profile_widgets.dart';
+import 'package:barbers_mk/widgets/profile_screens/profile_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/models/user.dart';
 

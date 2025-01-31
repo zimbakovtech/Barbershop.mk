@@ -1,9 +1,9 @@
 import 'package:barbers_mk/models/schedule.dart';
 import 'package:barbers_mk/models/service.dart';
 import 'package:flutter/material.dart';
-import 'services/barber_service.dart';
+import '../services/barber_service.dart';
 import 'package:intl/intl.dart';
-import 'widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
 class DatePick extends StatefulWidget {
   final String barberName;

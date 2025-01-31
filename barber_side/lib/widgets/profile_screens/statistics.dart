@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
-import '../services/barber_service.dart';
-import '../widgets/colors.dart';
-import '../models/stats.dart';
+import '../../services/barber_service.dart';
+import '../colors.dart';
+import '../../models/stats.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({super.key});

@@ -3,8 +3,8 @@ import 'package:barbers_mk/models/service.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:barbers_mk/widgets/colors.dart';
-import 'services/barber_service.dart';
-import 'providers/appointment_provider.dart';
+import '../services/barber_service.dart';
+import '../providers/appointment_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Confirmation extends ConsumerStatefulWidget {

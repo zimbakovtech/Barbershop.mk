@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/models/appointment.dart';
-import 'widgets/cards/app_history_card.dart';
-import 'widgets/colors.dart';
+import '../cards/app_history_card.dart';
+import '../colors.dart';
 
 class AppointmentHistoryScreen extends StatefulWidget {
   const AppointmentHistoryScreen({super.key});
