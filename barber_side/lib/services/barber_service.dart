@@ -1,5 +1,6 @@
 import 'package:barbers_mk/models/availability.dart';
 import 'package:barbers_mk/models/notification.dart';
+import 'package:barbers_mk/models/waitlist.dart';
 import '../models/stats.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
@@ -310,6 +311,25 @@ class BarberService {
       await apiFetcher.patch(endpoint, headers: headers);
     } catch (e) {
       throw Exception('Error no-showing appointment: $e');
+    }
+  }
+
+  Future<List<Waitlist>> getWaitlist() async {
+    try {
+      final headers = await _getHeaders();
+      final response =
+          await apiFetcher.get('barbers/waitlist', headers: headers);
+
+      if (response == null || response.isEmpty) {
+        return [];
+      }
+
+      return (response as List<dynamic>)
+          .map(
+              (waitlist) => Waitlist.fromJson(waitlist as Map<String, dynamic>))
+          .toList();
+    } catch (error) {
+      throw Exception('Error fetching waitlist: $error');
     }
   }
 

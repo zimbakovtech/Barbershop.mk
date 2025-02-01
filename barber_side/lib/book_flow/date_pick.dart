@@ -236,6 +236,7 @@ class AvailableTimesWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
                 'Нема слободни термини за одбраниот даум.',
@@ -250,6 +251,7 @@ class AvailableTimesWidget extends StatelessWidget {
                     fontSize: 16,
                     color: orange,
                     decoration: TextDecoration.underline,
+                    decorationColor: orange,
                   ),
                 ),
               )
