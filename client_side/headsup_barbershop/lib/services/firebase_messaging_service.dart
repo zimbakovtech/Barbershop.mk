@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:headsup_barbershop/widgets/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -61,12 +62,15 @@ class FirebaseMessagingService {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(message.notification?.title ?? ''),
-        content: Text(message.notification?.body ?? ''),
+        backgroundColor: navy,
+        title: Text(message.notification?.title ?? '',
+            style: const TextStyle(color: textPrimary)),
+        content: Text(message.notification?.body ?? '',
+            style: const TextStyle(color: textSecondary)),
         actions: <Widget>[
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
+            child: const Text('OK', style: TextStyle(color: orange)),
           ),
         ],
       ),

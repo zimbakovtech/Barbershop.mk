@@ -60,7 +60,7 @@ class _AppointmentCardWidgetState extends ConsumerState<AppointmentCardWidget> {
                     style: const TextStyle(
                       color: textSecondary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                      fontSize: 16,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),

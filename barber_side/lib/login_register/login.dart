@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/barbershop.png',
+              'lib/assets/barbershop.jpg',
               fit: BoxFit.cover,
             ),
           ),

@@ -67,6 +67,16 @@ class _BarbershopState extends ConsumerState<Barbershop> {
     });
   }
 
+  Future<bool> _handleWillPop() async {
+    if (_currentStep > 0) {
+      setState(() {
+        _currentStep--;
+      });
+      return false;
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final barbershop = ref.watch(homescreenprovider);
@@ -84,113 +94,112 @@ class _BarbershopState extends ConsumerState<Barbershop> {
       isLoading = false;
     });
 
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: _currentStep == 0
-              ? const AssetImage('lib/assets/headsup.png')
-              : const AssetImage('lib/assets/final_background.png'),
-          fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: _handleWillPop,
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: _currentStep == 0
+                ? const AssetImage('lib/assets/headsup.png')
+                : const AssetImage('lib/assets/final_background.png'),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: _currentStep == 0
-            ? AppBar(
-                backgroundColor: Colors.transparent,
-                centerTitle: false,
-                title: Text(
-                  'Добредојде, ${widget.user!.firstName}',
-                  style: const TextStyle(fontSize: 21, color: textPrimary),
-                ),
-              )
-            : AppBar(
-                elevation: 0.0,
-                scrolledUnderElevation: 0.0,
-                centerTitle: false,
-                backgroundColor: Colors.transparent,
-                title: _currentStep == 1
-                    ? const Text(
-                        'Одбери услуга',
-                        style: TextStyle(color: textPrimary),
-                      )
-                    : _currentStep == 2
-                        ? const Text(
-                            'Одбери термин',
-                            style: TextStyle(color: textPrimary),
-                          )
-                        : _currentStep == 3
-                            ? const Text(
-                                'Детали',
-                                style: TextStyle(color: textPrimary),
-                              )
-                            : null,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  onPressed: () {
-                    setState(() {
-                      _currentStep -= 1;
-                    });
-                  },
-                ),
-              ),
-        body: isLoading
-            ? const Center(child: CircularProgressIndicator(color: orange))
-            : Column(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _currentStep == 0
-                        ? Center(
-                            child: Container(),
-
-                            // Image(
-                            //   image: AssetImage('lib/assets/barbersmk.png'),
-                            //   height: 150,
-                            //   fit: BoxFit.contain,
-                            // ),
-                          )
-                        : Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 50.0),
-                                child: CircleAvatar(
-                                    radius: 55,
-                                    backgroundImage: NetworkImage(
-                                        _selectedBarber!.profilePicture!)),
-                              ),
-                              const SizedBox(width: 15),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    barbershopName.toUpperCase(),
-                                    style:
-                                        const TextStyle(color: textSecondary),
-                                  ),
-                                  Text(
-                                    _selectedBarber!.fullName,
-                                    style: const TextStyle(
-                                        color: textPrimary,
-                                        fontSize: 21,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: _currentStep == 0
+              ? AppBar(
+                  backgroundColor: Colors.transparent,
+                  centerTitle: false,
+                  title: Text(
+                    'Добредојде, ${widget.user!.firstName}',
+                    style: const TextStyle(fontSize: 21, color: textPrimary),
                   ),
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 20.0),
-                      child: bookingFlow(),
+                )
+              : AppBar(
+                  elevation: 0.0,
+                  scrolledUnderElevation: 0.0,
+                  centerTitle: false,
+                  backgroundColor: Colors.transparent,
+                  title: _currentStep == 1
+                      ? const Text(
+                          'Одбери услуга',
+                          style: TextStyle(color: textPrimary),
+                        )
+                      : _currentStep == 2
+                          ? const Text(
+                              'Одбери термин',
+                              style: TextStyle(color: textPrimary),
+                            )
+                          : _currentStep == 3
+                              ? const Text(
+                                  'Детали',
+                                  style: TextStyle(color: textPrimary),
+                                )
+                              : null,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      setState(() {
+                        if (_currentStep > 0) {
+                          _currentStep -= 1;
+                        }
+                      });
+                    },
+                  ),
+                ),
+          body: isLoading
+              ? const Center(child: CircularProgressIndicator(color: orange))
+              : Column(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: _currentStep == 0
+                          ? Center(
+                              child: Container(),
+                            )
+                          : Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 50.0),
+                                  child: CircleAvatar(
+                                      radius: 55,
+                                      backgroundImage: NetworkImage(
+                                          _selectedBarber!.profilePicture!)),
+                                ),
+                                const SizedBox(width: 15),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      barbershopName.toUpperCase(),
+                                      style:
+                                          const TextStyle(color: textSecondary),
+                                    ),
+                                    Text(
+                                      _selectedBarber!.fullName,
+                                      style: const TextStyle(
+                                          color: textPrimary,
+                                          fontSize: 21,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
                     ),
-                  ),
-                ],
-              ),
+                    Expanded(
+                      flex: 5,
+                      child: Container(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: bookingFlow(),
+                      ),
+                    ),
+                  ],
+                ),
+        ),
       ),
     );
   }
@@ -239,6 +248,9 @@ class _BarbershopState extends ConsumerState<Barbershop> {
             _selectedTime = selectedTime;
             _currentStep = 3;
           });
+        },
+        onWaitlist: () {
+          _resetBooking();
         },
       );
     } else if (_currentStep == 3) {

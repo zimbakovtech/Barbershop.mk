@@ -1,3 +1,4 @@
+import 'package:headsup_barbershop/models/waitlist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 import 'package:intl/intl.dart';
@@ -148,15 +149,54 @@ class BarberService {
     }
   }
 
+  Future<void> scheduleWaitList(
+      String startDate, String endDate, int serviceId, int barberId) async {
+    final body = {
+      'start_date': startDate,
+      'end_date': endDate,
+      'service_id': serviceId
+    };
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.post('barbers/$barberId/waitlist',
+          body: body, headers: headers);
+    } catch (e) {
+      throw Exception('Error scheduling waitlist: $e');
+    }
+  }
+
+  Future<List<Waitlist>> getWaitlist() async {
+    try {
+      final headers = await _getHeaders();
+      final response = await apiFetcher.get('users/waitlist', headers: headers);
+      return (response as List<dynamic>)
+          .map((json) => Waitlist.fromJson(json))
+          .toList();
+    } catch (e) {
+      throw Exception('Error getting waitlist: $e');
+    }
+  }
+
+  Future<void> deleteWaitlist(int waitlistId) async {
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.delete('barbers/2/waitlist/$waitlistId',
+          headers: headers);
+    } catch (e) {
+      throw Exception('Error deleting waitlist: $e');
+    }
+  }
+
   Future<void> updateUserInfo({
     String? firstName,
     String? lastName,
     String? phoneNumber,
   }) async {
     final body = {
-      'first_name': firstName,
-      'last_name': lastName,
-      'phone_number': phoneNumber,
+      if (firstName != null && lastName != null) 'first_name': firstName,
+      if (firstName != null && lastName != null) 'last_name': lastName,
+      if (phoneNumber != null) 'phone_number': phoneNumber,
     };
 
     try {

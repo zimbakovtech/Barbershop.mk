@@ -58,7 +58,7 @@ class MainPageState extends State<MainPage> {
     const Barbershop(key: ValueKey('Home')),
     const Appointments(),
     const Notifications(),
-    Profile(),
+    const Profile(),
   ];
 
   @override

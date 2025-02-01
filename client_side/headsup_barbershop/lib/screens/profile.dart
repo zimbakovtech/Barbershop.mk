@@ -6,20 +6,27 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 
 class Profile extends StatefulWidget {
-  User? user;
-  Profile({super.key, this.user});
+  final User? user; // Make this final
+  const Profile({super.key, this.user}); // Use const constructor
 
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  late User? user; // Local state for user
   String? language = 'Македонски';
+
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user; // Initialize with the widget's user
+  }
 
   void _onChange() async {
     final newUser = await BarberService().getUserInfo();
     setState(() {
-      widget.user = newUser;
+      user = newUser; // Update local user state
     });
   }
 
@@ -37,13 +44,14 @@ class _ProfileState extends State<Profile> {
                   const SizedBox(height: 40.0),
                   CircleAvatar(
                     radius: 55,
-                    backgroundImage: widget.user!.profilePicture != null
-                        ? NetworkImage(widget.user!.profilePicture!)
-                        : const AssetImage('lib/assets/barber.jpg'),
+                    backgroundImage: user?.profilePicture != null
+                        ? NetworkImage(user!.profilePicture!)
+                        : const AssetImage('lib/assets/barber.jpg')
+                            as ImageProvider,
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    '${widget.user!.firstName} ${widget.user!.lastName}',
+                    '${user?.firstName ?? ''} ${user?.lastName ?? ''}',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
@@ -52,7 +60,7 @@ class _ProfileState extends State<Profile> {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    widget.user!.email!,
+                    user?.email ?? '',
                     style: const TextStyle(
                       color: Colors.white70,
                       fontSize: 16,
@@ -67,20 +75,28 @@ class _ProfileState extends State<Profile> {
               context: context,
               title: 'Промени име и презиме',
               icon: Icons.person,
-              user: widget.user,
+              user: user,
               onChange: _onChange,
             ),
             BuildProfileItem(
-                context: context,
-                title: 'Промени лозинка',
-                icon: Icons.lock,
-                user: widget.user,
-                onChange: _onChange),
+              context: context,
+              title: 'Промени лозинка',
+              icon: Icons.lock,
+              user: user,
+              onChange: _onChange,
+            ),
+            BuildProfileItem(
+              context: context,
+              title: 'Промени телефон',
+              icon: CupertinoIcons.phone,
+              user: user,
+              onChange: _onChange,
+            ),
+            const Divider(color: textSecondary),
             BuildProfileItem(
                 context: context,
-                title: 'Промени телефон',
-                icon: CupertinoIcons.phone,
-                user: widget.user,
+                title: 'Листа на чекање',
+                icon: Icons.access_time,
                 onChange: _onChange),
             const Divider(color: textSecondary),
             const SizedBox(height: 10),
@@ -90,7 +106,7 @@ class _ProfileState extends State<Profile> {
             SupportSection(
               context: context,
             ),
-            const SizedBox(height: 10)
+            const SizedBox(height: 10),
           ],
         ),
       ),

@@ -1,3 +1,5 @@
+import 'package:headsup_barbershop/widgets/wait_list_screen.dart';
+
 import '../login_register/login.dart';
 import '../models/user.dart';
 import '../services/barber_service.dart';
@@ -42,6 +44,13 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
             _showChangePhoneDialog(context);
           } else if (widget.title == 'Промени име и презиме') {
             _showChangeNameDialog(context);
+          } else if (widget.title == 'Листа на чекање') {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const WaitListScreen(),
+              ),
+            );
           }
         });
   }
@@ -243,8 +252,7 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
                 try {
                   await BarberService().updateUserInfo(
                       firstName: firstNameController.text,
-                      lastName: lastNameController.text,
-                      phoneNumber: widget.user!.phoneNumber);
+                      lastName: lastNameController.text);
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     widget.onChange();
@@ -289,10 +297,8 @@ class _BuildProfileItemState extends State<BuildProfileItem> {
             TextButton(
               onPressed: () async {
                 try {
-                  await BarberService().updateUserInfo(
-                      firstName: widget.user!.firstName,
-                      lastName: widget.user!.lastName,
-                      phoneNumber: phoneController.text);
+                  await BarberService()
+                      .updateUserInfo(phoneNumber: phoneController.text);
                   if (context.mounted) {
                     Navigator.of(context).pop();
                     widget.onChange();

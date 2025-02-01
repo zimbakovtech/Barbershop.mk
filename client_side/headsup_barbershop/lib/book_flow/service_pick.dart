@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:headsup_barbershop/widgets/colors.dart';
 import '../../services/barber_service.dart';
 import '../../models/service.dart';
 import '../../widgets/service_list.dart';
@@ -56,7 +57,8 @@ class _ServicePickState extends State<ServicePick> {
                 child: Column(
                   children: [
                     isLoading
-                        ? const CircularProgressIndicator() // Show loading indicator
+                        ? const CircularProgressIndicator(
+                            color: orange) // Show loading indicator
                         : ServiceList(
                             services: services,
                             onServiceSelected: (service) {

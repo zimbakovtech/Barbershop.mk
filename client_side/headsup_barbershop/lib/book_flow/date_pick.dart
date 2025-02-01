@@ -14,6 +14,7 @@ class DatePick extends StatefulWidget {
   final Service service;
   final String barbershopName;
   final Function(DateTime, String) onDateTimeSelected;
+  final VoidCallback onWaitlist;
 
   const DatePick({
     super.key,
@@ -21,6 +22,7 @@ class DatePick extends StatefulWidget {
     required this.service,
     required this.barbershopName,
     required this.onDateTimeSelected,
+    required this.onWaitlist,
   });
 
   @override
@@ -111,7 +113,8 @@ class _DatePickState extends State<DatePick> {
         future: _scheduleFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(color: orange));
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
@@ -177,6 +180,8 @@ class _DatePickState extends State<DatePick> {
                     onTimeSelected: _onTimeSelected,
                     selectedBarber: widget.selectedBarber,
                     barbershopName: widget.barbershopName,
+                    serviceId: widget.service.id,
+                    onWaitlist: widget.onWaitlist,
                   ),
                   const SizedBox(height: 20),
                   BottomButtonWidget(
@@ -204,6 +209,8 @@ class AvailableTimesWidget extends StatelessWidget {
   final Function(String) onTimeSelected;
   final Barber selectedBarber;
   final String barbershopName;
+  final int serviceId;
+  final VoidCallback onWaitlist;
 
   const AvailableTimesWidget({
     super.key,
@@ -215,6 +222,8 @@ class AvailableTimesWidget extends StatelessWidget {
     required this.onTimeSelected,
     required this.selectedBarber,
     required this.barbershopName,
+    required this.serviceId,
+    required this.onWaitlist,
   });
 
   @override
@@ -255,6 +264,8 @@ class AvailableTimesWidget extends StatelessWidget {
                     builder: (context) => WaitList(
                       selectedBarber: selectedBarber,
                       barbershopName: barbershopName,
+                      serviceId: serviceId,
+                      onWaitlist: onWaitlist,
                     ),
                   ));
                 },
