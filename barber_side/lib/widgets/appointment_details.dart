@@ -1,12 +1,13 @@
 import 'dart:convert';
-
+import 'package:barbers_mk/providers/appointment_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:barbers_mk/models/appointment.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class AppointmentDetails extends StatefulWidget {
+class AppointmentDetails extends ConsumerStatefulWidget {
   final Appointment appointment;
   const AppointmentDetails({super.key, required this.appointment});
 
@@ -14,7 +15,16 @@ class AppointmentDetails extends StatefulWidget {
   AppointmentDetailsState createState() => AppointmentDetailsState();
 }
 
-class AppointmentDetailsState extends State<AppointmentDetails> {
+class AppointmentDetailsState extends ConsumerState<AppointmentDetails> {
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri url = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +75,35 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0),
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await ref
+                                  .read(appointmentProvider.notifier)
+                                  .cancelAppointment(widget.appointment.id!);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Appointment canceled successfully'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Failed to cancel appointment: $e'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          },
                           icon: Container(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -98,7 +136,13 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                   child: Column(
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final phoneNumber =
+                              widget.appointment.barber?.phoneNumber;
+                          if (phoneNumber != null) {
+                            await _makePhoneCall('071987100');
+                          }
+                        },
                         icon: Container(
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -132,8 +176,34 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0),
                         child: IconButton(
-                          onPressed: () {
-                            // Add your onPressed functionality here
+                          onPressed: () async {
+                            try {
+                              await ref
+                                  .read(appointmentProvider.notifier)
+                                  .noshowAppointment(widget.appointment.id!);
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text(
+                                        'Appointment marked no-show successfully'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+                              }
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Failed to no-show appointment: $e'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
                           },
                           icon: Container(
                             decoration: BoxDecoration(
@@ -258,7 +328,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
         children: [
           Row(
             children: [
-              Icon(Icons.note, color: orange, size: 22),
+              Icon(Icons.message_outlined, color: orange, size: 22),
               SizedBox(width: 8),
               Text(
                 'Белешки',
@@ -274,7 +344,7 @@ class AppointmentDetailsState extends State<AppointmentDetails> {
           Text(
             'Нема белешки за овој термин',
             style: TextStyle(
-              color: textPrimary,
+              color: textSecondary,
               fontSize: 16,
             ),
           ),

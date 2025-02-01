@@ -1,6 +1,5 @@
 import 'package:barbers_mk/services/general_service.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../screens/navigation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/colors.dart';
@@ -78,6 +77,14 @@ class _LoginScreenState extends State<LoginScreen> {
               fit: BoxFit.cover,
             ),
           ),
+          Positioned(
+            top: 80,
+            left: MediaQuery.of(context).size.width / 2 - 75,
+            child: Image.asset(
+              'lib/assets/barbersmk.png',
+              height: 150,
+            ),
+          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32.0),
@@ -86,15 +93,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'BARBERS Pro',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: GoogleFonts.montserrat().fontFamily,
-                      ),
-                    ),
                     Text(
                       _statusMessage,
                       style: const TextStyle(color: Colors.white),
@@ -115,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 18,
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          const SizedBox(height: 30),
                           Material(
                             elevation: 5,
                             color: Colors.transparent,

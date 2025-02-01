@@ -98,7 +98,7 @@ class MainPageState extends State<MainPage> {
       backgroundColor: navy,
       body: isLoading
           ? Container(
-              color: navy,
+              color: background,
               child: const Center(
                 child: CircularProgressIndicator(color: orange),
               ),

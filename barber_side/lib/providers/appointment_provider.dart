@@ -27,6 +27,11 @@ class AppointmentNotifier extends StateNotifier<List<Appointment>> {
 
   Future<void> cancelAppointment(int appointmentId) async {
     await repository.cancelAppointment(appointmentId);
-    await fetchAppointments(); // Refresh the list after cancellation
+    await fetchAppointments();
+  }
+
+  Future<void> noshowAppointment(int appointmentId) async {
+    await repository.noshowAppointment(appointmentId);
+    await fetchAppointments();
   }
 }

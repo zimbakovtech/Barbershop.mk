@@ -296,9 +296,20 @@ class BarberService {
 
     try {
       final headers = await _getHeaders();
-      await apiFetcher.put(endpoint, headers: headers);
+      await apiFetcher.patch(endpoint, headers: headers);
     } catch (e) {
       throw Exception('Error cancelling appointment: $e');
+    }
+  }
+
+  Future<void> noshowAppointment(int appointmentId) async {
+    final endpoint = 'appointments/$appointmentId/no-show';
+
+    try {
+      final headers = await _getHeaders();
+      await apiFetcher.patch(endpoint, headers: headers);
+    } catch (e) {
+      throw Exception('Error no-showing appointment: $e');
     }
   }
 
