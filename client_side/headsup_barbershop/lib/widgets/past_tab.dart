@@ -84,35 +84,49 @@ class PastAppointmentsState extends State<PastAppointments> {
   @override
   Widget build(BuildContext context) {
     if (_appointments.isEmpty && _isLoading) {
-      return Scaffold(
-        backgroundColor: background,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: background,
-          title: const Text('Историја на термини'),
-          leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back_ios),
+      return const Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Text(
+              'Минати термини',
+              style: TextStyle(
+                color: textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
-        body: const Center(
-          child: CircularProgressIndicator(color: orange),
-        ),
+          Center(
+            child: CircularProgressIndicator(color: orange),
+          )
+        ],
       );
     }
     if (_appointments.isEmpty) {
-      return Scaffold(
-        backgroundColor: background,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: background,
-          title: const Text('Историја на термини'),
-          leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back_ios),
+      return const Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.all(15.0),
+            child: Text(
+              'Минати термини',
+              style: TextStyle(
+                color: textPrimary,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
-        ),
-        body: const Center(child: Text('No appointments found.')),
+          Center(
+            child: Text(
+              'Нема минати термини',
+              style: TextStyle(
+                color: textSecondary,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ],
       );
     }
     return Column(
