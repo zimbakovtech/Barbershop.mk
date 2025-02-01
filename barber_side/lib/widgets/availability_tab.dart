@@ -139,10 +139,11 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                                 .format(widget.availabilitySelectedDate),
                           )!,
                           style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                            color: textPrimary,
+                            fontSize: 17,
                             fontWeight: FontWeight.bold,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
                         GestureDetector(
                           onTap: _selectAllSlots,
@@ -153,6 +154,7 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                               fontSize: 15,
                               decoration: TextDecoration.underline,
                               decorationColor: orange,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ),
