@@ -32,13 +32,23 @@ class AvailabilityTab extends StatefulWidget {
 }
 
 class _AvailabilityTabState extends State<AvailabilityTab> {
+  bool isSelect = true;
+
   void _selectAllSlots() {
-    setState(() {
-      widget.availabilitySelectedSlots.clear();
-      for (var slot in widget.availabilitySlots) {
-        widget.availabilitySelectedSlots.add(slot['time_slot']);
-      }
-    });
+    if (isSelect) {
+      setState(() {
+        widget.availabilitySelectedSlots.clear();
+        for (var slot in widget.availabilitySlots) {
+          widget.availabilitySelectedSlots.add(slot['time_slot']);
+        }
+        isSelect = false;
+      });
+    } else {
+      setState(() {
+        widget.availabilitySelectedSlots.clear();
+        isSelect = true;
+      });
+    }
   }
 
   @override
@@ -136,12 +146,13 @@ class _AvailabilityTabState extends State<AvailabilityTab> {
                         ),
                         GestureDetector(
                           onTap: _selectAllSlots,
-                          child: const Text(
-                            'Одбери сите',
-                            style: TextStyle(
+                          child: Text(
+                            isSelect ? 'Селектирај сите' : "Деселектирај сите",
+                            style: const TextStyle(
                               color: orange,
                               fontSize: 15,
                               decoration: TextDecoration.underline,
+                              decorationColor: orange,
                             ),
                           ),
                         ),

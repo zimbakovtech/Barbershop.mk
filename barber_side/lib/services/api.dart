@@ -157,7 +157,7 @@ class ApiFetcher {
 }
 
 final apiFetcher = ApiFetcher(
-  'https://barbers.prodanov.me/api/v1',
+  'https://barber.prodanov.me/api/v1',
   {
     'Accept': 'application/json',
     'Content-Type': 'application/json',

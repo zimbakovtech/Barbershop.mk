@@ -230,9 +230,9 @@ class _BarbershopState extends ConsumerState<Barbershop> {
       );
     } else if (_currentStep == 2) {
       content = DatePick(
-        barberName: _selectedBarberName ?? 'Unknown Barber',
-        barberId: _barberId ?? 0,
+        selectedBarber: _selectedBarber!,
         service: _selectedService!,
+        barbershopName: barbershopName,
         onDateTimeSelected: (selectedDate, selectedTime) {
           setState(() {
             _selectedDate = selectedDate;

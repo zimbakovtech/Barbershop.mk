@@ -95,7 +95,8 @@ class _StatisticsState extends State<Statistics> {
         future: _loadStatistics(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(
+                child: CircularProgressIndicator(color: orange));
           }
 
           if (snapshot.hasError) {

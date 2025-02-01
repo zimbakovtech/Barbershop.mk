@@ -1,3 +1,4 @@
+import 'package:barbers_mk/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/models/service.dart';
@@ -58,7 +59,8 @@ class _ServicePickState extends State<ServicePick> {
                 child: Column(
                   children: [
                     isLoading
-                        ? const CircularProgressIndicator() // Show loading indicator
+                        ? const CircularProgressIndicator(
+                            color: orange) // Show loading indicator
                         : ServiceList(
                             services: services,
                             onServiceSelected: (service) {

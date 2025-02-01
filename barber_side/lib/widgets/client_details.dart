@@ -42,7 +42,7 @@ class _ClientDetailsState extends State<ClientDetails>
   @override
   Widget build(BuildContext context) {
     if (client == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: orange));
     }
 
     return Scaffold(

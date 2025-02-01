@@ -1,11 +1,12 @@
-import '../screens/navigation.dart';
-import '../services/firebase_messaging_service.dart';
-import '../widgets/colors.dart';
+import 'screens/navigation.dart';
+import 'services/firebase_messaging_service.dart';
+import 'widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/firebase_options.dart';
-import '../login_register/login.dart';
+import 'services/firebase_options.dart';
+import 'login_register/login.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';

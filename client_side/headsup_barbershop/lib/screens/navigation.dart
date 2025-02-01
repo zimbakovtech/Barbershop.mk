@@ -3,7 +3,6 @@ import '../models/user.dart';
 import '../services/barber_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'home.dart';
 import 'profile.dart';
 import '../widgets/colors.dart';

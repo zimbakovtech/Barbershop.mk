@@ -15,6 +15,7 @@ class Appointment {
   String? time;
   Barbershop? barbershop;
   Barber? barber;
+  String? notes;
   Service? service;
 
   Appointment({
@@ -29,6 +30,7 @@ class Appointment {
     this.time,
     this.barbershop,
     this.barber,
+    this.notes,
     this.service,
   });
 
@@ -48,6 +50,7 @@ class Appointment {
       date: formattedDate,
       time: formattedTime,
       barbershop: Barbershop.fromJson(json['establishment']),
+      notes: json['notes'],
       barber: Barber.fromJson(json['barber']),
       service: Service.fromJson(json['service']),
     );

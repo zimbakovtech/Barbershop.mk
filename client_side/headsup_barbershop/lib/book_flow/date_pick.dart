@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:headsup_barbershop/models/barber.dart';
 import 'package:headsup_barbershop/widgets/colors.dart';
+import 'package:headsup_barbershop/widgets/waitlist.dart';
 import 'package:intl/intl.dart';
 import '../../models/schedule.dart';
 import '../../models/service.dart';
@@ -8,16 +10,16 @@ import '../widgets/custom_date_picker.dart';
 import '../widgets/bottom_button.dart';
 
 class DatePick extends StatefulWidget {
-  final String barberName;
-  final int barberId;
+  final Barber selectedBarber;
   final Service service;
+  final String barbershopName;
   final Function(DateTime, String) onDateTimeSelected;
 
   const DatePick({
     super.key,
-    required this.barberName,
-    required this.barberId,
+    required this.selectedBarber,
     required this.service,
+    required this.barbershopName,
     required this.onDateTimeSelected,
   });
 
@@ -47,7 +49,7 @@ class _DatePickState extends State<DatePick> {
   Future<Schedule> _fetchAvailableDates(int month) async {
     try {
       final schedule = await BarberService().fetchSchedule(
-        barberId: widget.barberId,
+        barberId: widget.selectedBarber.id,
         month: month.toString(),
       );
       setState(() {
@@ -79,7 +81,7 @@ class _DatePickState extends State<DatePick> {
     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
     try {
       List<String> availableTimes = await BarberService().fetchTimes(
-        barberId: widget.barberId,
+        barberId: widget.selectedBarber.id,
         date: formattedDate,
         serviceId: widget.service.id,
       );
@@ -173,6 +175,8 @@ class _DatePickState extends State<DatePick> {
                     availableTimes: _availableTimes,
                     selectedTime: _selectedTime,
                     onTimeSelected: _onTimeSelected,
+                    selectedBarber: widget.selectedBarber,
+                    barbershopName: widget.barbershopName,
                   ),
                   const SizedBox(height: 20),
                   BottomButtonWidget(
@@ -198,6 +202,8 @@ class AvailableTimesWidget extends StatelessWidget {
   final List<String> availableTimes;
   final String? selectedTime;
   final Function(String) onTimeSelected;
+  final Barber selectedBarber;
+  final String barbershopName;
 
   const AvailableTimesWidget({
     super.key,
@@ -207,6 +213,8 @@ class AvailableTimesWidget extends StatelessWidget {
     required this.availableTimes,
     required this.selectedTime,
     required this.onTimeSelected,
+    required this.selectedBarber,
+    required this.barbershopName,
   });
 
   @override
@@ -234,19 +242,28 @@ class AvailableTimesWidget extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(5.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Нема слободни термини за одбраниот даум.',
-                style: TextStyle(fontSize: 14, color: textPrimary),
+                'Нема слободни термини за одбраниот даум',
+                style: TextStyle(fontSize: 15, color: textPrimary),
                 textAlign: TextAlign.center,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WaitList(
+                      selectedBarber: selectedBarber,
+                      barbershopName: barbershopName,
+                    ),
+                  ));
+                },
                 child: const Text(
                   'ЛИСТА НА ЧЕКАЊЕ',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 17,
                     color: orange,
+                    decorationColor: orange,
                     decoration: TextDecoration.underline,
                   ),
                 ),

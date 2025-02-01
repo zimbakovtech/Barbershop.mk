@@ -159,7 +159,7 @@ class _ConfirmationState extends ConsumerState<Confirmation> {
                             const Icon(Icons.hourglass_bottom, color: orange),
                             const SizedBox(width: 8),
                             Text(
-                              "${widget.service.duration} min",
+                              "${widget.service.duration} мин",
                               style: const TextStyle(
                                   color: Colors.white, fontSize: 16),
                             ),
