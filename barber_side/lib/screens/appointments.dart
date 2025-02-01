@@ -1,4 +1,4 @@
-import 'package:barbers_mk/providers/appointment_provider.dart';
+import 'package:barbers_mk/models/appointment.dart';
 import 'package:barbers_mk/providers/availability_provider.dart';
 import 'package:barbers_mk/services/barber_service.dart';
 import 'package:barbers_mk/widgets/appointments_tab.dart';
@@ -23,6 +23,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
   final Set<String> _availabilitySelectedSlots = {};
   bool isLoading = true;
   final BarberService barberService = BarberService();
+  List<Appointment> todaysAppointments = [];
 
   @override
   void initState() {
@@ -46,9 +47,7 @@ class AppointmentsState extends ConsumerState<Appointments> {
       isLoading = true;
       _selectedDate = day;
     });
-    await ref
-        .read(appointmentProvider.notifier)
-        .fetchAppointments(date: DateFormat('yyyy-MM-dd').format(day));
+    _getAppointmentsForSelectedDate();
     setState(() {
       isLoading = false;
     });
@@ -62,15 +61,13 @@ class AppointmentsState extends ConsumerState<Appointments> {
 
   DateTime _stripTime(DateTime dt) => DateTime(dt.year, dt.month, dt.day);
 
-  List<dynamic> _getAppointmentsForSelectedDate(List<dynamic> allAppointments) {
-    final grouped = <DateTime, List<dynamic>>{};
-    for (final apt in allAppointments) {
-      try {
-        final date = DateFormat('dd-MM-yyyy').parse(apt.date!);
-        grouped[_stripTime(date)] = [...(grouped[_stripTime(date)] ?? []), apt];
-      } catch (_) {}
-    }
-    return grouped[_stripTime(_selectedDate)] ?? [];
+  Future<void> _getAppointmentsForSelectedDate() async {
+    List<Appointment> newappointments = await BarberService().fetchAppointments(
+        '?order_by=datetime&order=asc&date=$_selectedDate&status_not=canceled');
+
+    setState(() {
+      todaysAppointments = newappointments;
+    });
   }
 
   void _availabilityOnDaySelected(DateTime day) {
@@ -91,12 +88,6 @@ class AppointmentsState extends ConsumerState<Appointments> {
 
   @override
   Widget build(BuildContext context) {
-    final allAppointments = ref
-        .watch(appointmentProvider)
-        .where((appointment) => appointment.status != 'canceled')
-        .toList();
-
-    final todaysAppointments = _getAppointmentsForSelectedDate(allAppointments);
     final availabilitySlots = ref.watch(availabilityProvider);
     availabilitySlots.removeWhere((slot) => slot['status'] == 'appointment');
 

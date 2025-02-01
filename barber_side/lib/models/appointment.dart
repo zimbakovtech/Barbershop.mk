@@ -36,8 +36,8 @@ class Appointment {
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     final DateTime datetime = DateTime.parse(json['datetime']).toLocal();
-    final String formattedDate = DateFormat('dd.MM.yyyy').format(datetime);
-    final String formattedTime = DateFormat('HH:mm').format(datetime);
+    final formattedDate = DateFormat('dd.MM.yyyy').format(datetime);
+    final formattedTime = DateFormat('HH:mm').format(datetime);
 
     return Appointment(
       id: json['id'],
